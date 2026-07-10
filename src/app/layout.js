@@ -1,6 +1,7 @@
 import { Poppins, Anton_SC, Playwrite_US_Trad } from "next/font/google";
 import Navbar from "@/components/navbar/Navbar";
 import SmoothScroll from "@/components/smooth-scroll/SmoothScroll";
+import Loader from "@/components/loader/Loader";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
       className={`${poppins.variable} ${antonSC.variable} ${playwriteUSTrad.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-poppins">
+        <Loader />
         <SmoothScroll>
           <Navbar />
           {children}
