@@ -69,7 +69,7 @@ function Logo() {
   return (
     <Link
       href="/"
-      className="font-anton-sc text-4xl leading-none tracking-wide"
+      className="font-anton-sc text-[52px] leading-none tracking-wide"
     >
       SPKRH
       <span className="inline-block -scale-x-100">E</span>
@@ -105,7 +105,7 @@ function PlantYourSeedButton({ onClick, className = "" }) {
       initial="rest"
       animate="rest"
       whileHover="hover"
-      className={`flex items-center gap-3 text-sm tracking-widest ${className}`}
+      className={`flex items-center gap-3 text-base font-semibold ${className}`}
     >
       <span className="relative inline-flex">
         Plant Your Seed
@@ -124,11 +124,11 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <nav className="mx-auto flex max-w-360 items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16">
+      <nav className="mx-auto flex items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16">
         <div className="flex items-center gap-12 lg:gap-16">
           <Logo />
 
-          <ul className="hidden items-center gap-8 text-sm tracking-widest text-white/90 md:flex">
+          <ul className="hidden items-center gap-16 text-base font-semibold text-white/90 md:flex">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
                 <AnimatedNavLink href={href}>
@@ -140,7 +140,7 @@ export default function Navbar() {
           </ul>
         </div>
 
-        <div className="hidden items-center gap-10 text-sm tracking-widest text-white/90 lg:gap-14 md:flex">
+        <div className="hidden items-center gap-30.5 text-base font-semibold text-white/90 md:flex">
           {nycTime && <span>(NYC) {nycTime}</span>}
           <PlantYourSeedButton />
         </div>
@@ -158,7 +158,7 @@ export default function Navbar() {
 
       {isMenuOpen && (
         <div className="border-t border-white/10 bg-black/90 px-8 py-6 backdrop-blur-md md:hidden">
-          <ul className="flex flex-col gap-5 text-sm tracking-widest text-white/90">
+          <ul className="flex flex-col gap-5 text-base font-semibold text-white/90">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
                 <AnimatedNavLink href={href} onClick={() => setIsMenuOpen(false)}>
@@ -169,7 +169,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="mt-6 flex flex-col gap-4 text-sm tracking-widest text-white/90">
+          <div className="mt-6 flex flex-col gap-4 text-base font-semibold text-white/90">
             {nycTime && <span>(NYC) {nycTime}</span>}
             <PlantYourSeedButton onClick={() => setIsMenuOpen(false)} />
           </div>
