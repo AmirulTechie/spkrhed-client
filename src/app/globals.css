@@ -7,3 +7,85 @@
   --color-background: #000000;
   --color-foreground: #ffffff;
 }
+
+/*
+ * react-fast-marquee's component imports "./Marquee.scss", but the
+ * published package doesn't include that file, so none of its
+ * layout/animation styles exist at runtime without this.
+ */
+.rfm-marquee-container {
+  position: relative;
+  width: var(--width);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  transform: var(--transform);
+}
+
+.rfm-marquee-container:hover div.rfm-marquee {
+  animation-play-state: var(--pause-on-hover);
+}
+
+.rfm-marquee-container:active div.rfm-marquee {
+  animation-play-state: var(--pause-on-click);
+}
+
+.rfm-marquee {
+  flex: 0 0 auto;
+  min-width: var(--min-width);
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  animation-name: rfm-scroll;
+  animation-duration: var(--duration);
+  animation-timing-function: linear;
+  animation-delay: var(--delay);
+  animation-iteration-count: var(--iteration-count);
+  animation-play-state: var(--play);
+  animation-direction: var(--direction);
+}
+
+@keyframes rfm-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.rfm-initial-child-container {
+  flex: 0 0 auto;
+  display: flex;
+  min-width: auto;
+  flex-direction: row;
+  align-items: center;
+}
+
+.rfm-child {
+  transform: var(--transform);
+}
+
+.rfm-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.rfm-overlay::before,
+.rfm-overlay::after {
+  background: linear-gradient(to right, var(--gradient-color), rgba(255, 255, 255, 0));
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: var(--gradient-width);
+  z-index: 2;
+  pointer-events: none;
+  top: 0;
+}
+
+.rfm-overlay::after {
+  right: 0;
+  transform: rotateZ(180deg);
+}
