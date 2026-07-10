@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
+
+const SCROLL_THRESHOLD = 80;
 
 const NAV_LINKS = [
   { label: "Work", href: "/work" },
@@ -67,13 +71,15 @@ function AnimatedNavLink({ href, children, onClick }) {
 
 function Logo() {
   return (
-    <Link
-      href="/"
-      className="font-anton-sc text-[52px] leading-none tracking-wide"
-    >
-      SPKRH
-      <span className="inline-block -scale-x-100">E</span>
-      D
+    <Link href="/" className="block">
+      <Image
+        src="/images/spkrhed-logo.png"
+        alt="SPKRHED"
+        width={358}
+        height={58}
+        priority
+        className="h-auto w-[clamp(124px,12.4243vw,248px)]"
+      />
     </Link>
   );
 }
@@ -105,7 +111,7 @@ function PlantYourSeedButton({ onClick, className = "" }) {
       initial="rest"
       animate="rest"
       whileHover="hover"
-      className={`flex items-center gap-3 text-base font-semibold ${className}`}
+      className={`flex items-center gap-3 text-[clamp(16px,1.1111vw,20px)] font-semibold ${className}`}
     >
       <span className="relative inline-flex">
         Plant Your Seed
@@ -121,18 +127,49 @@ function PlantYourSeedButton({ onClick, className = "" }) {
 export default function Navbar() {
   const nycTime = useNycTime();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollRef = useRef(0);
+
+  useLenis(({ scroll, direction }) => {
+    setIsScrolled(scroll > SCROLL_THRESHOLD);
+
+    if (scroll <= SCROLL_THRESHOLD) {
+      setIsHidden(false);
+    } else if (direction === 1 && scroll - lastScrollRef.current > 0) {
+      setIsHidden(true);
+    } else if (direction === -1) {
+      setIsHidden(false);
+    }
+
+    lastScrollRef.current = scroll;
+  }, []);
+
+  const headerHidden = isHidden && !isMenuOpen;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <nav className="mx-auto flex items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16">
-        <div className="flex items-center gap-12 lg:gap-16">
+    <motion.header
+      className="fixed inset-x-0 top-0 z-50"
+      initial={false}
+      animate={{ y: headerHidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <motion.nav
+        className="mx-auto flex items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16"
+        initial={false}
+        animate={{
+          backgroundColor: isScrolled ? "rgba(0,0,0,1)" : "rgba(0,0,0,0)",
+        }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
+        <div className="flex items-center gap-[clamp(32px,4.4444vw,96px)]">
           <Logo />
 
-          <ul className="hidden items-center gap-16 text-base font-semibold text-white/90 md:flex">
+          <ul className="hidden items-center gap-[clamp(32px,4.4444vw,96px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 md:flex">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
                 <AnimatedNavLink href={href}>
-                  <span aria-hidden className="h-1 w-1 rounded-full bg-white/60" />
+                  <span aria-hidden className="h-1 w-1 rounded-full bg-white" />
                   {label}
                 </AnimatedNavLink>
               </li>
@@ -140,7 +177,7 @@ export default function Navbar() {
           </ul>
         </div>
 
-        <div className="hidden items-center gap-30.5 text-base font-semibold text-white/90 md:flex">
+        <div className="hidden items-center gap-[clamp(48px,8.4722vw,180px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 md:flex">
           {nycTime && <span>(NYC) {nycTime}</span>}
           <PlantYourSeedButton />
         </div>
@@ -154,7 +191,7 @@ export default function Navbar() {
         >
           {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
-      </nav>
+      </motion.nav>
 
       {isMenuOpen && (
         <div className="border-t border-white/10 bg-black/90 px-8 py-6 backdrop-blur-md md:hidden">
@@ -175,6 +212,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 }
