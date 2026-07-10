@@ -1,0 +1,176 @@
+"use client";
+
+import { useLayoutEffect, useRef } from "react";
+import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Line breaks match the Figma layout exactly (enforced at lg+).
+const COPY_LINES = [
+  "A LinkedIn-led growth partner for",
+  "founders, consultants, and enterprise",
+  "teams.We turn quiet profiles into pipeline-",
+  "generating beanstalks so qualified buyers",
+  "come to you, while you sleep.",
+];
+
+const STATS = [
+  { value: "10+", valueClassName: "text-white", label: "Years of\nExperience" },
+  { value: "10K+", valueClassName: "text-[#AC40FF]", label: "Targeted\nDMs / Month" },
+];
+
+// Two rows of four, matching the Figma order and per-logo widths
+// (measured at the 1440px design frame; min/max ≈ 0.6x/1.6x).
+const LOGO_ROWS = [
+  [
+    { src: "/images/clients-logo/logo-01.png", alt: "RubyMine", w: 236, h: 42, width: "w-[clamp(70px,8.125vw,187px)]" },
+    { src: "/images/clients-logo/logo-02.png", alt: "Spotify", w: 201, h: 66, width: "w-[clamp(56px,6.4583vw,149px)]" },
+    { src: "/images/clients-logo/logo-03.png", alt: "Lexus", w: 171, h: 77, width: "w-[clamp(55px,6.3194vw,146px)]" },
+    { src: "/images/clients-logo/logo-05.png", alt: "Coca-Cola", w: 194, h: 64, width: "w-[clamp(53px,6.1806vw,142px)]" },
+  ],
+  [
+    { src: "/images/clients-logo/logo-04.png", alt: "NHL on TNT", w: 236, h: 70, width: "w-[clamp(68px,7.8472vw,181px)]" },
+    { src: "/images/clients-logo/logo-06.png", alt: "Tim Hortons", w: 236, h: 48, width: "w-[clamp(70px,8.125vw,187px)]" },
+    { src: "/images/clients-logo/logo-07.png", alt: "Mercedes-Benz", w: 145, h: 30, width: "w-[clamp(83px,9.5833vw,221px)]" },
+    { src: "/images/clients-logo/logo-08.png", alt: "Chevrolet", w: 449, h: 217, width: "w-[clamp(54px,6.25vw,144px)]" },
+  ],
+];
+
+function Stat({ value, valueClassName, label }) {
+  return (
+    <div className="flex flex-col">
+      <span
+        className={`font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none ${valueClassName}`}
+      >
+        {value}
+      </span>
+      <span className="mt-1 whitespace-pre-line font-poppins text-[clamp(14px,1.7361vw,25px)] font-semibold leading-[1.35] text-white/35">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+export default function StatsClientsSection() {
+  const rowRef = useRef(null);
+  const fillRef = useRef(null);
+  const wordRefs = useRef([]);
+
+  useLayoutEffect(() => {
+    const words = wordRefs.current.filter(Boolean);
+
+    const ctx = gsap.context(() => {
+      gsap.set(words, { opacity: 0.35 });
+
+      const trigger = {
+        trigger: rowRef.current,
+        start: "clamp(top 80%)",
+        end: "clamp(bottom 55%)",
+        scrub: 0.5,
+      };
+
+      gsap.to(words, {
+        opacity: 1,
+        stagger: 0.4,
+        ease: "none",
+        scrollTrigger: trigger,
+      });
+
+      gsap.to(fillRef.current, {
+        scaleX: 1,
+        ease: "none",
+        scrollTrigger: trigger,
+      });
+    }, rowRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  let wordIndex = -1;
+
+  return (
+    <section className="bg-black">
+      <div className="px-[clamp(32px,5.0694vw,117px)] pt-[clamp(56px,8.125vw,187px)] pb-[clamp(24px,3.1944vw,74px)]">
+        <div
+          ref={rowRef}
+          className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-14 lg:grid-cols-[589fr_641fr]"
+        >
+          <div>
+            <div className="mb-[clamp(32px,4.7222vw,109px)] h-0.5 w-[clamp(200px,26.7361vw,616px)] bg-white/20">
+              <div
+                ref={fillRef}
+                className="h-full w-full origin-left scale-x-0 bg-white"
+              />
+            </div>
+            <div className="flex gap-x-[clamp(40px,6.25vw,144px)]">
+              {STATS.map((stat) => (
+                <Stat key={stat.value} {...stat} />
+              ))}
+            </div>
+          </div>
+
+          <p className="font-anton-sc text-[clamp(18px,2.2222vw,51px)] uppercase leading-[1.275] text-white">
+            {COPY_LINES.map((line, lineIndex) => (
+              <span key={lineIndex} className="lg:block">
+                {line.split(" ").map((word) => {
+                  // eslint-disable-next-line react-hooks/immutability
+                  wordIndex += 1;
+                  const index = wordIndex;
+                  return (
+                    <span key={index}>
+                      <span
+                        ref={(el) => {
+                          wordRefs.current[index] = el;
+                        }}
+                      >
+                        {word}
+                      </span>{" "}
+                    </span>
+                  );
+                })}
+              </span>
+            ))}
+          </p>
+        </div>
+      </div>
+
+      <div className="h-px w-full bg-white/10" />
+
+      <div className="px-[clamp(32px,5.0694vw,117px)] pt-[clamp(40px,6.1111vw,141px)] pb-[clamp(48px,6.1111vw,141px)]">
+        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:grid-cols-[589fr_641fr]">
+          <div className="flex items-start gap-3">
+            <Image
+              src="/images/Home/banner-bullet.png"
+              alt=""
+              width={20}
+              height={20}
+              className="mt-[0.3em] h-[clamp(14px,1.1111vw,20px)] w-[clamp(14px,1.1111vw,20px)] shrink-0"
+            />
+            <p className="max-w-90 font-poppins text-[clamp(14px,1.3194vw,30px)] font-semibold uppercase leading-none text-[#B7B7B7]">
+  Clients whose realities we&apos;ve changed
+</p>
+          </div>
+
+          <div className="flex flex-col gap-y-[clamp(32px,4.5139vw,104px)]">
+            {LOGO_ROWS.map((row, rowIndex) => (
+              <div key={rowIndex} className="grid grid-cols-4 items-center">
+                {row.map((logo) => (
+                  <Image
+                    key={logo.src}
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={logo.w}
+                    height={logo.h}
+                    className={`h-auto justify-self-start opacity-60 transition-all duration-300 ease-out hover:scale-110 hover:opacity-100 hover:brightness-0 hover:invert ${logo.width}`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

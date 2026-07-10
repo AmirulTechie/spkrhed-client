@@ -1,6 +1,21 @@
 "use client";
 
-import { ReactLenis } from "lenis/react";
+import { useEffect } from "react";
+import { ReactLenis, useLenis } from "lenis/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+function GsapLenisBridge() {
+  useLenis(() => ScrollTrigger.update());
+
+  useEffect(() => {
+    gsap.ticker.lagSmoothing(0);
+  }, []);
+
+  return null;
+}
 
 export default function SmoothScroll({ children }) {
   return (
@@ -12,6 +27,7 @@ export default function SmoothScroll({ children }) {
         smoothWheel: true,
       }}
     >
+      <GsapLenisBridge />
       {children}
     </ReactLenis>
   );

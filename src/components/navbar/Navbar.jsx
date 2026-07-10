@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
@@ -53,15 +54,18 @@ function Underline() {
   );
 }
 
-function AnimatedNavLink({ href, children, onClick }) {
+function AnimatedNavLink({ href, children, onClick, isActive = false }) {
   return (
     <MotionLink
       href={href}
       onClick={onClick}
+      aria-current={isActive ? "page" : undefined}
       initial="rest"
-      animate="rest"
+      animate={isActive ? "hover" : "rest"}
       whileHover="hover"
-      className="relative inline-flex items-center gap-2"
+      className={`relative inline-flex items-center gap-2 ${
+        isActive ? "text-white" : ""
+      }`}
     >
       {children}
       <Underline />
@@ -125,6 +129,7 @@ function PlantYourSeedButton({ onClick, className = "" }) {
 }
 
 export default function Navbar() {
+  const pathname = usePathname();
   const nycTime = useNycTime();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -145,13 +150,16 @@ export default function Navbar() {
     lastScrollRef.current = scroll;
   }, []);
 
-  const headerHidden = isHidden && !isMenuOpen;
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (isMenuOpen) setIsHidden(false);
+  }, [isMenuOpen]);
 
   return (
     <motion.header
       className="fixed inset-x-0 top-0 z-50"
       initial={false}
-      animate={{ y: headerHidden ? "-100%" : "0%" }}
+      animate={{ y: isHidden ? "-100%" : "0%" }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
@@ -168,7 +176,7 @@ export default function Navbar() {
           <ul className="hidden items-center gap-[clamp(32px,4.4444vw,96px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 md:flex">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
-                <AnimatedNavLink href={href}>
+                <AnimatedNavLink href={href} isActive={pathname === href}>
                   <span aria-hidden className="h-1 w-1 rounded-full bg-white" />
                   {label}
                 </AnimatedNavLink>
@@ -198,7 +206,11 @@ export default function Navbar() {
           <ul className="flex flex-col gap-5 text-base font-semibold text-white/90">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
-                <AnimatedNavLink href={href} onClick={() => setIsMenuOpen(false)}>
+                <AnimatedNavLink
+                  href={href}
+                  onClick={() => setIsMenuOpen(false)}
+                  isActive={pathname === href}
+                >
                   <span aria-hidden className="h-1 w-1 rounded-full bg-white/60" />
                   {label}
                 </AnimatedNavLink>
