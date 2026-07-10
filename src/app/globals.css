@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme inline {
+  --font-poppins: var(--font-poppins);
+  --font-anton-sc: var(--font-anton-sc);
+  --font-playwrite-us-trad: var(--font-playwrite-us-trad);
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+}
