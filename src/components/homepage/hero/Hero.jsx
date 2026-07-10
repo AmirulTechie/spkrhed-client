@@ -28,20 +28,30 @@ export default function Hero() {
         className="object-cover opacity-80"
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-350 flex-col items-center px-6 text-center text-white">
-        <p className="mb-6 font-poppins text-[18px] font-semibold uppercase tracking-[0.15em] text-white/50 sm:text-[24px] lg:text-[32px]">
+      <div className="relative z-10 mt-[-100] flex w-full max-w-[1800px] flex-col items-center text-center text-white">
+        <p className="mb-15 flex items-center gap-3 font-poppins text-[clamp(18px,2.2222vw,50px)] font-bold uppercase text-white/35">
+          <Image
+            src="/images/Home/banner-bullet.png"
+            alt=""
+            width={20}
+            height={20}
+          />
           This is a movement
         </p>
 
         <div className="flex flex-col items-center">
-          <div className="grid grid-cols-[auto_auto] justify-center gap-x-12 gap-y-0 font-anton-sc text-[48px] leading-none sm:gap-x-22.5 sm:text-[64px] md:text-[80px] lg:gap-x-46.25 lg:text-[100px]">
-            <span className="text-left">WATCH</span>
-            <span className="text-left">THE SEED</span>
-            <span className="text-left">PLANT</span>
-            <span className="text-left">THE CLIENTS</span>
+          <div className="relative w-full h-[calc(2*clamp(48px,6.9444vw,160px))]">
+            <div className="absolute top-0 right-[calc(50%+clamp(24px,6.4236vw,130px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
+              <span>WATCH</span>
+              <span>PLANT</span>
+            </div>
+            <div className="absolute top-0 left-[calc(50%+clamp(24px,6.4236vw,130px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
+              <span>THE SEED</span>
+              <span>THE CLIENTS</span>
+            </div>
           </div>
 
-          <p className="-mt-3 mr-50 font-playwrite-us-trad text-[40px] text-[#AC40FF] sm:-mt-6 sm:text-[56px] md:text-[70px] lg:-mt-8 lg:text-[85px]">
+          <p className="-mt-[clamp(12px,2.2222vw,50px)] font-playwrite-us-trad text-[clamp(40px,5.9028vw,130px)] text-[#AC40FF] z-9999">
             climb to you
           </p>
         </div>

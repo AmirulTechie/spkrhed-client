@@ -28,7 +28,7 @@ function MarqueeRow({ items, direction }) {
       {items.map((text, index) => (
         <span
           key={`${text}-${index}`}
-          className="flex items-center whitespace-nowrap font-anton-sc text-[40px] uppercase leading-none text-white sm:text-[64px] lg:text-[100px]"
+          className="flex items-center whitespace-nowrap font-anton-sc text-[40px] uppercase leading-none text-white sm:text-[64px] lg:text-[140px]"
         >
           {text}
           <Star />
@@ -42,7 +42,7 @@ export default function MarqueeSection() {
   const rowTwo = [...PHRASES.slice(1), PHRASES[0]];
 
   return (
-    <section className="overflow-hidden bg-black py-5">
+    <section className="overflow-hidden bg-black py-2">
       <MarqueeRow items={PHRASES} direction="left" />
       <MarqueeRow items={rowTwo} direction="right" />
     </section>
