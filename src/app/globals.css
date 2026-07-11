@@ -6,6 +6,7 @@
   --font-playwrite-us-trad: var(--font-playwrite-us-trad);
   --color-background: #000000;
   --color-foreground: #ffffff;
+  --radius-5xl: clamp(28px, 4.4444vw, 64px);
 }
 
 /*
