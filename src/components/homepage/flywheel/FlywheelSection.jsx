@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 
 const STEPS = [
   {
@@ -31,48 +32,27 @@ const STEPS = [
   },
 ];
 
-function ArrowIcon({ className }) {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M4 12L12 4M12 4H5M12 4V11"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function StepCard({ step }) {
-  const glass =
-    "border border-white/40 bg-[rgba(217,217,217,0.5)] backdrop-blur-md";
-
   return (
     <div
-      className={`relative ${step.offset ? "sm:mt-[clamp(40px,8.3333vw,120px)]" : ""}`}
+      className={`relative aspect-321/353 w-full bg-[rgba(217,217,217,0.5)] backdrop-blur-md [mask-image:url('/images/Home/flywheel-card-shape.svg')] mask-no-repeat mask-size-[100%_100%] ${step.offset ? "sm:mt-[clamp(38px,8.0556vw,116px)]" : ""}`}
     >
-      <div
-        className={`absolute -top-[clamp(10px,1.1111vw,16px)] left-0 h-[clamp(10px,1.1111vw,16px)] w-[45%] rounded-t-[10px] border-b-0 ${glass}`}
-      />
-      <div
-        className={`relative flex aspect-321/353 w-full flex-col rounded-tr-2xl rounded-br-2xl rounded-bl-2xl p-[clamp(20px,1.875vw,27px)] ${glass}`}
-      >
-        <div className="flex items-start justify-between">
+      <div className="flex h-full w-full flex-col pt-[clamp(20px,1.875vw,27px)] pr-[clamp(20px,1.875vw,27px)] pb-[clamp(28px,2.6389vw,38px)] pl-[clamp(20px,1.875vw,27px)]">
+        <div className="mr-[clamp(13px,1.3194vw,19px)] flex items-start justify-between">
           <span className="font-anton-sc text-[clamp(40px,5.5556vw,80px)] leading-[0.8] text-[#101010]">
             {step.number}
           </span>
-          <span className="flex h-[clamp(22px,1.8056vw,26px)] w-[clamp(22px,1.8056vw,26px)] shrink-0 items-center justify-center rounded-full bg-[#101010]">
-            <ArrowIcon className="h-[clamp(10px,0.8333vw,12px)] w-[clamp(10px,0.8333vw,12px)] text-white" />
-          </span>
+          <ArrowUpRight
+            className="mt-[clamp(32px,3.1944vw,46px)] h-8 w-8 shrink-0 text-[#101010]"
+          />
         </div>
+        <div className="mt-[clamp(9px,0.9028vw,13px)] mr-[clamp(13px,1.3194vw,19px)] border-t border-[#101010]" />
 
         <div className="mt-auto">
           <h3 className="font-anton-sc text-[clamp(16px,1.3889vw,20px)] uppercase leading-[0.8] text-[#101010]">
             {step.title}
           </h3>
-          <p className="mt-2 max-w-52 font-poppins text-[clamp(10px,0.7639vw,11px)] leading-none text-[#101010]">
+          <p className="mt-2 max-w-[clamp(146px,14.4444vw,208px)] font-poppins text-[clamp(9px,0.6944vw,10px)] leading-none text-[#101010]">
             {step.description}
           </p>
         </div>
@@ -89,10 +69,10 @@ export default function FlywheelSection() {
         alt=""
         width={2162}
         height={3842}
-        className="pointer-events-none absolute right-[-10%] top-[30%] z-0 w-[50%] rotate-5 select-none opacity-90"
+        className="pointer-events-none absolute right-[-8%] top-[15%] z-0 w-[50%] rotate-12 select-none opacity-90"
       />
 
-      <div className="relative z-10 mx-auto max-w-325 px-[clamp(24px,5.5556vw,80px)] text-center">
+      <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
         <div className="flex items-center justify-center gap-3">
           <Image
             src="/images/Home/banner-bullet.png"
@@ -117,7 +97,7 @@ export default function FlywheelSection() {
           <span className="block">Content Close Faster.</span>
         </p>
 
-        <div className="relative z-10 mt-[clamp(48px,9.5139vw,137px)] grid grid-cols-1 gap-x-[clamp(12px,1.4583vw,21px)] gap-y-[clamp(40px,4.4444vw,64px)] text-left sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
+        <div className="relative z-10 mt-[clamp(48px,9.5139vw,137px)] grid grid-cols-1 gap-x-[clamp(30px,1.4583vw,40px)] gap-y-[clamp(40px,4.4444vw,64px)] text-left sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
           {STEPS.map((step) => (
             <StepCard key={step.number} step={step} />
           ))}
@@ -129,7 +109,7 @@ export default function FlywheelSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute -bottom-87.5 left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-9999"
+        className="pointer-events-none absolute -bottom-120 left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-9999 opacity-50"
       />
     </section>
   );
