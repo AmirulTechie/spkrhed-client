@@ -5,6 +5,7 @@ import VideoSection from "@/components/homepage/video/VideoSection";
 import ProblemSection from "@/components/homepage/problem/ProblemSection";
 import ScaleNotStrategy from "@/components/homepage/why-linkedin/ScaleNotStrategy";
 import WhyLinkedInSection from "@/components/homepage/why-linkedin/WhyLinkedInSection";
+import BeanstalkSystemSection from "@/components/homepage/beanstalk/BeanstalkSystemSection";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <ProblemSection />
       <WhyLinkedInSection />
       <ScaleNotStrategy />
+      <BeanstalkSystemSection />
     </>
   );
 }

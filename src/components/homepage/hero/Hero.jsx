@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black">
       <Image
-        src="/images/Home/hero-banner.jpg"
+        src="/images/Home/hero-banner.png"
         alt=""
         fill
         priority
