@@ -3,6 +3,8 @@ import MarqueeSection from "@/components/homepage/marquee/MarqueeSection";
 import StatsClientsSection from "@/components/homepage/stats-clients/StatsClientsSection";
 import VideoSection from "@/components/homepage/video/VideoSection";
 import ProblemSection from "@/components/homepage/problem/ProblemSection";
+import ScaleNotStrategy from "@/components/homepage/why-linkedin/ScaleNotStrategy";
+import WhyLinkedInSection from "@/components/homepage/why-linkedin/WhyLinkedInSection";
 
 export default function Home() {
   return (
@@ -12,6 +14,8 @@ export default function Home() {
       <StatsClientsSection />
       <VideoSection />
       <ProblemSection />
+      <WhyLinkedInSection />
+      <ScaleNotStrategy />
     </>
   );
 }
