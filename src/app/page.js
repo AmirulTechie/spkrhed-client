@@ -9,6 +9,7 @@ import BeanstalkSystemSection from "@/components/homepage/beanstalk/BeanstalkSys
 import ProjectsSection from "@/components/homepage/projects/ProjectsSection";
 import PricingSection from "@/components/homepage/pricing/PricingSection";
 import FlywheelSection from "@/components/homepage/flywheel/FlywheelSection";
+import TestimonialsSection from "@/components/homepage/testimonials/TestimonialsSection";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       <ProjectsSection />
       <PricingSection />
       <FlywheelSection />
+      <TestimonialsSection />
     </>
   );
 }
