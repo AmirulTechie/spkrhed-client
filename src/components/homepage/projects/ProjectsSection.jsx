@@ -42,7 +42,7 @@ function ProjectRow({ project }) {
         </p>
       </div>
 
-      <div className="relative aspect-[544/362] w-full overflow-hidden rounded-[30px] sm:w-[clamp(280px,37.7778vw,544px)] sm:shrink-0">
+      <div className="relative aspect-544/362 w-full overflow-hidden rounded-[30px] sm:w-[clamp(280px,37.7778vw,544px)] sm:shrink-0">
         <Image
           src={project.image}
           alt={project.name}
