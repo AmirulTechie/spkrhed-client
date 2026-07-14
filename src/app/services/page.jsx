@@ -1,11 +1,11 @@
-import React from 'react';
+import ServicesHero from "@/components/services/ServicesHero";
+import GrowthEngineSection from "@/components/services/GrowthEngineSection";
 
-const ServicesPage = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-};
-
-export default ServicesPage;
+export default function ServicesPage() {
+  return (
+    <>
+      <ServicesHero />
+      <GrowthEngineSection />
+    </>
+  );
+}
