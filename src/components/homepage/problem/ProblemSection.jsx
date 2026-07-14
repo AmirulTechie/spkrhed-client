@@ -48,24 +48,24 @@ function ProblemCard({ card }) {
     <>
       <span
         style={{ color: "var(--label-color)" }}
-        className="font-poppins text-[clamp(14px,1.25vw,18px)] font-semibold uppercase tracking-wide"
+        className="font-poppins text-[clamp(14px,1.7361vw,25px)] font-semibold uppercase"
       >
         {card.label}
       </span>
-      <h3 className="mt-3 font-anton-sc text-[70px] uppercase leading-[97%] text-[#101010] max-w-xl">
+      <h3 className="mt-[clamp(20px,2.8472vw,41px)] max-w-xl font-anton-sc text-[clamp(28px,4.1667vw,60px)] uppercase leading-[0.97] text-[#101010]">
         {card.heading}
       </h3>
-      <p className="mt-5 max-w-sm font-poppins text-[clamp(13px,1.1111vw,16px)] font-medium leading-[140%] text-[#101010]">
+      <p className="mt-[clamp(16px,2.1528vw,31px)] max-w-sm font-poppins text-[clamp(14px,1.3889vw,20px)] font-medium leading-[1.1] text-[#101010]">
         {card.description}
       </p>
 
-      <div className="mt-10 flex items-end justify-between gap-4">
-        <ul className="font-poppins text-[clamp(13px,1.1111vw,16px)] font-semibold leading-[150%] text-[#101010]">
+      <div className="mt-auto flex items-end justify-between gap-4 pt-[clamp(24px,3.3333vw,48px)]">
+        <ul className="font-poppins text-[clamp(14px,1.3889vw,20px)] font-semibold leading-[1.1] text-[#101010]">
           {card.points.map((point) => (
             <li key={point}>{point}</li>
           ))}
         </ul>
-        <span className="font-anton-sc text-[clamp(48px,5.5556vw,80px)] leading-none text-[#101010]">
+        <span className="font-anton-sc text-[clamp(56px,8.3333vw,120px)] leading-[1.1] text-[#101010]">
           {card.number}
         </span>
       </div>
@@ -90,8 +90,8 @@ export default function ProblemSection() {
     if (!topRef.current || !backRef.current) return;
     gsap.set(topRef.current, { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 });
     gsap.set(backRef.current, {
-      x: 6,
-      y: 10,
+      x: 0,
+      y: 16,
       rotate: -1.95,
       scale: 0.97,
       opacity: 1,
@@ -134,24 +134,27 @@ export default function ProblemSection() {
   }
 
   return (
-    <section className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-x-hidden rounded-5xl bg-[#F0F0EA] pt-30">
-      <div className="relative px-[clamp(32px,5.5556vw,80px)] py-[clamp(40px,6.9444vw,100px)]">
-        <Image
-          src="/images/Home/leaf.png"
-          alt=""
-          width={200}
-          height={148}
-          className="pointer-events-none absolute right-[10%] top-[0%] w-[clamp(56px,6.25vw,90px)] -scale-x-100 rotate-150 select-none"
-        />
-        <Image
-          src="/images/Home/leaf.png"
-          alt=""
-          width={200}
-          height={200}
-          className="pointer-events-none absolute left-[15%] top-[36%] w-[clamp(36px,3.6111vw,52px)] rotate-165 select-none"
-        />
+    <section
+      id="problem"
+      className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pt-30"
+    >
+      <Image
+        src="/images/Home/leaf.png"
+        alt=""
+        width={200}
+        height={200}
+        className="pointer-events-none absolute left-[80.26%] top-[20.89%] z-20 w-[clamp(60px,9.7014vw,140px)] -scale-x-100 rotate-12 select-none"
+      />
+      <Image
+        src="/images/Home/leaf.png"
+        alt=""
+        width={200}
+        height={200}
+        className="pointer-events-none absolute left-[17.16%] top-[62%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none rotate-160"
+      />
 
-        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,3.0556vw,44px)] gap-y-12 lg:grid-cols-[589fr_647fr]">
+      <div className="relative px-[clamp(32px,5.5556vw,80px)] py-[clamp(40px,6.9444vw,100px)]">
+        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,6.1111vw,88px)] gap-y-12 lg:grid-cols-[526fr_647fr]">
           <div>
             <div className="mb-4 flex items-center gap-3">
               <Image
@@ -159,14 +162,14 @@ export default function ProblemSection() {
                 alt=""
                 width={20}
                 height={20}
-                className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
+                className="h-[clamp(10px,1.0271vw,15px)] w-[clamp(10px,1.0271vw,15px)]"
               />
-              <span className="font-poppins text-[38px] font-semibold uppercase text-[#424242]">
+              <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#424242]">
                 Sound familiar?
               </span>
             </div>
 
-            <h2 className="font-anton-sc text-[clamp(32px,4.7222vw,90px)] uppercase leading-[0.97] text-black">
+            <h2 className="font-anton-sc text-[clamp(32px,6.25vw,90px)] uppercase leading-[97%] text-black">
               Every client{" "}
               <span className="block">
                 you have <span className="text-[#AC40FF]">came</span>
@@ -174,7 +177,7 @@ export default function ProblemSection() {
               <span className="block text-[#AC40FF]">from you.</span>
             </h2>
 
-            <p className="mt-8 max-w-md font-poppins text-[20px] font-medium leading-[97%] text-black">
+            <p className="relative z-10 mt-8 max-w-md font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black top-50">
               You&apos;re the strategist, the creator, the sales team, and the
               closer. If you disappear for a week, so does your pipeline.
               That&apos;s not a business — that&apos;s a job you can never
@@ -182,10 +185,9 @@ export default function ProblemSection() {
             </p>
           </div>
 
-          <div className="relative">
-            {/* Absolutely positioned, so it takes its size from the front
-                card below (the only element in normal flow) instead of
-                forcing a fixed aspect ratio that outgrows its content. */}
+          <div className="relative w-full lg:aspect-647/565.5">
+            {/* Absolutely positioned, so it shares the exact size of the
+                front card below instead of drifting out of sync with it. */}
             <div
               ref={backRef}
               aria-hidden="true"
@@ -203,7 +205,7 @@ export default function ProblemSection() {
               ref={topRef}
               onClick={handleShuffle}
               aria-label="Show next problem card"
-              className="relative z-10 flex w-full flex-col rounded-[clamp(16px,1.6667vw,24px)] p-[clamp(24px,2.7778vw,40px)] text-left cursor-pointer"
+              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(16px,1.6667vw,24px)] p-[clamp(24px,2.7778vw,40px)] text-left cursor-pointer"
               style={{
                 backgroundColor: FRONT_STYLE.bg,
                 "--label-color": FRONT_STYLE.labelColor,

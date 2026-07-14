@@ -10,6 +10,8 @@ import ProjectsSection from "@/components/homepage/projects/ProjectsSection";
 import PricingSection from "@/components/homepage/pricing/PricingSection";
 import FlywheelSection from "@/components/homepage/flywheel/FlywheelSection";
 import TestimonialsSection from "@/components/homepage/testimonials/TestimonialsSection";
+import DiscoveryCallSection from "@/components/homepage/discovery-call/DiscoveryCallSection";
+import CastleSection from "@/components/homepage/castle/CastleSection";
 
 export default function Home() {
   return (
@@ -26,6 +28,8 @@ export default function Home() {
       <PricingSection />
       <FlywheelSection />
       <TestimonialsSection />
+      <DiscoveryCallSection />
+      <CastleSection />
     </>
   );
 }

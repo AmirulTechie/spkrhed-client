@@ -139,7 +139,7 @@ export default function TestimonialsSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute -left-[30%] top-[8%] z-0 w-[40%] max-w-none select-none rotate-30 "
+        className="pointer-events-none absolute left-[-30%] top-[8%] z-0 w-[40%] max-w-none select-none rotate-30 "
       />
 
       <Image
@@ -168,7 +168,7 @@ export default function TestimonialsSection() {
           In Their <span className="text-[#ac40ff]">Own Voice.</span>
         </h2>
 
-        <p className="mx-auto mt-[clamp(8px,1.1806vw,17px)] max-w-176 font-poppins text-[clamp(15px,1.5278vw,22px)] text-white/60">
+        <p className="mx-auto mt-[clamp(8px,1.1806vw,17px)] font-poppins text-[clamp(15px,1.5278vw,22px)] text-white/60">
           Founders, agencies, and enterprise teams who joined the movement.
         </p>
       </div>
