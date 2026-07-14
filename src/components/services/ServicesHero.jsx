@@ -22,11 +22,11 @@ export default function ServicesHero() {
 
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-[40%] bg-gradient-to-b from-[#0f0f0f] to-transparent"
+        className="absolute inset-x-0 top-0 h-[40%] bg-linear-to-b from-[#0f0f0f] to-transparent"
       />
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-b from-transparent to-[#0f0f0f]"
+        className="absolute inset-x-0 bottom-0 h-[40%] bg-linear-to-b from-transparent to-[#0f0f0f]"
       />
 
       <div className="relative z-10 grid w-full grid-cols-1 items-end gap-y-10 px-8 pb-[clamp(24px,3.1944vw,46px)] text-white sm:px-12 lg:grid-cols-[490fr_598fr] lg:gap-x-[clamp(48px,14.4444vw,208px)] lg:px-16">

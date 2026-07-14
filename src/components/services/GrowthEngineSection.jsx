@@ -169,10 +169,10 @@ export default function GrowthEngineSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute -top-[15%] -left-[25%] w-[50%] max-w-none select-none rotate-80 -scale-x-100"
+        className="pointer-events-none absolute top-[-15%] left-[-25%] w-[50%] max-w-none select-none rotate-80 -scale-x-100"
       />
-      <div className="w-48 h-28 bg-gradient-to-b from-stone-950 to-stone-950/0 z-999" />
-      <div className="relative mx-auto max-w-[1200px] px-8 sm:px-12 lg:px-16">
+      <div className="w-48 h-28 bg-linear-to-b from-stone-950 to-stone-950/0 z-999" />
+      <div className="relative mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
         <div className="flex items-center justify-center gap-3">
           <Image
             src="/images/Home/banner-bullet.png"
@@ -186,19 +186,19 @@ export default function GrowthEngineSection() {
           </span>
         </div>
 
-        <h2 className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-[726px] text-center font-anton-sc text-[clamp(32px,5vw,72px)] uppercase leading-[1]">
+        <h2 className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-181.5 text-center font-anton-sc text-[clamp(32px,5vw,72px)] uppercase leading-none">
           <span className="text-[#AC40FF]">LinkedIn at the center. </span>
           <span className="text-white">Three parts, one motion.</span>
         </h2>
 
-        <p className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-[816px] text-center font-poppins text-[clamp(16px,1.3889vw,20px)] text-white">
+        <p className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-204 text-center font-poppins text-[clamp(16px,1.3889vw,20px)] text-white">
           Every client runs the same engine, and it lives on LinkedIn. Build
           the authority, start the conversations, convert them to calls.
           Cold calling and email wrap around it. Skip a part and you leave
           money on the table.
         </p>
 
-        <div className="relative z-10 mx-auto mt-[clamp(56px,7.6389vw,110px)] aspect-588/355 w-full max-w-[588px]">
+        <div className="relative z-10 mx-auto mt-[clamp(56px,7.6389vw,110px)] aspect-588/355 w-full max-w-147">
           {CARDS.map((card, index) => (
             <GrowthCard
               key={card.number}
@@ -217,7 +217,7 @@ export default function GrowthEngineSection() {
         alt=""
         width={1441}
         height={235}
-        className="pointer-events-none absolute inset-x-0 bottom-[clamp(16px,3vw,48px)] mx-auto w-[90%] max-w-[1441px] select-none"
+        className="pointer-events-none absolute inset-x-0 bottom-[clamp(16px,3vw,48px)] mx-auto w-[90%] max-w-360.25 select-none"
       />
     </section>
   );
