@@ -73,13 +73,19 @@ export default function BeanstalkSystemSection() {
         height={1164}
         className="pointer-events-none absolute -bottom-87.5 left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-9999"
       />
-
-      <h2 className="relative z-10 w-full text-center font-anton-sc text-[clamp(40px,11.5972vw,167px)] uppercase leading-none text-black">
+      <div
+      className="pointer-events-none absolute left-[clamp(120px,14.375vw,207px)] top-[clamp(200px,10vw,360px)] h-[clamp(200px,29.7917vw,429px)] w-[clamp(500px,69.9306vw,1007px)]"
+      style={{
+        background:
+        "linear-gradient(180deg, #F0F0EA 0%, rgba(240, 240, 234, 0) 100%)",
+      }}
+/>
+      <h2 className="relative z-10 w-full origin-center scale-140 text-center font-anton-sc text-[clamp(40px,8vw,160px)] uppercase leading-[100%] text-black">
         The Beanstalk System
       </h2>
 
       <div className="relative z-10 mx-auto max-w-325 px-[clamp(24px,5.5556vw,80px)] text-center">
-        <div className="mt-[clamp(24px,3.3333vw,56px)]">
+        <div className="mt-[clamp(24px,10.213vw,141px)]">
           <p className="font-anton-sc text-[clamp(22px,5.4167vw,78px)] uppercase leading-none text-black">
             Five Plantings. One Unstoppable
           </p>

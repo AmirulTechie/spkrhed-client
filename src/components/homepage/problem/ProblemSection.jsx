@@ -52,10 +52,10 @@ function ProblemCard({ card }) {
       >
         {card.label}
       </span>
-      <h3 className="mt-[clamp(20px,2.8472vw,41px)] max-w-xl font-anton-sc text-[clamp(28px,4.1667vw,60px)] uppercase leading-[0.97] text-[#101010]">
+      <h3 className="mt-[clamp(20px,2.8472vw,41px)] max-w-md font-anton-sc text-[clamp(28px,4.1667vw,60px)] uppercase leading-[0.97] text-[#101010]">
         {card.heading}
       </h3>
-      <p className="mt-[clamp(16px,2.1528vw,31px)] max-w-sm font-poppins text-[clamp(14px,1.3889vw,20px)] font-medium leading-[1.1] text-[#101010]">
+      <p className="mt-[clamp(16px,2.1528vw,31px)] max-w-md font-poppins text-[clamp(14px,1.3889vw,20px)] font-medium leading-[1.1] text-[#101010]">
         {card.description}
       </p>
 
@@ -143,7 +143,7 @@ export default function ProblemSection() {
         alt=""
         width={200}
         height={200}
-        className="pointer-events-none absolute left-[80.26%] top-[20.89%] z-20 w-[clamp(60px,9.7014vw,140px)] -scale-x-100 rotate-12 select-none"
+        className="pointer-events-none absolute left-[70%] top-[7%] z-20 w-[clamp(60px,9.7014vw,140px)] rotate-360 select-none"
       />
       <Image
         src="/images/Home/leaf.png"
@@ -153,7 +153,7 @@ export default function ProblemSection() {
         className="pointer-events-none absolute left-[17.16%] top-[62%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none rotate-160"
       />
 
-      <div className="relative px-[clamp(32px,5.5556vw,80px)] py-[clamp(40px,6.9444vw,100px)]">
+      <div className="relative mx-auto max-w-360 py-[clamp(40px,6.9444vw,100px)]">
         <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,6.1111vw,88px)] gap-y-12 lg:grid-cols-[526fr_647fr]">
           <div>
             <div className="mb-4 flex items-center gap-3">
@@ -177,7 +177,7 @@ export default function ProblemSection() {
               <span className="block text-[#AC40FF]">from you.</span>
             </h2>
 
-            <p className="relative z-10 mt-8 max-w-md font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black top-50">
+            <p className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black top-50">
               You&apos;re the strategist, the creator, the sales team, and the
               closer. If you disappear for a week, so does your pipeline.
               That&apos;s not a business — that&apos;s a job you can never
