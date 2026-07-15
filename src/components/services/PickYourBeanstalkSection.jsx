@@ -44,7 +44,7 @@ export default function PickYourBeanstalkSection() {
         </h2>
 
         <div className="mt-[clamp(24px,4vw,58px)] flex flex-col gap-[clamp(20px,2.5vw,36px)] md:contents">
-          <p className="max-w-138.25 font-poppins text-[clamp(14px,1.5972vw,23px)] leading-[1.1] text-white uppercase md:absolute md:top-[23.3859%] md:left-[5%] md:w-[38.4028%] md:max-w-none">
+          <p className="max-w-40 font-poppins text-[clamp(14px,1.5972vw,23px)] leading-[1.1] text-white uppercase md:absolute md:top-[23.3859%] md:left-[5%] md:w-[38.4028%] md:max-w-none">
             Not sure which pieces you need? Most clients start with the core
             engine, then add a rung at a time as the pipeline compounds. Book
             a call and we will map the right starting point for you.
