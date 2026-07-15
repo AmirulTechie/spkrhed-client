@@ -103,7 +103,7 @@ export default function WhyNowClimbSection() {
       />
 
       <div className="relative mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
-        <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
           <div className="max-w-159">
             <div className="flex items-center gap-3">
               <Image
