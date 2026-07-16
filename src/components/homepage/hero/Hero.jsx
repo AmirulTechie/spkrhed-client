@@ -1,6 +1,54 @@
+"use client";
+
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+
+// Matches Loader.jsx's TOTAL_DURATION so the hero animation starts the
+// instant the preloader finishes sliding away.
+const LOADER_DURATION = 3.5;
+
+const LEFT_LINES = ["WATCH", "PLANT"];
+const RIGHT_LINES = ["THE SEED", "THE CLIENTS"];
+
+function splitChars(line) {
+  return line.split("").map((char, i) => (
+    <span key={i} className="inline-block opacity-0">
+      {char === " " ? " " : char}
+    </span>
+  ));
+}
 
 export default function Hero() {
+  const leftRef = useRef(null);
+  const rightRef = useRef(null);
+  const climbRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const chars = [
+      ...leftRef.current.querySelectorAll("span span"),
+      ...rightRef.current.querySelectorAll("span span"),
+    ];
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: LOADER_DURATION });
+
+      tl.to(chars, {
+        opacity: 1,
+        duration: 0.02,
+        stagger: 0.035,
+        ease: "none",
+      }).fromTo(
+        climbRef.current,
+        { yPercent: 120, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+        "-=0.2"
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black">
       <Image
@@ -41,19 +89,32 @@ export default function Hero() {
 
         <div className="flex flex-col items-center">
           <div className="relative w-full h-[calc(2*clamp(48px,6.9444vw,160px))]">
-            <div className="absolute top-0 right-[calc(50%+clamp(24px,5.55vw,90px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
-              <span>WATCH</span>
-              <span>PLANT</span>
+            <div
+              ref={leftRef}
+              className="absolute top-0 right-[calc(50%+clamp(24px,5.55vw,90px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none"
+            >
+              {LEFT_LINES.map((line) => (
+                <span key={line}>{splitChars(line)}</span>
+              ))}
             </div>
-            <div className="absolute top-0 left-[calc(50%+clamp(24px,5.55vw,90px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
-              <span>THE SEED</span>
-              <span>THE CLIENTS</span>
+            <div
+              ref={rightRef}
+              className="absolute top-0 left-[calc(50%+clamp(24px,5.55vw,90px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none"
+            >
+              {RIGHT_LINES.map((line) => (
+                <span key={line}>{splitChars(line)}</span>
+              ))}
             </div>
           </div>
 
-          <p className="-mt-[clamp(12px,2.2222vw,50px)] font-playwrite-us-trad text-[clamp(40px,5.9028vw,130px)] text-[#AC40FF] z-9999">
-            climb to you
-          </p>
+          <div className="-mt-[clamp(12px,2.2222vw,50px)] overflow-hidden">
+            <p
+              ref={climbRef}
+              className="font-playwrite-us-trad text-[clamp(40px,5.9028vw,130px)] text-[#AC40FF] z-9999 opacity-0"
+            >
+              climb to you
+            </p>
+          </div>
         </div>
       </div>
     </section>

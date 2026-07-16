@@ -135,11 +135,11 @@ export default function TestimonialsSection() {
       />
 
       <Image
-        src="/images/Home/tree-branch-1.png"
+        src="/images/Home/tree-branch-small.png"
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute left-[-30%] top-[8%] z-0 w-[40%] max-w-none select-none rotate-30 "
+        className="pointer-events-none absolute left-[-9%] top-[25%] z-0 w-[20%] max-w-none select-none"
       />
 
       <Image
