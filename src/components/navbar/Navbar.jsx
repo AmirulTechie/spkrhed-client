@@ -157,7 +157,7 @@ export default function Navbar() {
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-50"
+      className="fixed inset-x-0 top-0 z-99999"
       initial={false}
       animate={{ y: isHidden ? "-100%" : "0%" }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}

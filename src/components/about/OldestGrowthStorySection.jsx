@@ -9,62 +9,62 @@ const INACTIVE_FILTER = "grayscale(1) brightness(0.35)";
 
 const CARDS = [
   {
-    id: "cow",
-    title: "The Cow",
-    quote: "“Stop trading your best hours for nothing.”",
-    body: "Cold calls, dead referrals, a site that just sits there. Most founders keep feeding their last good asset, their time, into channels that quit paying. That ends here.",
-    image: "/images/services/why-now/cow.png",
-    imageWidthPct: 52.4,
-    textMaxWidthPct: 44,
+    id: "magic-beans",
+    title: "The Magic Beans",
+    quote: "“A small bet that changes everything.”",
+    body: "Most founders pass on the unglamorous move. The few who plant it own the channel everyone else ignored. For you, that is LinkedIn done right.",
+    image: "/images/about/oldest-growth/handful.png",
+    imageWidthPct: 55.5,
+    textMaxWidthPct: 41,
   },
   {
-    id: "overnight-climb",
-    title: "The Overnight Climb",
-    quote: "“It grows while you sleep.”",
-    body: "The system runs whether you are on a call, on a flight, or off the clock. Conversations get started and nurtured in the background, every single day.",
-    image: "/images/services/why-now/moon.png",
-    imageWidthPct: 54.3,
-    textMaxWidthPct: 42,
+    id: "beanstalk-branch",
+    title: "The Beanstalk",
+    quote: "“Watch it grow overnight.”",
+    body: "One system, planted once, that climbs on its own. Compounding conversations and steady upward momentum, a real pipeline instead of a monthly scramble.",
+    image: "/images/about/oldest-growth/tree-branch.png",
+    imageWidthPct: 43.4,
+    textMaxWidthPct: 53,
   },
   {
-    id: "clouds",
-    title: "The Clouds",
-    quote: "“Your market is higher than you think.”",
-    body: "The buyers worth the most sit above where your competitors bother to look. We climb past the noise and start the conversations they never reach.",
-    image: "/images/services/why-now/cloud.png",
-    imageWidthPct: 54.4,
-    textMaxWidthPct: 42,
+    id: "singing-harp",
+    title: "The Singing Harp",
+    quote: "“Content that calls them to you.”",
+    body: "The harp sang and people came. Your content does the same. Authority that pulls the right buyers toward you before you ever send a message.",
+    image: "/images/about/oldest-growth/harmony.png",
+    imageWidthPct: 50.9,
+    textMaxWidthPct: 45,
   },
   {
-    id: "treasure-room",
-    title: "The Treasure Room",
-    quote: "“The access is already yours.”",
-    body: "The opportunities you want are often one introduction deep inside networks you can already reach. We unlock what is sitting right there waiting.",
-    image: "/images/services/why-now/door.png",
-    imageWidthPct: 56.5,
-    textMaxWidthPct: 40,
+    id: "beanstalk-duck",
+    title: "The Beanstalk",
+    quote: "“Watch it grow overnight.”",
+    body: "One system, planted once, that climbs on its own. Compounding conversations and steady upward momentum, a real pipeline instead of a monthly scramble.",
+    image: "/images/about/oldest-growth/duck.png",
+    imageWidthPct: 57.1,
+    textMaxWidthPct: 39,
   },
   {
-    id: "fee-fi-fo-fum",
-    title: "Fee-Fi-Fo-Fum",
-    quote: "“Loud is not the same as strong.”",
-    body: "Your noisiest competitors win on volume, not precision. A sharper message to the right person beats a louder one to everyone, every time.",
-    image: "/images/services/why-now/speaker.png",
-    imageWidthPct: 64.2,
-    textMaxWidthPct: 33,
+    id: "giant",
+    title: "The Giant",
+    quote: "“The loud ones fall first.”",
+    body: "Market incumbents look unbeatable until you climb past them. Noise is not strength. Precision beats volume every time.",
+    image: "/images/about/oldest-growth/castle.png",
+    imageWidthPct: 43.9,
+    textMaxWidthPct: 52,
   },
   {
-    id: "jacks-courage",
-    title: "Jack’s Courage",
-    quote: "“Someone has to make the climb.”",
-    body: "Every result starts with the decision to go. We do not sell magic. We hand you the beans, then climb right alongside you.",
-    image: "/images/services/why-now/compass.png",
-    imageWidthPct: 37.7,
-    textMaxWidthPct: 58,
+    id: "axe",
+    title: "The Axe",
+    quote: "“Cut what isn’t working.”",
+    body: "Every climb needs one decisive move. The cold calls, the dead referrals, the site that just sits there. The old way goes so the new one can grow.",
+    image: "/images/about/oldest-growth/axe.png",
+    imageWidthPct: 68.2,
+    textMaxWidthPct: 28,
   },
 ];
 
-export default function WhyNowClimbSection() {
+export default function OldestGrowthStorySection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasHovered, setHasHovered] = useState(false);
   const contentRefs = useRef([]);
@@ -94,17 +94,9 @@ export default function WhyNowClimbSection() {
 
   return (
     <section className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]">
-      <Image
-        src="/images/small-spots.png"
-        alt=""
-        width={2880}
-        height={1596}
-        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover opacity-80"
-      />
-
-      <div className="relative mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
+      <div className="relative mx-auto max-w-11/12 px-8 sm:px-12 lg:px-16">
         <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
-          <div className="max-w-159">
+          <div className=" max-w-112.5">
             <div className="flex items-center gap-3">
               <Image
                 src="/images/Home/banner-bullet.png"
@@ -114,20 +106,20 @@ export default function WhyNowClimbSection() {
                 className="h-[clamp(10px,1.0417vw,15px)] w-[clamp(10px,1.0417vw,15px)]"
               />
               <span className="font-poppins text-[clamp(14px,1.5vw,21px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
-                Why Now &middot; The Climb
+                Our Story
               </span>
             </div>
             <h2 className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[0.9] text-white">
-              Most founders are still trading the cow.
+              The oldest growth story there is.
             </h2>
           </div>
 
-          <p className="max-w-108.5 font-poppins text-[clamp(11px,0.9028vw,13px)] leading-relaxed text-white uppercase md:text-right">
-            Before SPKRHED, growth means burning your best hours on cold
-            calls, dead referrals, and a website that just sits there.
-            Meanwhile the buyers worth the most are sitting one climb above
-            where your competitors bother to look. Here is what changes the
-            moment you plant the beans.
+          <p className="max-w-190 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.3] text-white/70 text-start">
+            A boy trades what little he has for a handful of beans everyone
+            swears are worthless. Overnight, they climb into a kingdom of
+            gold. That is the whole idea behind SPKRHED. The right small
+            investment, planted well, grows further than anyone expects.
+            Here is how the story maps to the work we do for you.
           </p>
         </div>
 

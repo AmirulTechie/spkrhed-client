@@ -37,7 +37,7 @@ export default function AboutHero() {
           className="h-auto w-[clamp(220px,32.5694vw,469px)]"
         />
 
-        <p className="mt-[clamp(12px,1.4583vw,21px)] max-w-[602px] font-poppins text-[clamp(15px,1.5972vw,23px)] leading-[1.124] text-white/60">
+        <p className="mt-[clamp(12px,1.4583vw,21px)] max-w-150.5 font-poppins text-[clamp(15px,1.5972vw,23px)] leading-[1.124] text-white/60">
           SPKRHED is not another agency. We are a movement to put the human
           back into how companies grow. While the rest of the market drowns
           buyers in bots and cold spam, we are building something rare and
