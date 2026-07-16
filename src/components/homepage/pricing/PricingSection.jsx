@@ -115,7 +115,7 @@ function PricingCard({ tier }) {
         }`}
       >
         <span className="inline-flex w-fit items-center gap-1 rounded-full bg-black px-[clamp(8px,0.6944vw,10px)] py-[clamp(4px,0.3889vw,6px)]">
-          <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-[#AC40FF]" />
+          <span className="h-1.25 w-1.25 shrink-0 rounded-full bg-[#AC40FF]" />
           <span
             className={`font-poppins text-[clamp(11px,1.0417vw,15px)] font-semibold leading-none ${
               highlight ? "text-[#AC40FF]" : "text-white"
