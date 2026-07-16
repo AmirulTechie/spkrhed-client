@@ -38,7 +38,7 @@ export default function Loader() {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-black"
+      className="fixed inset-0 z-1000000 flex items-center justify-center bg-black"
       aria-hidden="true"
     >
       <Image

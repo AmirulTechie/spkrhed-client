@@ -41,11 +41,11 @@ export default function Hero() {
 
         <div className="flex flex-col items-center">
           <div className="relative w-full h-[calc(2*clamp(48px,6.9444vw,160px))]">
-            <div className="absolute top-0 right-[calc(50%+clamp(24px,6.4236vw,130px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
+            <div className="absolute top-0 right-[calc(50%+clamp(24px,5.55vw,90px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
               <span>WATCH</span>
               <span>PLANT</span>
             </div>
-            <div className="absolute top-0 left-[calc(50%+clamp(24px,6.4236vw,130px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
+            <div className="absolute top-0 left-[calc(50%+clamp(24px,5.55vw,90px))] flex flex-col items-start whitespace-nowrap font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none">
               <span>THE SEED</span>
               <span>THE CLIENTS</span>
             </div>
