@@ -9,7 +9,7 @@ export default function FirstStepBannerSection() {
         fill
         className="object-cover"
       />
-
+    
       {/* Full-height overlay: dark at top, fading to transparent by mid/lower banner */}
       <div
         aria-hidden
@@ -35,7 +35,7 @@ export default function FirstStepBannerSection() {
         <span className="text-[#AC40FF]">begins with the first step.</span>
       </p>
 
-      <p className="absolute top-[78.18%] left-[5.07%] w-[61.18%] font-poppins text-[clamp(15px,1.5278vw,22px)] leading-[1.18] text-white/70">
+      <p className="absolute top-[78.18%] left-[5.07%] w-[48%] font-poppins text-[clamp(15px,1.5278vw,22px)] leading-[1.18] text-white/70">
         Every client we have ever grown started in exactly one place. One
         profile, rebuilt. One honest message, sent. One conversation that
         became a call, then a contract, then a referral. We are not here to

@@ -8,14 +8,16 @@ const CARD_QUOTE_CLASS =
   "font-poppins text-[clamp(13px,1.25vw,18px)] font-medium uppercase leading-[1.22] text-white";
 const CARD_ATTRIBUTION_CLASS =
   "font-poppins text-[clamp(13px,1.3194vw,19px)] uppercase leading-[1.16] text-white/60";
+const NUMBER_CLASS =
+  "absolute pointer-events-none select-none bg-linear-to-b from-[rgba(255,255,255,0.12)] to-transparent bg-clip-text font-anton-sc text-[clamp(76px,18.4722vw,266px)] leading-none text-transparent";
 
 const PRINCIPLES = [
   {
     id: "conscious-collaboration",
-    number: "/images/about/number-01.svg",
+    digits: "01",
     align: "left",
     box: { left: "47.29%", top: "29.24%", width: "43.75%", height: "21.92%" },
-    numberBox: { left: "20.21%", top: "34.92%", width: "22.5%", height: "16.24%" },
+    numberBox: { left: "20.21%", top: "34.92%" },
     title: { left: "49.93%", top: "30.89%", width: "31.39%" },
     body: { left: "49.93%", top: "37.48%", width: "34.58%" },
     quote: { left: "49.93%", top: "41.03%", width: "38.47%" },
@@ -29,10 +31,10 @@ const PRINCIPLES = [
   },
   {
     id: "purposeful-process",
-    number: "/images/about/number-02.svg",
+    digits: "02",
     align: "right",
     box: { left: "9.58%", top: "53.66%", width: "43.75%", height: "21.92%" },
-    numberBox: { left: "57.01%", top: "59.34%", width: "28.54%", height: "16.24%" },
+    numberBox: { left: "57.01%", top: "59.34%" },
     title: { left: "18.61%", top: "55.98%", width: "31.39%" },
     body: { left: "15.42%", top: "62.58%", width: "34.58%" },
     quote: { left: "11.53%", top: "66.12%", width: "38.47%" },
@@ -46,10 +48,10 @@ const PRINCIPLES = [
   },
   {
     id: "exceeded-expectations",
-    number: "/images/about/number-03.svg",
+    digits: "03",
     align: "left",
     box: { left: "47.29%", top: "78.08%", width: "43.75%", height: "21.92%" },
-    numberBox: { left: "14.375%", top: "83.76%", width: "28.33%", height: "16.24%" },
+    numberBox: { left: "14.375%", top: "83.76%" },
     title: { left: "49.93%", top: "81.07%", width: "31.39%" },
     body: { left: "49.93%", top: "87.67%", width: "34.58%" },
     quote: { left: "49.93%", top: "91.21%", width: "38.47%" },
@@ -64,26 +66,22 @@ const PRINCIPLES = [
 ];
 
 export default function ThreePrinciplesSection() {
+  const newLocal = "block  w-[824px] h-36 bg-gradient-to-r from-purple-500 to-stone-950/0";
   return (
     <section className="relative aspect-1440/1638 w-full overflow-hidden bg-black">
-      <div className="absolute left-[35.9%] top-[0.98%] size-[clamp(8px,0.9028vw,13px)]">
+      <div className="absolute left-[39.9%] top-[0.98%] size-[clamp(8px,0.9028vw,13px)]">
         <Image src="/images/about/holds-together-icon.png" alt="" fill className="object-contain" />
       </div>
-      <p className="absolute left-[37.22%] top-0 whitespace-nowrap font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase leading-[normal] text-[rgba(122,122,122,0.4)]">
+      <p className="absolute left-[40.22%] top-0 whitespace-nowrap font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase leading-[normal] text-[rgba(122,122,122,0.4)]">
         What holds it together
       </p>
 
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-[21.39%] top-[11.78%] h-[8.85%] w-[57.22%] bg-linear-to-r from-[#ac40ff] to-[rgba(15,15,15,0)]"
-      />
-
-      <p className="absolute left-[17.08%] top-[3.36%] w-[65.9%] text-center font-anton-sc text-[clamp(40px,9.7222vw,140px)] uppercase leading-none text-white">
+      <p className="absolute left-[17.08%] top-[3.36%] w-[65.9%] text-center font-anton-sc text-[clamp(40px,9.7222vw,140px)] uppercase leading-none text-white flex flex-col justify-center items-center">
         <span className="block">Three principles.</span>
-        <span className="block">No exceptions.</span>
+        <span className={newLocal}>No exceptions.</span>
       </p>
 
-      <p className="absolute left-[25.63%] top-[21.06%] w-[48.82%] text-center font-poppins text-[clamp(14px,1.6667vw,24px)] uppercase leading-none text-white">
+      <p className="absolute left-[32%] top-[17.06%] max-w-[703px] text-center font-poppins text-[clamp(14px,1.6667vw,24px)] uppercase leading-none text-white">
         Everything we do runs through these. They are how the movement keeps
         its promise, on every account, every day.
       </p>
@@ -96,16 +94,9 @@ export default function ThreePrinciplesSection() {
             style={principle.box}
           />
 
-          <div className="absolute" style={principle.numberBox}>
-            <Image
-              src={principle.number}
-              alt=""
-              aria-hidden
-              fill
-              unoptimized
-              className="object-contain"
-            />
-          </div>
+          <p aria-hidden className={NUMBER_CLASS} style={principle.numberBox}>
+            {principle.digits}
+          </p>
 
           <p
             className={`absolute ${CARD_TITLE_CLASS} ${
