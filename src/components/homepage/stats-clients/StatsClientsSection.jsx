@@ -111,7 +111,7 @@ export default function StatsClientsSection() {
             </div>
           </div>
 
-          <p className="font-anton-sc text-[clamp(18px,2.2222vw,51px)] uppercase leading-[1.275] text-white">
+          <p className="font-anton-sc text-[clamp(18px,2.2222vw,51px)] leading-[1.275] text-white">
             {COPY_LINES.map((line, lineIndex) => (
               <span key={lineIndex} className="lg:block">
                 {line.split(" ").map((word) => {
