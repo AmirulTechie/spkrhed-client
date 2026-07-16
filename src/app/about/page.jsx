@@ -3,6 +3,7 @@ import MovementSection from "@/components/about/MovementSection";
 import OldestGrowthStorySection from "@/components/about/OldestGrowthStorySection";
 import FirstStepBannerSection from "@/components/about/FirstStepBannerSection";
 import ThreePrinciplesSection from "@/components/about/ThreePrinciplesSection";
+import TakeFirstStepSection from "@/components/about/TakeFirstStepSection";
 
 export const metadata = {
   title: "About | SPKRHED",
@@ -24,6 +25,7 @@ const AboutPage = () => {
       <OldestGrowthStorySection />
       <FirstStepBannerSection />
       <ThreePrinciplesSection />
+      <TakeFirstStepSection />
     </>
   );
 };
