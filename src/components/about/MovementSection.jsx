@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function MovementSection() {
   return (
-    <section className="relative overflow-hidden bg-[#0f0f0f] pt-[clamp(12px,2.0833vw,30px)] pb-[clamp(60px,8.3333vw,120px)]">
+    <section className="relative overflow-hidden pt-[clamp(12px,2.0833vw,30px)] pb-[clamp(60px,8.3333vw,120px)]">
       <Image
         src="/images/about/spkrhed-bg-wordmark.svg"
         alt=""
@@ -23,7 +23,7 @@ export default function MovementSection() {
             }}
           />
 
-          <div className="pointer-events-none absolute left-[-14%] top-[34%] z-10 w-[48%] rotate-[132.62deg] select-none opacity-95">
+          <div className="pointer-events-none absolute left-[-32%] top-[45%] z-10 w-[50%] rotate-[132.62deg] select-none opacity-95">
             <Image
               src="/images/about/tree-vine.png"
               alt=""
@@ -32,7 +32,7 @@ export default function MovementSection() {
               className="h-auto w-full"
             />
           </div>
-          <div className="pointer-events-none absolute right-[-15%] top-[26%] z-10 w-[48%] rotate-[132.62deg] select-none opacity-95">
+          <div className="pointer-events-none absolute right-[-25%] top-[15%] z-10 w-[50%] select-none opacity-95 rotate-110">
             <Image
               src="/images/about/tree-vine.png"
               alt=""
@@ -44,8 +44,8 @@ export default function MovementSection() {
 
           <div className="absolute inset-0 z-20">
             <p className="absolute left-[17.70%] top-[7.77%] w-[64.53%] text-center font-anton-sc text-[clamp(26px,5.5556vw,80px)] uppercase leading-[0.95]">
-              <span className="text-[#101010]">We didn&apos;t start an agency.</span>{" "}
-              <span className="text-[#AC40FF]">We started a movement.</span>
+              <span className="text-[#101010]">We didn&apos;t start an <br /> agency.</span>{" "}
+              <span className="text-[#AC40FF]">We started a <br /> movement.</span>
             </p>
 
             <div
@@ -65,7 +65,7 @@ export default function MovementSection() {
               className="absolute left-0 top-[10.61%] h-auto w-full"
             />
 
-            <h3 className="absolute left-[5.49%] top-[69.83%] w-[39.95%] font-poppins text-[clamp(20px,2.9167vw,42px)] font-bold uppercase leading-[0.88] text-[#101010]">
+            <h3 className="absolute left-[5.49%] top-[69.83%] w-[39.95%] font-poppins text-[clamp(20px,2.9167vw,42px)] font-bold uppercase leading-[0.88] text-[#101010] max-w-129.25">
               The internet promised connection and delivered noise.
             </h3>
 
