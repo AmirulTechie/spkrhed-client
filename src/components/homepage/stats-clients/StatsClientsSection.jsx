@@ -25,16 +25,16 @@ const STATS = [
 // (measured at the 1440px design frame; min/max ≈ 0.6x/1.6x).
 const LOGO_ROWS = [
   [
-    { src: "/images/clients-logo/logo-01.png", alt: "RubyMine", w: 236, h: 42, width: "w-[clamp(70px,8.125vw,187px)]" },
-    { src: "/images/clients-logo/logo-02.png", alt: "Spotify", w: 201, h: 66, width: "w-[clamp(56px,6.4583vw,149px)]" },
-    { src: "/images/clients-logo/logo-03.png", alt: "Lexus", w: 171, h: 77, width: "w-[clamp(55px,6.3194vw,146px)]" },
-    { src: "/images/clients-logo/logo-05.png", alt: "Coca-Cola", w: 194, h: 64, width: "w-[clamp(53px,6.1806vw,142px)]" },
+    { src: "/images/clients-logo/logo-01.svg", alt: "RubyMine", w: 120, h: 23, width: "w-[clamp(72px,8.3104vw,191px)]" },
+    { src: "/images/clients-logo/logo-02.svg", alt: "Spotify", w: 102, h: 35, width: "w-[clamp(61px,7.1174vw,164px)]" },
+    { src: "/images/clients-logo/logo-03.svg", alt: "Lexus", w: 87, h: 40, width: "w-[clamp(52px,6.0583vw,140px)]" },
+    { src: "/images/clients-logo/logo-05.svg", alt: "Coca-Cola", w: 101, h: 35, width: "w-[clamp(61px,7.0049vw,161px)]" },
   ],
   [
-    { src: "/images/clients-logo/logo-04.png", alt: "NHL on TNT", w: 236, h: 70, width: "w-[clamp(68px,7.8472vw,181px)]" },
-    { src: "/images/clients-logo/logo-06.png", alt: "Tim Hortons", w: 236, h: 48, width: "w-[clamp(70px,8.125vw,187px)]" },
-    { src: "/images/clients-logo/logo-07.png", alt: "Mercedes-Benz", w: 145, h: 30, width: "w-[clamp(83px,9.5833vw,221px)]" },
-    { src: "/images/clients-logo/logo-08.png", alt: "Chevrolet", w: 449, h: 217, width: "w-[clamp(54px,6.25vw,144px)]" },
+    { src: "/images/clients-logo/logo-04.svg", alt: "NHL on TNT", w: 120, h: 37, width: "w-[clamp(72px,8.3097vw,191px)]" },
+    { src: "/images/clients-logo/logo-06.svg", alt: "Tim Hortons", w: 120, h: 26, width: "w-[clamp(72px,8.3083vw,191px)]" },
+    { src: "/images/clients-logo/logo-07.svg", alt: "Mercedes-Benz", w: 146, h: 32, width: "w-[clamp(88px,10.1597vw,234px)]" },
+    { src: "/images/clients-logo/logo-08.svg", alt: "Chevrolet", w: 88, h: 42, width: "w-[clamp(53px,6.1118vw,141px)]" },
   ],
 ];
 
@@ -155,7 +155,7 @@ export default function StatsClientsSection() {
 
           <div className="flex flex-col gap-y-[clamp(32px,4.5139vw,104px)]">
             {LOGO_ROWS.map((row, rowIndex) => (
-              <div key={rowIndex} className="grid grid-cols-4 items-center">
+              <div key={rowIndex} className="flex items-center justify-between">
                 {row.map((logo) => (
                   <Image
                     key={logo.src}
@@ -163,7 +163,7 @@ export default function StatsClientsSection() {
                     alt={logo.alt}
                     width={logo.w}
                     height={logo.h}
-                    className={`h-auto justify-self-start opacity-60 transition-all duration-300 ease-out hover:scale-110 hover:opacity-100 hover:brightness-0 hover:invert ${logo.width}`}
+                    className={`h-auto opacity-60 transition-all duration-300 ease-out hover:scale-110 hover:opacity-100 ${logo.width} cursor-pointer`}
                   />
                 ))}
               </div>

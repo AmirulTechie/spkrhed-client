@@ -11,7 +11,7 @@ export default function DiscoveryCallSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2-[160%] max-w-none -translate-x-1/2 select-none lglg:bottom-[-35%]g:w-[160%]"
+        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2 max-w-none -translate-x-1/2 select-none lg:bottom-[-55%] lg:w-[160%]"
       />
 
       {/* Desktop — pixel-matched to the Figma canvas (1440x860) */}
@@ -21,7 +21,7 @@ export default function DiscoveryCallSection() {
           alt=""
           width={1244}
           height={1244}
-          className="pointer-events-none absolute left-[60.42%] top-[43.26%] z-1 w-[43.19%] select-none"
+          className="pointer-events-none absolute left-[60.42%] top-[35%] z-1 w-[43.19%] select-none"
         />
 
         <Image
@@ -43,7 +43,7 @@ export default function DiscoveryCallSection() {
             You&rsquo;ll Never Get Back
           </p>
 
-          <p className="mt-[clamp(16px,2.2222vw,32px)] max-w-[34vw] font-poppins text-[clamp(14px,1.3194vw,19px)] font-semibold leading-[1.1] text-black/70">
+          <p className="mt-[clamp(16px,2.2222vw,32px)] max-w-121.75 font-poppins text-[clamp(14px,1.3194vw,19px)] font-semibold leading-[110%] text-black/70">
             One call. Within 30 days, your pipeline runs on two channels
             instead of zero. Qualified prospects book calls whether you
             posted today or not.

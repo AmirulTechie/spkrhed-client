@@ -81,7 +81,7 @@ export default function ThreePrinciplesSection() {
         <span className={newLocal}>No exceptions.</span>
       </p>
 
-      <p className="absolute left-[32%] top-[17.06%] max-w-[703px] text-center font-poppins text-[clamp(14px,1.6667vw,24px)] uppercase leading-none text-white">
+      <p className="absolute left-[32%] top-[17.06%] max-w-175.75 text-center font-poppins text-[clamp(14px,1.6667vw,24px)] uppercase leading-none text-white">
         Everything we do runs through these. They are how the movement keeps
         its promise, on every account, every day.
       </p>
