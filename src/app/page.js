@@ -13,6 +13,21 @@ import TestimonialsSection from "@/components/homepage/testimonials/Testimonials
 import DiscoveryCallSection from "@/components/homepage/discovery-call/DiscoveryCallSection";
 import CastleSection from "@/components/homepage/castle/CastleSection";
 
+export const metadata = {
+  title: "SPKRHED",
+  description:
+    "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+  openGraph: {
+    title: "SPKRHED",
+    description:
+      "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+    images: ["/images/Home/hero-banner.png"],
+  },
+};
+
+
+
+
 export default function Home() {
   return (
     <>

@@ -3,8 +3,11 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
 import EngineCard from "./EngineCard";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CARDS = {
   foundation: {
@@ -79,11 +82,41 @@ export default function FoundationAmplifySection() {
   const [frontId, setFrontId] = useState("foundation");
   const backId = frontId === "foundation" ? "amplify" : "foundation";
 
+  const sectionRef = useRef(null);
+  const cardsWrapperRef = useRef(null);
   const frontRef = useRef(null);
   const peekRightRef = useRef(null);
   const peekLeftRef = useRef(null);
   const animatingRef = useRef(false);
   const mountedRef = useRef(false);
+
+  // One-time entrance, played the moment the section reaches the viewport:
+  // the three cards pop in one by one from the left, left-to-right in the
+  // order they sit on screen (peek-left, front, peek-right), each landing
+  // exactly on the uneven/angled resting spot its own style already sets —
+  // this only animates in from an offset, it never touches final position.
+  useLayoutEffect(() => {
+    const cards = [peekLeftRef.current, frontRef.current, peekRightRef.current];
+
+    const ctx = gsap.context(() => {
+      gsap.set(cards, { xPercent: -40, opacity: 0 });
+
+      gsap.to(cards, {
+        xPercent: 0,
+        opacity: 1,
+        duration: 0.7,
+        ease: "power3.out",
+        stagger: 0.25,
+        scrollTrigger: {
+          trigger: cardsWrapperRef.current,
+          start: "top 60%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   useLayoutEffect(() => {
     if (!mountedRef.current) {
@@ -124,7 +157,10 @@ export default function FoundationAmplifySection() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-black pt-[clamp(94px,25.3472vw,365px)] pb-[clamp(104px,28.3333vw,408px)]">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-black pt-[clamp(94px,25.3472vw,365px)] pb-[clamp(104px,28.3333vw,408px)]"
+    >
       <Image
         src="/images/big-branch.png"
         alt=""
@@ -151,6 +187,7 @@ export default function FoundationAmplifySection() {
 
       <div className="relative mx-auto max-w-300">
         <div
+          ref={cardsWrapperRef}
           className="relative"
           style={{ minHeight: "clamp(320px,35.625vw,513px)" }}
         >
