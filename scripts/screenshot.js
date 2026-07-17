@@ -77,18 +77,22 @@ async function main() {
 
     if (selector) {
       await page.waitForSelector(selector, { timeout: 10000 });
-      const box = await page.evaluate((sel) => {
-        const el = document.querySelector(sel);
-        if (!el) return null;
-        const rect = el.getBoundingClientRect();
-        return { top: rect.top + window.scrollY, height: rect.height };
+      // Puppeteer's `clip` is relative to the full document, not the
+      // current scroll position — so no scrolling is needed at all, which
+      // sidesteps both the Lenis-fights-scrollIntoView problem and the old
+      // bug where resizing the viewport to fit the element reflowed any
+      // h-screen/100vh ancestor earlier on the page and shifted everything
+      // below it before the shot was taken.
+      const clip = await page.evaluate((sel) => {
+        const r = document.querySelector(sel).getBoundingClientRect();
+        return {
+          x: r.left + window.scrollX,
+          y: r.top + window.scrollY,
+          width: r.width,
+          height: r.height,
+        };
       }, selector);
-      if (!box) throw new Error(`Selector not found: ${selector}`);
-
-      await page.setViewport({ width: 1440, height: Math.ceil(box.height) + 100 });
-      await page.evaluate((top) => window.scrollTo(0, top), box.top);
-      await new Promise((r) => setTimeout(r, 300));
-      await page.screenshot({ path: outFile });
+      await page.screenshot({ path: outFile, clip });
     } else {
       await page.screenshot({ path: outFile, fullPage: true });
     }

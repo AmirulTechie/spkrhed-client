@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ArrowRight } from "lucide-react";
 import EngineCard from "./EngineCard";
 
 const CARDS = {
@@ -123,25 +124,32 @@ export default function FoundationAmplifySection() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]">
+    <section className="relative overflow-hidden bg-black pt-[clamp(94px,25.3472vw,365px)] pb-[clamp(104px,28.3333vw,408px)]">
       <Image
         src="/images/big-branch.png"
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute bottom-[-10%] left-[-15%] w-[65%] max-w-none -scale-x-100 select-none"
+        className="pointer-events-none absolute top-0 object-cover select-none"
+        style={{
+          left: "8vw",
+          width: "clamp(416px,98.6111vw,1420px)",
+          height: "clamp(423px,100vw,1440px)",
+        }}
       />
 
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 z-10 h-[30%] bg-linear-to-b from-black to-transparent"
+        className="absolute inset-x-0 top-0 z-10 bg-linear-to-b from-[#0f0f0f] to-[rgba(15,15,15,0)]"
+        style={{ height: "clamp(224px,55.2778vw,796px)" }}
       />
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 z-10 h-[30%] bg-linear-to-b from-transparent to-black"
+        className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-b from-transparent to-black"
+        style={{ height: "clamp(114px,28.3333vw,408px)" }}
       />
 
-      <div className="relative mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
+      <div className="relative mx-auto max-w-300">
         <div
           className="relative"
           style={{ minHeight: "clamp(320px,35.625vw,513px)" }}
@@ -187,7 +195,7 @@ export default function FoundationAmplifySection() {
             type="button"
             onClick={handleAdvance}
             aria-label="Swap the engine pillar shown up front"
-            className="absolute z-40 flex items-center justify-center rounded-full backdrop-blur-[5.5px]"
+            className="absolute z-40 flex items-center justify-center rounded-full border border-white/15 backdrop-blur-[5.5px] cursor-pointer hover:backdrop-blur-2xl"
             style={{
               width: "clamp(48px,5.9722vw,86px)",
               height: "clamp(48px,5.9722vw,86px)",
@@ -197,12 +205,9 @@ export default function FoundationAmplifySection() {
               backgroundColor: "rgba(15,15,15,0.5)",
             }}
           >
-            <Image
-              src="/images/services/engine-arrow-icon.svg"
-              alt=""
-              width={28}
-              height={28}
-              className="h-[35%] w-[35%]"
+            <ArrowRight
+              className="h-[35%] w-[35%] text-white"
+              strokeWidth={2}
             />
           </button>
         </div>

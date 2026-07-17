@@ -14,8 +14,8 @@ const CARDS = [
     quote: "“Stop trading your best hours for nothing.”",
     body: "Cold calls, dead referrals, a site that just sits there. Most founders keep feeding their last good asset, their time, into channels that quit paying. That ends here.",
     image: "/images/services/why-now/cow.png",
-    imageWidthPct: 52.4,
-    textMaxWidthPct: 44,
+    imageWidthPct: 46.9,
+    textMaxWidthPct: 70,
   },
   {
     id: "overnight-climb",
@@ -23,8 +23,8 @@ const CARDS = [
     quote: "“It grows while you sleep.”",
     body: "The system runs whether you are on a call, on a flight, or off the clock. Conversations get started and nurtured in the background, every single day.",
     image: "/images/services/why-now/moon.png",
-    imageWidthPct: 54.3,
-    textMaxWidthPct: 42,
+    imageWidthPct: 48.7,
+    textMaxWidthPct: 67,
   },
   {
     id: "clouds",
@@ -32,8 +32,8 @@ const CARDS = [
     quote: "“Your market is higher than you think.”",
     body: "The buyers worth the most sit above where your competitors bother to look. We climb past the noise and start the conversations they never reach.",
     image: "/images/services/why-now/cloud.png",
-    imageWidthPct: 54.4,
-    textMaxWidthPct: 42,
+    imageWidthPct: 48.9,
+    textMaxWidthPct: 70,
   },
   {
     id: "treasure-room",
@@ -41,8 +41,8 @@ const CARDS = [
     quote: "“The access is already yours.”",
     body: "The opportunities you want are often one introduction deep inside networks you can already reach. We unlock what is sitting right there waiting.",
     image: "/images/services/why-now/door.png",
-    imageWidthPct: 56.5,
-    textMaxWidthPct: 40,
+    imageWidthPct: 50.9,
+    textMaxWidthPct: 63,
   },
   {
     id: "fee-fi-fo-fum",
@@ -50,8 +50,8 @@ const CARDS = [
     quote: "“Loud is not the same as strong.”",
     body: "Your noisiest competitors win on volume, not precision. A sharper message to the right person beats a louder one to everyone, every time.",
     image: "/images/services/why-now/speaker.png",
-    imageWidthPct: 64.2,
-    textMaxWidthPct: 33,
+    imageWidthPct: 58.6,
+    textMaxWidthPct: 70,
   },
   {
     id: "jacks-courage",
@@ -59,8 +59,8 @@ const CARDS = [
     quote: "“Someone has to make the climb.”",
     body: "Every result starts with the decision to go. We do not sell magic. We hand you the beans, then climb right alongside you.",
     image: "/images/services/why-now/compass.png",
-    imageWidthPct: 37.7,
-    textMaxWidthPct: 58,
+    imageWidthPct: 56.4,
+    textMaxWidthPct: 57,
   },
 ];
 
@@ -102,7 +102,7 @@ export default function WhyNowClimbSection() {
         className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover opacity-80"
       />
 
-      <div className="relative mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
+      <div className="relative mx-auto max-w-11/12 px-8 sm:px-12 lg:px-16">
         <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
           <div className="max-w-159">
             <div className="flex items-center gap-3">
@@ -117,12 +117,12 @@ export default function WhyNowClimbSection() {
                 Why Now &middot; The Climb
               </span>
             </div>
-            <h2 className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[0.9] text-white">
+            <h2 className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[1.1] text-white">
               Most founders are still trading the cow.
             </h2>
           </div>
 
-          <p className="max-w-108.5 font-poppins text-[clamp(11px,0.9028vw,13px)] leading-relaxed text-white uppercase md:text-right">
+          <p className="max-w-156.25 font-poppins text-[clamp(11px,0.9028vw,13px)] leading-[1.23] text-white uppercase md:text-right">
             Before SPKRHED, growth means burning your best hours on cold
             calls, dead referrals, and a website that just sits there.
             Meanwhile the buyers worth the most are sitting one climb above
@@ -178,7 +178,7 @@ export default function WhyNowClimbSection() {
                   </div>
 
                   <div
-                    className="relative z-10 flex h-full flex-col pt-[clamp(8px,10cqh,24px)] pb-[clamp(6px,5cqh,14px)] pl-[clamp(12px,7cqw,44px)] pr-[clamp(12px,7cqw,44px)]"
+                    className="relative z-10 flex h-full flex-col pt-[clamp(10px,14.2cqh,34px)] pb-[clamp(6px,5cqh,14px)] pl-[clamp(14px,8.5cqw,54px)] pr-[clamp(14px,8.5cqw,54px)]"
                     style={{ maxWidth: `${card.textMaxWidthPct}%` }}
                   >
                     <h3 className="font-poppins text-[clamp(14px,5cqw,32px)] leading-[0.95] font-bold uppercase text-[#dcb754]">

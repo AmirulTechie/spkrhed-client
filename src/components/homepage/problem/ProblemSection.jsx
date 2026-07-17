@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Deck of "/Problem" cards — content only. Add another object to shuffle in
 // a new card: number, label, heading, description, and bullet points.
@@ -44,8 +47,44 @@ const PROBLEM_CARDS = [
 const PURPLE_STYLE = { bg: "#AC40FF", labelColor: "#FFFFFF" };
 const GRAY_STYLE = { bg: "#CECECE", labelColor: "#101010" };
 
+const DESCRIPTION_TEXT =
+  "You're the strategist, the creator, the sales team, and the closer. If you disappear for a week, so does your pipeline. That's not a business — that's a job you can never step away from.";
+
 function styleForCardIndex(index) {
   return index === 0 ? PURPLE_STYLE : GRAY_STYLE;
+}
+
+// Splits text into words (kept as real space text nodes between them, so
+// wrapping stays natural) and each word into individually animatable
+// characters — the same "type on" building block used by Hero's headings.
+function SproutChars({ text }) {
+  const words = text.split(" ");
+  const nodes = [];
+
+  words.forEach((word, wi) => {
+    nodes.push(
+      <span key={`w-${wi}`} className="inline-block whitespace-nowrap">
+        {word.split("").map((char, ci) => (
+          <span key={ci} className="sprout-char inline-block opacity-0">
+            {char}
+          </span>
+        ))}
+      </span>,
+    );
+    if (wi < words.length - 1) nodes.push(" ");
+  });
+
+  return nodes;
+}
+
+// One clipped row: chars sprout up from a hidden baseline inside it,
+// mirroring Hero's <Line> treatment for its display headings.
+function SproutLine({ children, className = "" }) {
+  return (
+    <div className={`overflow-hidden ${className}`}>
+      <span className="block">{children}</span>
+    </div>
+  );
 }
 
 function ProblemCard({ card }) {
@@ -84,6 +123,14 @@ export default function ProblemSection() {
   const [order, setOrder] = useState(() =>
     PROBLEM_CARDS.map((_, index) => index),
   );
+  const sectionRef = useRef(null);
+  const bulletRef = useRef(null);
+  const soundFamiliarRef = useRef(null);
+  const headingRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const leafTopRef = useRef(null);
+  const leafLeftRef = useRef(null);
+  const cardsWrapperRef = useRef(null);
   const topRef = useRef(null);
   const backRef = useRef(null);
   const animatingRef = useRef(false);
@@ -105,6 +152,109 @@ export default function ProblemSection() {
       opacity: 1,
     });
   }, [order]);
+
+  // One-time entrance: "Sound familiar?" sprouts in with the same
+  // char-coupling technique as Hero's "This is a movement" line, the
+  // heading/description type on character by character, the leaves drift
+  // in from off-section, and the card stack slides in from the right.
+  useLayoutEffect(() => {
+    const soundFamiliarChars = [
+      ...soundFamiliarRef.current.querySelectorAll(".sprout-char"),
+    ];
+    const headingChars = [...headingRef.current.querySelectorAll(".sprout-char")];
+    const descriptionChars = [
+      ...descriptionRef.current.querySelectorAll(".sprout-char"),
+    ];
+
+    const ctx = gsap.context(() => {
+      gsap.set(headingChars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
+      gsap.set(descriptionChars, { opacity: 0, yPercent: 50 });
+
+      gsap.set(leafLeftRef.current, { rotate: 160, opacity: 0, x: -160 });
+      gsap.set(cardsWrapperRef.current, { opacity: 0, x: 160 });
+      gsap.set(leafTopRef.current, {
+        opacity: 0,
+        x: 80,
+        y: -140,
+        rotate: -20,
+      });
+
+      // "Sound familiar?" is coupled to its first character — every other
+      // char and the bullet start stacked on top of it, then pull apart
+      // outward, exactly like Hero's movement text.
+      const anchorEl = soundFamiliarChars[0];
+      const soundFamiliarEls = [bulletRef.current, ...soundFamiliarChars];
+      const anchorLeft = anchorEl.getBoundingClientRect().left;
+
+      gsap.set(soundFamiliarEls, {
+        opacity: 0,
+        x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 78%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      tl.to(soundFamiliarEls, {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: { each: 0.032, from: soundFamiliarEls.indexOf(anchorEl) },
+      })
+        .to(
+          headingChars,
+          {
+            opacity: 1,
+            yPercent: 0,
+            filter: "blur(0px)",
+            duration: 0.4,
+            stagger: 0.02,
+            ease: "power2.out",
+          },
+          "-=0.15",
+        )
+        .to(
+          descriptionChars,
+          {
+            opacity: 1,
+            yPercent: 0,
+            duration: 0.3,
+            stagger: 0.008,
+            ease: "power2.out",
+          },
+          "-=0.3",
+        )
+        .to(
+          leafLeftRef.current,
+          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
+          "<",
+        )
+        .to(
+          cardsWrapperRef.current,
+          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
+          "<",
+        )
+        .to(
+          leafTopRef.current,
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotate: 0,
+            duration: 0.8,
+            ease: "power3.out",
+          },
+          "<0.1",
+        );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   function handleShuffle() {
     if (animatingRef.current) return;
@@ -140,57 +290,78 @@ export default function ProblemSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="problem"
       className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pt-30"
     >
       <Image
+        ref={leafTopRef}
         src="/images/Home/leaf.png"
         alt=""
         width={200}
         height={200}
-        className="pointer-events-none absolute left-[70%] top-[7%] z-20 w-[clamp(60px,9.7014vw,140px)] rotate-360 select-none"
+        className="pointer-events-none absolute left-[70%] top-[7%] z-20 w-[clamp(60px,9.7014vw,140px)] select-none"
       />
       <Image
+        ref={leafLeftRef}
         src="/images/Home/leaf.png"
         alt=""
         width={200}
         height={200}
-        className="pointer-events-none absolute left-[17.16%] top-[62%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none rotate-160"
+        className="pointer-events-none absolute left-[17.16%] top-[62%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none"
       />
 
       <div className="relative mx-auto max-w-360 py-[clamp(40px,6.9444vw,100px)]">
         <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,6.1111vw,88px)] gap-y-12 lg:grid-cols-[526fr_647fr]">
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <Image
-                src="/images/Home/banner-bullet.png"
-                alt=""
-                width={20}
-                height={20}
-                className="h-[clamp(10px,1.0271vw,15px)] w-[clamp(10px,1.0271vw,15px)]"
-              />
-              <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#424242]">
-                Sound familiar?
+              <span ref={bulletRef} className="inline-flex opacity-0">
+                <Image
+                  src="/images/Home/banner-bullet.png"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-[clamp(10px,1.0271vw,15px)] w-[clamp(10px,1.0271vw,15px)]"
+                />
+              </span>
+              <span
+                ref={soundFamiliarRef}
+                className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#424242]"
+              >
+                <SproutChars text="Sound familiar?" />
               </span>
             </div>
 
-            <h2 className="font-anton-sc text-[clamp(32px,6.25vw,90px)] uppercase leading-[97%] text-black">
-              Every client{" "}
-              <span className="block">
-                you have <span className="text-[#AC40FF]">came</span>
-              </span>
-              <span className="block text-[#AC40FF]">from you.</span>
+            <h2
+              ref={headingRef}
+              className="font-anton-sc text-[clamp(32px,6.25vw,90px)] uppercase leading-[97%] text-black"
+            >
+              <SproutLine>
+                <SproutChars text="Every client" />
+              </SproutLine>
+              <SproutLine>
+                <SproutChars text="you have" />{" "}
+                <span className="text-[#AC40FF]">
+                  <SproutChars text="came" />
+                </span>
+              </SproutLine>
+              <SproutLine className="text-[#AC40FF]">
+                <SproutChars text="from you." />
+              </SproutLine>
             </h2>
 
-            <p className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black top-50">
-              You&apos;re the strategist, the creator, the sales team, and the
-              closer. If you disappear for a week, so does your pipeline.
-              That&apos;s not a business — that&apos;s a job you can never
-              step away from.
+            <p
+              ref={descriptionRef}
+              className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black top-50"
+            >
+              <SproutChars text={DESCRIPTION_TEXT} />
             </p>
           </div>
 
-          <div className="relative w-full lg:aspect-647/565.5">
+          <div
+            ref={cardsWrapperRef}
+            className="relative w-full lg:aspect-647/565.5"
+          >
             {/* Absolutely positioned, so it shares the exact size of the
                 front card below instead of drifting out of sync with it. */}
             <div
