@@ -38,13 +38,23 @@ const LOGO_ROWS = [
   ],
 ];
 
-function Stat({ value, valueClassName, label }) {
+// Splits "10K+" into { target: 10, suffix: "K+" } so the number can be
+// tweened while the unit/suffix stays put.
+function parseStatValue(value) {
+  const [, digits, suffix] = value.match(/^(\d+)(.*)$/);
+  return { target: Number(digits), suffix };
+}
+
+function Stat({ value, valueClassName, label, valueRef }) {
+  const { suffix } = parseStatValue(value);
+
   return (
     <div className="flex flex-col">
       <span
+        ref={valueRef}
         className={`font-anton-sc text-[clamp(48px,6.9444vw,160px)] leading-none ${valueClassName}`}
       >
-        {value}
+        {`0${suffix}`}
       </span>
       <span className="mt-1 whitespace-pre-line font-poppins text-[clamp(14px,1.7361vw,25px)] font-semibold leading-[1.35] text-white/35">
         {label}
@@ -57,9 +67,13 @@ export default function StatsClientsSection() {
   const rowRef = useRef(null);
   const fillRef = useRef(null);
   const wordRefs = useRef([]);
+  const statValueRefs = useRef([]);
+  const clientsSectionRef = useRef(null);
+  const clientsRevealRef = useRef(null);
 
   useLayoutEffect(() => {
     const words = wordRefs.current.filter(Boolean);
+    const statEls = statValueRefs.current;
 
     const ctx = gsap.context(() => {
       gsap.set(words, { opacity: 0.35 });
@@ -83,6 +97,42 @@ export default function StatsClientsSection() {
         ease: "none",
         scrollTrigger: trigger,
       });
+
+      STATS.forEach((stat, index) => {
+        const el = statEls[index];
+        if (!el) return;
+
+        const { target, suffix } = parseStatValue(stat.value);
+        const counter = { val: 0 };
+
+        gsap.to(counter, {
+          val: target,
+          duration: 1.6,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: rowRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+          onUpdate: () => {
+            el.textContent = `${Math.round(counter.val)}${suffix}`;
+          },
+        });
+      });
+
+      gsap.set(clientsRevealRef.current, { yPercent: 100, opacity: 0 });
+
+      gsap.to(clientsRevealRef.current, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: clientsSectionRef.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      });
     }, rowRef);
 
     return () => ctx.revert();
@@ -105,8 +155,14 @@ export default function StatsClientsSection() {
               />
             </div>
             <div className="flex gap-x-[clamp(40px,6.25vw,144px)]">
-              {STATS.map((stat) => (
-                <Stat key={stat.value} {...stat} />
+              {STATS.map((stat, index) => (
+                <Stat
+                  key={stat.value}
+                  {...stat}
+                  valueRef={(el) => {
+                    statValueRefs.current[index] = el;
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -138,8 +194,14 @@ export default function StatsClientsSection() {
 
       <div className="h-px w-full bg-white/10" />
 
-      <div className="px-[clamp(32px,5.0694vw,117px)] pt-[clamp(40px,6.1111vw,141px)] pb-[clamp(48px,6.1111vw,141px)]">
-        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:grid-cols-[589fr_641fr]">
+      <div
+        ref={clientsSectionRef}
+        className="overflow-hidden px-[clamp(32px,5.0694vw,117px)] pt-[clamp(40px,6.1111vw,141px)] pb-[clamp(48px,6.1111vw,141px)]"
+      >
+        <div
+          ref={clientsRevealRef}
+          className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:grid-cols-[589fr_641fr]"
+        >
           <div className="flex items-start gap-3">
             <Image
               src="/images/Home/banner-bullet.png"

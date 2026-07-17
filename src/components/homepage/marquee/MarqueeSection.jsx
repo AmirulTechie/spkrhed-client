@@ -1,7 +1,12 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PHRASES = [
   "Personal Branding",
@@ -40,11 +45,35 @@ function MarqueeRow({ items, direction }) {
 
 export default function MarqueeSection() {
   const rowTwo = [...PHRASES.slice(1), PHRASES[0]];
+  const sectionRef = useRef(null);
+  const revealRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(revealRef.current, { yPercent: 100, opacity: 0 });
+
+      gsap.to(revealRef.current, {
+        yPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="overflow-hidden bg-black py-2">
-      <MarqueeRow items={PHRASES} direction="left" />
-      <MarqueeRow items={rowTwo} direction="right" />
+    <section ref={sectionRef} className="overflow-hidden bg-black py-2">
+      <div ref={revealRef}>
+        <MarqueeRow items={PHRASES} direction="left" />
+        <MarqueeRow items={rowTwo} direction="right" />
+      </div>
     </section>
   );
 }
