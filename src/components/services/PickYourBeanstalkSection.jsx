@@ -5,41 +5,19 @@ export default function PickYourBeanstalkSection() {
     <section className="relative min-h-120 overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)] md:h-[clamp(500px,48.4028vw,697px)] md:py-0">
       <div
         aria-hidden
-        className="pointer-events-none absolute right-[2%] bottom-0 flex h-[80vw] w-[55vw] items-center justify-center md:right-auto md:bottom-auto md:left-[28.3868%] md:top-[15.0645%] md:h-[105.8vw] md:w-[71.8194%]"
+        className="pointer-events-none absolute right-[2%] bottom-0 h-[80vw] w-[55vw] md:right-auto md:bottom-auto md:left-[28.3868%] md:top-[15.0645%] md:h-[105.8vw] md:w-[71.8194%]"
       >
         <Image
           src="/images/big-branch.png"
           alt=""
           width={2162}
           height={3842}
-          className="w-[42vw] max-w-none rotate-[10.64deg] select-none md:w-[54.7917vw]"
+          className="absolute h-auto w-[50%] max-w-none select-none md:top-[5vw] md:left-[12.55%] md:w-[37vw]"
         />
       </div>
 
-      {/* Rectangle 164/165 from Figma: fades the branch into black. Drag via top/left to re-align. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute hidden items-center justify-center md:flex"
-        style={{
-          top: "17.5036%",
-          left: "32.9583%",
-          width: "45.2924%",
-          height: "25.135%",
-        }}
-      >
-        <div
-          className="rotate-[5.45deg]"
-          style={{
-            width: "43.1675vw",
-            height: "24.4429vw",
-            background:
-              "linear-gradient(180deg, #0f0f0f 0%, rgba(15,15,15,0) 100%)",
-          }}
-        />
-      </div>
-
-      <div className="relative mx-auto h-auto max-w-300 px-8 sm:px-12 lg:px-16 md:mx-0 md:h-full md:max-w-none md:px-0">
-        <h2 className="text-center font-anton-sc text-[clamp(40px,10.9722vw,158px)] leading-[0.886] uppercase text-white md:absolute md:inset-x-0 md:top-0">
+      <div className="relative mx-auto h-auto max-w-500 px-8 sm:px-12 lg:px-16 md:mx-0 md:h-full md:max-w-none md:px-0">
+        <h2 className="text-center font-anton-sc text-[clamp(40px,10.9722vw,158px)] leading-[0.886] uppercase text-white md:absolute md:top-0 md:left-[5%] md:w-[91.1111%]">
           Pick your Beanstalk.
         </h2>
 

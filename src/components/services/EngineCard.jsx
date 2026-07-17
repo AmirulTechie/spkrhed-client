@@ -68,7 +68,7 @@ export default function EngineCard({
           {card.eyebrow}
         </p>
 
-        <h3 className="mt-[clamp(8px,1.25vw,18px)] max-w-[36.6%] font-anton-sc text-[clamp(24px,3.4722vw,50px)] leading-[1.02] uppercase">
+        <h3 className="mt-[clamp(8px,1.25vw,18px)] max-w-[50%] font-anton-sc text-[clamp(24px,3.4722vw,50px)] leading-[1.02] uppercase">
           {card.headingLines.map((line, index) => (
             <span
               key={index}
