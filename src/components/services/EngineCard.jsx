@@ -53,15 +53,6 @@ export default function EngineCard({
         className="absolute inset-0 backdrop-blur-[5.5px]"
         style={maskStyle}
       />
-      {variant === "front" && (
-        // Front role needs to read as solid — without this, cards peeking
-        // behind it (also semi-transparent) show their text bleeding through.
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-black"
-          style={maskStyle}
-        />
-      )}
       <Image
         src={card.shape}
         alt=""
@@ -72,7 +63,7 @@ export default function EngineCard({
         style={{ objectFit: "fill" }}
       />
 
-      <div className="relative flex h-full flex-col p-[clamp(20px,2.7778vw,40px)]">
+      <div className="relative flex h-full flex-col p-[clamp(26px,3.6111vw,52px)]">
         <p className="font-poppins text-[clamp(11px,1.1111vw,16px)] font-semibold text-white">
           {card.eyebrow}
         </p>

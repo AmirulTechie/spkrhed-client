@@ -1,4 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CARD_BASE =
   "flex flex-col overflow-hidden rounded-[clamp(9px,0.86vw,12px)] p-[clamp(20px,2.3611vw,34px)]";
@@ -7,6 +14,33 @@ const QUOTE_CLASS =
   "font-poppins text-[clamp(15px,1.4583vw,21px)] font-semibold leading-[1.1]";
 const NAME_CLASS = "font-poppins text-[clamp(12px,0.9722vw,14px)] font-medium leading-[1.1]";
 const ROLE_CLASS = "font-poppins text-[clamp(11px,0.9028vw,13px)] leading-[1.1]";
+
+const BULLET_TEXT = "Testimonials";
+const DESCRIPTION_TEXT = "Founders, agencies, and enterprise teams who joined the movement.";
+
+// Splits on words, keeping spaces as real text nodes between word-spans
+// (rather than wrapping the space itself in a span, which would collapse to
+// zero width), and wraps each character in an individually animatable span —
+// the true "type on" building block shared by Beanstalk/Projects/Pricing.
+function TypewriterChars({ text }) {
+  const words = text.split(" ");
+  const nodes = [];
+
+  words.forEach((word, wi) => {
+    nodes.push(
+      <span key={`w-${wi}`} className="inline-block whitespace-nowrap">
+        {word.split("").map((char, ci) => (
+          <span key={ci} className="typewriter-char inline-block opacity-0">
+            {char}
+          </span>
+        ))}
+      </span>,
+    );
+    if (wi < words.length - 1) nodes.push(" ");
+  });
+
+  return nodes;
+}
 
 function MudCityLogo({ className }) {
   return (
@@ -92,11 +126,12 @@ const VARIANT_ASPECT = {
   dark: "lg:aspect-440/324",
 };
 
-function TestimonialCard({ testimonial, className = "", style }) {
+function TestimonialCard({ testimonial, className = "", style, cardRef }) {
   const { variant, quote, name, role, logo, thumbnail } = testimonial;
 
   return (
     <div
+      ref={cardRef}
       style={style}
       className={`${CARD_BASE} ${VARIANT_ASPECT[variant]} ${VARIANT_CLASSES[variant]} ${className}`}
       data-testimonial={testimonial.id}
@@ -124,8 +159,130 @@ function TestimonialCard({ testimonial, className = "", style }) {
 }
 
 export default function TestimonialsSection() {
+  const sectionRef = useRef(null);
+  const bulletIconRef = useRef(null);
+  const bulletCharRefs = useRef([]);
+  const headingRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const treeBranchRef = useRef(null);
+  const leafRef = useRef(null);
+  const cardRefs = useRef([]);
+
+  // One-time entrance, gated behind ScrollTrigger: the "Testimonials" bullet
+  // line is coupled to its first character exactly like Hero's "This is a
+  // movement" line (everything starts stacked on the anchor, then pulls
+  // apart outward), the heading and description type on character by
+  // character, the tree branch slides in from the left border, the leaf
+  // drifts in from the middle of the section, and the three desktop cards
+  // converge from the left, bottom, and right respectively. No resting
+  // position changes — only the approach.
+  useLayoutEffect(() => {
+    const headingChars = [
+      ...headingRef.current.querySelectorAll(".typewriter-char"),
+    ];
+    const descriptionChars = [
+      ...descriptionRef.current.querySelectorAll(".typewriter-char"),
+    ];
+    const bulletChars = bulletCharRefs.current.filter(Boolean);
+    const [leftCard, middleCard, rightCard] = cardRefs.current;
+
+    const ctx = gsap.context(() => {
+      gsap.set(headingChars, { opacity: 0 });
+      gsap.set(descriptionChars, { opacity: 0 });
+      gsap.set(treeBranchRef.current, { opacity: 0, x: -180 });
+      gsap.set(leafRef.current, {
+        opacity: 0,
+        scale: 0.4,
+        x: -170,
+        y: -160,
+        rotate: 250,
+      });
+
+      if (leftCard) gsap.set(leftCard, { opacity: 0, x: -180 });
+      if (middleCard) gsap.set(middleCard, { opacity: 0, y: 160 });
+      if (rightCard) gsap.set(rightCard, { opacity: 0, x: 180 });
+
+      // "Testimonials" is coupled to its first character — every other
+      // char and the bullet start stacked on top of it, then pull apart
+      // outward in both directions, exactly like Hero's movement text.
+      const anchorEl = bulletChars[0];
+      const bulletEls = [bulletIconRef.current, ...bulletChars];
+      const anchorLeft = anchorEl.getBoundingClientRect().left;
+
+      gsap.set(bulletEls, {
+        opacity: 0,
+        x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      tl.to(bulletEls, {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: { each: 0.032, from: bulletEls.indexOf(anchorEl) },
+      })
+        .to(
+          headingChars,
+          { opacity: 1, duration: 0.01, stagger: 0.02, ease: "none" },
+          "-=0.15",
+        )
+        .to(
+          descriptionChars,
+          { opacity: 1, duration: 0.01, stagger: 0.012, ease: "none" },
+          "-=0.25",
+        )
+        .to(
+          treeBranchRef.current,
+          { opacity: 1, x: 0, duration: 1, ease: "power3.out" },
+          "-=0.3",
+        );
+
+      if (leftCard || rightCard) {
+        tl.to(
+          [leftCard, rightCard].filter(Boolean),
+          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
+          "-=0.6",
+        );
+      }
+      if (middleCard) {
+        tl.to(
+          middleCard,
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+          "<",
+        );
+      }
+
+      tl.to(
+        leafRef.current,
+        {
+          opacity: 0.9,
+          scale: 1,
+          x: 0,
+          y: 0,
+          rotate: 340,
+          duration: 0.9,
+          ease: "power3.out",
+        },
+        "-=0.5",
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]"
+    >
       <Image
         src="/images/Home/small-spots.png"
         alt=""
@@ -135,6 +292,7 @@ export default function TestimonialsSection() {
       />
 
       <Image
+        ref={treeBranchRef}
         src="/images/Home/tree-branch-small.png"
         alt=""
         width={1615}
@@ -143,41 +301,66 @@ export default function TestimonialsSection() {
       />
 
       <Image
+        ref={leafRef}
         src="/images/Home/leaf.png"
         alt=""
         width={200}
         height={148}
-        className="pointer-events-none absolute bottom-[6%] right-[20%] z-20 w-[7%] rotate-340 select-none opacity-90"
+        className="pointer-events-none absolute bottom-[6%] right-[20%] z-20 w-[7%] select-none"
       />
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
         <div className="flex items-center justify-center gap-3">
-          <Image
-            src="/images/Home/banner-bullet.png"
-            alt=""
-            width={20}
-            height={20}
-            className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
-          />
+          <span ref={bulletIconRef} className="inline-flex opacity-0">
+            <Image
+              src="/images/Home/banner-bullet.png"
+              alt=""
+              width={20}
+              height={20}
+              className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
+            />
+          </span>
           <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#b7b7b7]">
-            Testimonials
+            {BULLET_TEXT.split("").map((char, i) => (
+              <span
+                key={i}
+                ref={(el) => {
+                  bulletCharRefs.current[i] = el;
+                }}
+                className="inline-block opacity-0"
+              >
+                {char === " " ? " " : char}
+              </span>
+            ))}
           </span>
         </div>
 
-        <h2 className="mx-auto mt-[clamp(16px,1.875vw,27px)] max-w-217 font-anton-sc text-[clamp(32px,6.8056vw,98px)] uppercase leading-[1.02] text-white">
-          In Their <span className="text-[#ac40ff]">Own Voice.</span>
+        <h2
+          ref={headingRef}
+          className="mx-auto mt-[clamp(16px,1.875vw,27px)] max-w-217 font-anton-sc text-[clamp(32px,6.8056vw,98px)] uppercase leading-[1.02] text-white"
+        >
+          <TypewriterChars text="In Their" />{" "}
+          <span className="text-[#ac40ff]">
+            <TypewriterChars text="Own Voice." />
+          </span>
         </h2>
 
-        <p className="mx-auto mt-[clamp(8px,1.1806vw,17px)] font-poppins text-[clamp(15px,1.5278vw,22px)] text-white/60">
-          Founders, agencies, and enterprise teams who joined the movement.
+        <p
+          ref={descriptionRef}
+          className="mx-auto mt-[clamp(8px,1.1806vw,17px)] font-poppins text-[clamp(15px,1.5278vw,22px)] text-white/60"
+        >
+          <TypewriterChars text={DESCRIPTION_TEXT} />
         </p>
       </div>
 
       <div className="relative z-10 mx-auto mt-[clamp(40px,4.9306vw,71px)] hidden aspect-1440/521 w-full max-w-360 lg:block">
-        {TESTIMONIALS.map((testimonial) => (
+        {TESTIMONIALS.map((testimonial, index) => (
           <TestimonialCard
             key={testimonial.id}
             testimonial={testimonial}
+            cardRef={(el) => {
+              cardRefs.current[index] = el;
+            }}
             className="absolute top-0 w-[clamp(230px,30.5736vw,440px)]"
             style={{ left: testimonial.left }}
           />

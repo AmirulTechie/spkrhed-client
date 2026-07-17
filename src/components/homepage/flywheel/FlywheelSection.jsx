@@ -1,5 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+// Same curl used by Hero's "climb to you" and Beanstalk's "Growth Engine." —
+// a vine tip unrolling into place rather than a straight vertical slide.
+// Reused here so "Outreach Makes Content Close Faster." matches that motion.
+const CLIMB_PATH = [
+  { x: 0, y: 90 },
+  { x: 26, y: 55 },
+  { x: -14, y: 22 },
+  { x: 0, y: 0 },
+];
+
+const BULLET_TEXT = "The Flywheel";
 
 const STEPS = [
   {
@@ -32,9 +52,45 @@ const STEPS = [
   },
 ];
 
-function StepCard({ step }) {
+// Splits on words, keeping spaces as real text nodes between word-spans
+// (rather than wrapping the space itself in a span, which would collapse to
+// zero width), and wraps each character in an individually animatable span —
+// the char-level building block shared by Hero/Problem/Projects/Beanstalk's
+// type-on treatments.
+function SproutChars({ text }) {
+  const words = text.split(" ");
+  const nodes = [];
+
+  words.forEach((word, wi) => {
+    nodes.push(
+      <span key={`w-${wi}`} className="inline-block whitespace-nowrap">
+        {word.split("").map((char, ci) => (
+          <span key={ci} className="sprout-char inline-block opacity-0">
+            {char}
+          </span>
+        ))}
+      </span>,
+    );
+    if (wi < words.length - 1) nodes.push(" ");
+  });
+
+  return nodes;
+}
+
+// One clipped row: chars sprout up from a hidden baseline inside it,
+// mirroring Hero's <Line> treatment for its display headings.
+function SproutLine({ children, className = "" }) {
+  return (
+    <div className={`overflow-hidden ${className}`}>
+      <span className="block">{children}</span>
+    </div>
+  );
+}
+
+function StepCard({ step, cardRef }) {
   return (
     <div
+      ref={cardRef}
       className={`relative aspect-321/353 w-full bg-[rgba(217,217,217,0.5)] backdrop-blur-md [mask-image:url('/images/Home/flywheel-card-shape.svg')] mask-no-repeat mask-size-[100%_100%] ${step.offset ? "sm:mt-[clamp(38px,8.0556vw,116px)]" : ""}`}
     >
       <div className="flex h-full w-full flex-col pt-[clamp(20px,1.875vw,27px)] pr-[clamp(20px,1.875vw,27px)] pb-[clamp(28px,2.6389vw,38px)] pl-[clamp(20px,1.875vw,27px)]">
@@ -62,44 +118,195 @@ function StepCard({ step }) {
 }
 
 export default function FlywheelSection() {
+  const sectionRef = useRef(null);
+  const treeBranchRef = useRef(null);
+  const bulletRef = useRef(null);
+  const bulletCharRefs = useRef([]);
+  const headingRef = useRef(null);
+  const climbRef = useRef(null);
+  const cardRefs = useRef([]);
+
+  // One-time entrance, gated behind ScrollTrigger the moment the section is
+  // reached: the tree branch rises from below (resting position/rotation
+  // untouched), "The Flywheel" is coupled to its first character exactly
+  // like Hero's "This is a movement" line, the heading types on line by line
+  // the same way as Hero's display headings, "Outreach Makes Content Close
+  // Faster." climbs in with the same curl as Hero's "climb to you", and
+  // each card then pops in with a stagger.
+  useLayoutEffect(() => {
+    const headingChars = [
+      ...headingRef.current.querySelectorAll(".sprout-char"),
+    ];
+    const bulletChars = bulletCharRefs.current.filter(Boolean);
+    const cards = cardRefs.current.filter(Boolean);
+
+    const ctx = gsap.context(() => {
+      // Rotation is set explicitly (rather than left to the Tailwind
+      // rotate-12 class) because GSAP owns the full transform once it
+      // animates y here — an untouched rotate value would otherwise be
+      // silently dropped.
+      gsap.set(treeBranchRef.current, { opacity: 0, y: 220, rotate: 12 });
+      gsap.set(headingChars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
+      gsap.set(climbRef.current, {
+        opacity: 0,
+        filter: "blur(6px)",
+        rotate: -8,
+        transformOrigin: "left bottom",
+      });
+      gsap.set(cards, { opacity: 0, y: 80, scale: 0.85 });
+
+      const anchorEl = bulletChars[0];
+      const bulletEls = [bulletRef.current, ...bulletChars];
+      const anchorLeft = anchorEl.getBoundingClientRect().left;
+
+      gsap.set(bulletEls, {
+        opacity: 0,
+        x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Phases are deliberately overlapped rather than chained end-to-end —
+      // the branch rises in the background while the bullet/heading build
+      // in front of it, and cards start popping before the climb text has
+      // even finished settling. Same beats as before, played as a chord
+      // instead of a sequence so the whole entrance resolves much quicker.
+      tl.to(treeBranchRef.current, {
+        opacity: 0.9,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      })
+        .to(
+          bulletEls,
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.35,
+            ease: "power3.out",
+            stagger: { each: 0.018, from: bulletEls.indexOf(anchorEl) },
+          },
+          "<0.1",
+        )
+        .to(
+          headingChars,
+          {
+            opacity: 1,
+            yPercent: 0,
+            filter: "blur(0px)",
+            duration: 0.3,
+            stagger: 0.012,
+            ease: "power2.out",
+          },
+          "-=0.15",
+        )
+        .to(
+          climbRef.current,
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            rotate: 0,
+            duration: 0.55,
+            ease: "power2.out",
+            motionPath: { path: CLIMB_PATH, curviness: 1.5 },
+          },
+          "-=0.25",
+        )
+        .to(
+          cards,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.5,
+            ease: "back.out(1.6)",
+            stagger: 0.08,
+          },
+          "-=0.3",
+        );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pb-[clamp(64px,9.7222vw,140px)] pt-[clamp(48px,6.25vw,90px)]">
+    <section
+      ref={sectionRef}
+      className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pb-[clamp(64px,9.7222vw,140px)] pt-[clamp(48px,6.25vw,90px)]"
+    >
       <Image
+        ref={treeBranchRef}
         src="/images/Home/tree-branch-1.png"
         alt=""
         width={2162}
         height={3842}
-        className="pointer-events-none absolute right-[-8%] top-[15%] z-0 w-[50%] rotate-12 select-none opacity-90"
+        className="pointer-events-none absolute right-[-8%] top-[15%] z-0 w-[50%] select-none"
       />
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
         <div className="flex items-center justify-center gap-3">
-          <Image
-            src="/images/Home/banner-bullet.png"
-            alt=""
-            width={20}
-            height={20}
-            className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
-          />
+          <span ref={bulletRef} className="inline-flex opacity-0">
+            <Image
+              src="/images/Home/banner-bullet.png"
+              alt=""
+              width={20}
+              height={20}
+              className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
+            />
+          </span>
           <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#424242]">
-            The Flywheel
+            {BULLET_TEXT.split("").map((char, i) => (
+              <span
+                key={i}
+                ref={(el) => {
+                  bulletCharRefs.current[i] = el;
+                }}
+                className="inline-block opacity-0"
+              >
+                {char === " " ? " " : char}
+              </span>
+            ))}
           </span>
         </div>
 
-        <h2 className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-129.5 font-anton-sc text-[clamp(32px,5.9028vw,85px)] uppercase leading-[1.06] text-black">
-          <span className="block">Content Makes</span>
-          <span className="block">Outreach Work</span>
-          <span className="block">Harder.</span>
+        <h2
+          ref={headingRef}
+          className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-129.5 font-anton-sc text-[clamp(32px,5.9028vw,85px)] uppercase leading-[1.06] text-black"
+        >
+          <SproutLine>
+            <SproutChars text="Content Makes" />
+          </SproutLine>
+          <SproutLine>
+            <SproutChars text="Outreach Work" />
+          </SproutLine>
+          <SproutLine>
+            <SproutChars text="Harder." />
+          </SproutLine>
         </h2>
 
-        <p className="mx-auto mt-[clamp(-23px,-1.5972vw,-16px)] max-w-197 font-alex-brush text-[clamp(48px,7.2917vw,105px)] leading-[0.8] text-[#AC40FF]">
+        <p
+          ref={climbRef}
+          className="mx-auto mt-[clamp(-23px,-1.5972vw,-16px)] max-w-197 font-alex-brush text-[clamp(48px,7.2917vw,105px)] leading-[0.8] text-[#AC40FF]"
+        >
           <span className="block">Outreach Makes</span>
           <span className="block">Content Close Faster.</span>
         </p>
 
         <div className="relative z-10 mt-[clamp(48px,9.5139vw,137px)] grid grid-cols-1 gap-x-[clamp(30px,1.4583vw,40px)] gap-y-[clamp(40px,4.4444vw,64px)] text-left sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
-          {STEPS.map((step) => (
-            <StepCard key={step.number} step={step} />
+          {STEPS.map((step, index) => (
+            <StepCard
+              key={step.number}
+              step={step}
+              cardRef={(el) => {
+                cardRefs.current[index] = el;
+              }}
+            />
           ))}
         </div>
       </div>

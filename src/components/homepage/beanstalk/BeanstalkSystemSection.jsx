@@ -1,4 +1,46 @@
+"use client";
+
 import Image from "next/image";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+// Same curl used by Hero's "climb to you" text — a vine tip unrolling into
+// place rather than a straight vertical slide. Reused here so "Growth
+// Engine." matches that motion exactly, per design ask.
+const CLIMB_PATH = [
+  { x: 0, y: 90 },
+  { x: 26, y: 55 },
+  { x: -14, y: 22 },
+  { x: 0, y: 0 },
+];
+
+// Splits on words and keeps spaces as real text nodes between word-spans
+// (rather than wrapping the space itself in a span) — a lone space as the
+// sole content of an inline-block collapses to zero width otherwise.
+function TypewriterChars({ text }) {
+  const words = text.split(" ");
+  const nodes = [];
+
+  words.forEach((word, wi) => {
+    nodes.push(
+      <span key={`w-${wi}`} className="inline-block whitespace-nowrap">
+        {word.split("").map((char, ci) => (
+          <span key={ci} className="typewriter-char inline-block opacity-0">
+            {char}
+          </span>
+        ))}
+      </span>,
+    );
+    if (wi < words.length - 1) nodes.push(" ");
+  });
+
+  return nodes;
+}
+
 const CARDS = [
   {
     step: "1. THE LAND OFFER",
@@ -53,14 +95,112 @@ function BeanstalkCard({ card }) {
   );
 }
 export default function BeanstalkSystemSection() {
+  const sectionRef = useRef(null);
+  const bigBranchRef = useRef(null);
+  const fivePlantingsRef = useRef(null);
+  const growthEngineRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const cardRefs = useRef([]);
+
+  // One-time entrance, gated behind ScrollTrigger the moment the section is
+  // reached: the big-branch rises from below (position untouched), the
+  // heading types on, "Growth Engine." climbs in exactly like Hero's "climb
+  // to you", and the description slides in from the left. Each card then
+  // pops in on its own ScrollTrigger as the user scrolls past it.
+  useLayoutEffect(() => {
+    const typewriterChars = [
+      ...fivePlantingsRef.current.querySelectorAll(".typewriter-char"),
+    ];
+
+    const ctx = gsap.context(() => {
+      // xPercent replicates the Tailwind -translate-x-1/2 centering: GSAP
+      // owns the full transform once it animates y here, so the class's
+      // translateX would otherwise be silently dropped.
+      gsap.set(bigBranchRef.current, { opacity: 0, y: 220, xPercent: -50 });
+      gsap.set(typewriterChars, { opacity: 0 });
+      gsap.set(growthEngineRef.current, {
+        opacity: 0,
+        filter: "blur(6px)",
+        rotate: -8,
+        transformOrigin: "left bottom",
+      });
+      gsap.set(descriptionRef.current, { opacity: 0, x: -140 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      tl.to(bigBranchRef.current, {
+        opacity: 0.95,
+        y: 0,
+        duration: 1.1,
+        ease: "power3.out",
+      })
+        .to(
+          typewriterChars,
+          {
+            opacity: 1,
+            duration: 0.01,
+            stagger: 0.045,
+            ease: "none",
+          },
+          "-=0.7",
+        )
+        .to(
+          growthEngineRef.current,
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            rotate: 0,
+            duration: 0.9,
+            ease: "power2.out",
+            motionPath: { path: CLIMB_PATH, curviness: 1.5 },
+          },
+          "-=0.2",
+        )
+        .to(
+          descriptionRef.current,
+          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
+          "-=0.4",
+        );
+
+      cardRefs.current.forEach((cardEl) => {
+        if (!cardEl) return;
+        gsap.set(cardEl, { opacity: 0, y: 80, scale: 0.85 });
+        gsap.to(cardEl, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "back.out(1.6)",
+          scrollTrigger: {
+            trigger: cardEl,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pb-[clamp(64px,9.7222vw,140px)]">
+    <section
+      ref={sectionRef}
+      className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pb-[clamp(64px,9.7222vw,140px)]"
+    >
       <Image
+        ref={bigBranchRef}
         src="/images/Home/big-branch.png"
         alt=""
         width={2162}
         height={3842}
-        className="pointer-events-none absolute right-1 top-[300] z-0 w-[50%] -translate-x-1/2 select-none opacity-95"
+        className="pointer-events-none absolute -right-150 top-[300] z-0 w-[70%] select-none"
       />
       <Image
         src="/images/Home/cloud.png"
@@ -80,16 +220,24 @@ export default function BeanstalkSystemSection() {
         The Beanstalk System
       </h2>
 
-      <div className="relative z-10 mx-auto max-w-325 px-[clamp(24px,5.5556vw,80px)] text-center">
-        <div className="mt-[clamp(24px,10.213vw,141px)] flex justify-end flex-col">
-          <p className="font-anton-sc text-[clamp(22px,5.4167vw,78px)] uppercase leading-none text-black mx-auto scale-150">
-            Five Plantings. One Unstoppable
+      <div className="relative z-10 mx-auto max-w-400 px-[clamp(24px,5.5556vw,80px)] text-center">
+        <div className="mt-[clamp(24px,10.213vw,141px)] flex flex-col">
+          <p
+            ref={fivePlantingsRef}
+            className="whitespace-nowrap font-anton-sc text-[clamp(22px,5.4167vw,78px)] uppercase leading-none text-black"
+          >
+            <TypewriterChars text="Five Plantings. One Unstoppable" />
           </p>
-          <p className="absoulate whitespace-nowrap font-alex-brush text-[clamp(48px,14.0278vw,202px)] leading-none text-[#AC40FF] -mt-9 flex justify-between">
-            <span className="block">Growth</span> 
-            <span className="block">Engine</span> .
+          <p
+            ref={growthEngineRef}
+            className="mt-[clamp(-39px,-2.7083vw,-11px)] whitespace-pre font-alex-brush text-[clamp(48px,14.0278vw,202px)] leading-none text-[#AC40FF]"
+          >
+            Growth    Engine.
           </p>
-        <p className="mx-auto mt-[clamp(24px,3.3333vw,48px)] max-w-[clamp(280px,32.6389vw,470px)] font-poppins text-[clamp(16px,1.8056vw,26px)] font-medium leading-none text-black/70 text-start">
+        <p
+          ref={descriptionRef}
+          className="mt-[clamp(-22px,-1.5278vw,-5px)] max-w-[clamp(280px,32.6389vw,470px)] font-poppins text-[clamp(16px,1.8056vw,26px)] font-medium leading-none text-black/70 text-start"
+        >
           Jack didn&apos;t climb by accident — he planted the right seed in
           the right ground. We do the same for your business on LinkedIn.
         </p>
@@ -98,6 +246,9 @@ export default function BeanstalkSystemSection() {
           {CARDS.map((card, index) => (
             <div
               key={card.step}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
               className={`flex w-full ${
                 card.align === "end" ? "lg:justify-end" : "lg:justify-start"
               } ${index === 1 ? "lg:-mt-8" : ""}`}
