@@ -6,9 +6,10 @@ import gsap from "gsap";
 
 // Deck of "/Problem" cards — content only. Add another object to shuffle in
 // a new card: number, label, heading, description, and bullet points.
-// Color isn't part of the data: whichever card is on top is always styled
-// purple, and whatever's behind it is always styled gray (see FRONT_STYLE /
-// BACK_STYLE below).
+// Color is tied to card identity, not stack position: only the first card
+// (index 0) is styled purple, every other card is gray, regardless of
+// whether it's currently on top or behind (see PURPLE_STYLE / GRAY_STYLE
+// below).
 const PROBLEM_CARDS = [
   {
     number: "01",
@@ -40,8 +41,12 @@ const PROBLEM_CARDS = [
   },
 ];
 
-const FRONT_STYLE = { bg: "#AC40FF", labelColor: "#FFFFFF" };
-const BACK_STYLE = { bg: "#CECECE", labelColor: "#101010" };
+const PURPLE_STYLE = { bg: "#AC40FF", labelColor: "#FFFFFF" };
+const GRAY_STYLE = { bg: "#CECECE", labelColor: "#101010" };
+
+function styleForCardIndex(index) {
+  return index === 0 ? PURPLE_STYLE : GRAY_STYLE;
+}
 
 function ProblemCard({ card }) {
   return (
@@ -83,17 +88,20 @@ export default function ProblemSection() {
   const backRef = useRef(null);
   const animatingRef = useRef(false);
 
-  const topCard = PROBLEM_CARDS[order[0]];
-  const backCard = PROBLEM_CARDS[order[1 % order.length]];
+  const topIndex = order[0];
+  const backIndex = order[1 % order.length];
+  const topCard = PROBLEM_CARDS[topIndex];
+  const backCard = PROBLEM_CARDS[backIndex];
+  const topCardStyle = styleForCardIndex(topIndex);
+  const backCardStyle = styleForCardIndex(backIndex);
 
   useLayoutEffect(() => {
     if (!topRef.current || !backRef.current) return;
-    gsap.set(topRef.current, { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 });
+    gsap.set(topRef.current, { x: 0, y: 0, rotate: 0, opacity: 1 });
     gsap.set(backRef.current, {
       x: 0,
-      y: 16,
+      yPercent: 8.7,
       rotate: -1.95,
-      scale: 0.97,
       opacity: 1,
     });
   }, [order]);
@@ -101,15 +109,6 @@ export default function ProblemSection() {
   function handleShuffle() {
     if (animatingRef.current) return;
     animatingRef.current = true;
-
-    // The back card is about to slide into the front spot — recolor it to
-    // the front style right now, while it's still fully hidden behind the
-    // opaque outgoing front card, so it's already purple by the time it
-    // becomes visible instead of popping from gray to purple mid-slide.
-    gsap.set(backRef.current, {
-      backgroundColor: FRONT_STYLE.bg,
-      "--label-color": FRONT_STYLE.labelColor,
-    });
 
     gsap
       .timeline({
@@ -128,7 +127,13 @@ export default function ProblemSection() {
       })
       .to(
         backRef.current,
-        { x: 0, y: 0, rotate: 0, scale: 1, duration: 0.5, ease: "power2.out" },
+        {
+          x: 0,
+          yPercent: 0,
+          rotate: 0,
+          duration: 0.5,
+          ease: "power2.out",
+        },
         "-=0.3",
       );
   }
@@ -191,10 +196,10 @@ export default function ProblemSection() {
             <div
               ref={backRef}
               aria-hidden="true"
-              className="absolute inset-0 flex flex-col rounded-[clamp(16px,1.6667vw,24px)] p-[clamp(24px,2.7778vw,40px)]"
+              className="absolute inset-0 flex flex-col rounded-[clamp(8px,0.8333vw,12px)] p-[clamp(24px,2.7778vw,40px)]"
               style={{
-                backgroundColor: BACK_STYLE.bg,
-                "--label-color": BACK_STYLE.labelColor,
+                backgroundColor: backCardStyle.bg,
+                "--label-color": backCardStyle.labelColor,
               }}
             >
               <ProblemCard card={backCard} />
@@ -205,10 +210,10 @@ export default function ProblemSection() {
               ref={topRef}
               onClick={handleShuffle}
               aria-label="Show next problem card"
-              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(16px,1.6667vw,24px)] p-[clamp(24px,2.7778vw,40px)] text-left cursor-pointer"
+              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(8px,0.8333vw,12px)] p-[clamp(24px,2.7778vw,40px)] text-left cursor-pointer"
               style={{
-                backgroundColor: FRONT_STYLE.bg,
-                "--label-color": FRONT_STYLE.labelColor,
+                backgroundColor: topCardStyle.bg,
+                "--label-color": topCardStyle.labelColor,
               }}
             >
               <ProblemCard card={topCard} />
