@@ -3,9 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-
-gsap.registerPlugin(MotionPathPlugin);
 
 // Matches Loader.jsx's TOTAL_DURATION so the hero animation starts the
 // instant the preloader finishes sliding away.
@@ -22,15 +19,6 @@ const HEADLINE_LINES = [
   { text: "THE CLIENTS", column: "right", row: 1 },
 ];
 const MOVEMENT_TEXT = "This is a movement";
-
-// A gentle curl, like a vine tip unrolling into place rather than a
-// straight vertical slide.
-const CLIMB_PATH = [
-  { x: 0, y: 90 },
-  { x: 26, y: 55 },
-  { x: -14, y: 22 },
-  { x: 0, y: 0 },
-];
 
 function Line({ text }) {
   return (
@@ -59,9 +47,7 @@ export default function Hero() {
       gsap.set(chars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
       gsap.set(climbRef.current, {
         opacity: 0,
-        filter: "blur(6px)",
-        rotate: -8,
-        transformOrigin: "left bottom",
+        y: 60,
       });
 
       // "This is a movement" is coupled to the "T" — every other char and
@@ -94,11 +80,9 @@ export default function Hero() {
           climbRef.current,
           {
             opacity: 1,
-            filter: "blur(0px)",
-            rotate: 0,
-            duration: 0.9,
-            ease: "power2.out",
-            motionPath: { path: CLIMB_PATH, curviness: 1.5 },
+            y: 0,
+            duration: 0.7,
+            ease: "power3.out",
           },
           "-=0.25"
         )

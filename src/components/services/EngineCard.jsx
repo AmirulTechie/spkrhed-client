@@ -33,6 +33,8 @@ export default function EngineCard({
   className = "",
   style,
 }) {
+  const isBack = variant === "back";
+
   const maskStyle = {
     WebkitMaskImage: `url(${card.mask})`,
     maskImage: `url(${card.mask})`,
@@ -59,7 +61,7 @@ export default function EngineCard({
         aria-hidden
         fill
         unoptimized
-        className="pointer-events-none rounded-[clamp(18px,2.1875vw,32px)] select-none"
+        className={`pointer-events-none rounded-[clamp(18px,2.1875vw,32px)] select-none ${isBack ? "opacity-20" : "opacity-50"}`}
         style={{ objectFit: "fill" }}
       />
 

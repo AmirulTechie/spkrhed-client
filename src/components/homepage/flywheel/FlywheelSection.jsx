@@ -80,7 +80,7 @@ function StepCard({ step, cardRef }) {
   return (
     <div
       ref={cardRef}
-      className={`relative aspect-321/353 w-full bg-[rgba(217,217,217,0.5)] backdrop-blur-md [mask-image:url('/images/Home/flywheel-card-shape.svg')] mask-no-repeat mask-size-[100%_100%] ${step.offset ? "sm:mt-[clamp(38px,8.0556vw,116px)]" : ""}`}
+      className={`relative mx-auto aspect-321/353 w-full max-w-70 bg-[rgba(217,217,217,0.5)] backdrop-blur-md [mask-image:url('/images/Home/flywheel-card-shape.svg')] mask-no-repeat mask-size-[100%_100%] sm:max-w-none ${step.offset ? "sm:mt-[clamp(38px,8.0556vw,116px)]" : ""}`}
     >
       <div className="flex h-full w-full flex-col pt-[clamp(20px,1.875vw,27px)] pr-[clamp(20px,1.875vw,27px)] pb-[clamp(28px,2.6389vw,38px)] pl-[clamp(20px,1.875vw,27px)]">
         <div className="mr-[clamp(13px,1.3194vw,19px)] flex items-start justify-between">
@@ -93,7 +93,7 @@ function StepCard({ step, cardRef }) {
         </div>
         <div className="mt-[clamp(9px,0.9028vw,13px)] mr-[clamp(13px,1.3194vw,19px)] border-t border-[#101010]" />
 
-        <div className="mt-auto">
+        <div className="mt-auto pt-[clamp(6px,0.9028vw,13px)]">
           <h3 className="font-anton-sc text-[clamp(16px,1.3889vw,20px)] uppercase leading-[0.8] text-[#101010]">
             {step.title}
           </h3>
@@ -247,7 +247,7 @@ export default function FlywheelSection() {
         alt=""
         width={2162}
         height={3842}
-        className="pointer-events-none absolute right-[-8%] top-[15%] z-0 w-[50%] select-none"
+        className="pointer-events-none absolute right-[-8%] top-[15%] z-0 hidden w-[50%] select-none sm:block"
       />
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
@@ -293,7 +293,7 @@ export default function FlywheelSection() {
 
         <p
           ref={climbRef}
-          className="mx-auto mt-[clamp(-23px,-1.5972vw,-16px)] max-w-197 font-alex-brush text-[clamp(48px,7.2917vw,105px)] leading-[0.8] text-[#AC40FF]"
+          className="mx-auto mt-[-0.12em] max-w-197 font-alex-brush text-[clamp(48px,7.2917vw,105px)] leading-[0.8] text-[#AC40FF]"
         >
           <span className="block">
             <span className="climb-line inline-block">Outreach Makes</span>
