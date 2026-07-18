@@ -185,7 +185,10 @@ export default function FoundationAmplifySection() {
         style={{ height: "clamp(114px,28.3333vw,408px)" }}
       />
 
-      <div className="relative mx-auto max-w-300">
+      <div
+        className="relative mx-auto"
+        style={{ width: "clamp(665px,83.125vw,1197px)" }}
+      >
         <div
           ref={cardsWrapperRef}
           className="relative"
@@ -236,7 +239,7 @@ export default function FoundationAmplifySection() {
             style={{
               width: "clamp(48px,5.9722vw,86px)",
               height: "clamp(48px,5.9722vw,86px)",
-              right: "clamp(-24px,-2.9861vw,-43px)",
+              right: "clamp(-54px,-6.7361vw,-97px)",
               top: "60.8%",
               transform: "translateY(-50%)",
               backgroundColor: "rgba(15,15,15,0.5)",

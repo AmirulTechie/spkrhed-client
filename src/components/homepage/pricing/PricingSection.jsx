@@ -291,7 +291,7 @@ export default function PricingSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute right-[-24%] top-[-10vw] w-[50%] select-none"
+        className="pointer-events-none absolute right-[-24%] top-[-20vw] w-[50%] select-none"
       />
 
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">
@@ -310,7 +310,7 @@ export default function PricingSection() {
         </p>
 
         {/* mt-top gives room for the "Most Popular" tag that sits above the Beanstalk card */}
-        <div className="mt-[clamp(32px,3.2639vw,47px)] grid grid-cols-1 items-stretch gap-[clamp(8px,0.6944vw,10px)] sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-[clamp(32px,3.2639vw,47px)] grid grid-cols-1 items-stretch gap-[clamp(30px,0.6944vw,50px)] sm:grid-cols-2 sm:gap-7 xl:grid-cols-4 xl:gap-[11.7px]">
           {TIERS.map((tier, index) => (
             <PricingCard
               key={tier.name}

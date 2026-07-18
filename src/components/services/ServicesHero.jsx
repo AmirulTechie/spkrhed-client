@@ -86,7 +86,7 @@ export default function ServicesHero() {
   }, []);
 
   return (
-    <section className="relative flex h-screen w-full items-end overflow-hidden bg-black">
+    <section className="relative flex min-h-dvh w-full items-center overflow-hidden bg-black lg:h-screen lg:items-end">
       <Image
         src="/images/services/services-banner.png"
         alt=""
@@ -113,7 +113,7 @@ export default function ServicesHero() {
         className="absolute inset-x-0 bottom-0 h-[40%] bg-linear-to-b from-transparent to-[#0f0f0f]"
       />
 
-      <div className="relative z-10 grid w-full grid-cols-1 items-end gap-y-10 px-8 pb-[clamp(24px,3.1944vw,46px)] text-white sm:px-12 lg:grid-cols-[490fr_598fr] lg:gap-x-[clamp(48px,14.4444vw,208px)] lg:px-16">
+      <div className="relative z-10 grid w-full grid-cols-1 items-end gap-y-8 px-8 py-[clamp(96px,14vw,120px)] text-white sm:px-12 sm:gap-y-10 lg:grid-cols-[490fr_598fr] lg:gap-x-[clamp(48px,14.4444vw,208px)] lg:px-16 lg:py-0 lg:pb-[clamp(24px,3.1944vw,46px)]">
         <div className="flex flex-col items-start">
           <Image
             src="/images/spkrhed-logo.png"
@@ -143,17 +143,17 @@ export default function ServicesHero() {
           </p>
         </div>
 
-        <div className="text-right flex flex-col items-end">
+        <div className="flex flex-col items-start text-left lg:items-end lg:text-right">
           <p
             ref={descriptionRef}
-            className="font-poppins text-[clamp(14px,1.1806vw,17px)] uppercase leading-[1.1] max-w-[598px]"
+            className="font-poppins text-[clamp(14px,1.1806vw,17px)] uppercase leading-[1.35] max-w-149.5 lg:leading-[1.1]"
           >
             {DESCRIPTION_TEXT}
           </p>
 
           <p
             ref={noteRef}
-            className="mt-[clamp(8px,1.1111vw,16px)] font-poppins text-[clamp(11px,0.8333vw,12px)] italic uppercase leading-[1.1] text-white/60 max-w-[539px]"
+            className="mt-[clamp(8px,1.1111vw,16px)] font-poppins text-[clamp(11px,0.8333vw,12px)] italic uppercase leading-[1.35] text-white/60 max-w-134.75 lg:leading-[1.1]"
           >
             {NOTE_TEXT}
           </p>
