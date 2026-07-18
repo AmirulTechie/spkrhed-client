@@ -204,17 +204,17 @@ export default function BeanstalkSystemSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-14%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
+        className="pointer-events-none absolute bottom-[-40%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
       />
       <Image
         src="/images/Home/cloud.png"
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-16%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
+        className="pointer-events-none absolute bottom-[-20%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
       />
       <div
-      className="pointer-events-none absolute left-[clamp(120px,14.375vw,207px)] top-[20.2083vw] h-[clamp(200px,29.7917vw,429px)] w-[clamp(500px,69.9306vw,1007px)]"
+      className="pointer-events-none absolute left-[clamp(120px,14.375vw,207px)] top-[20.2083vw] h-[clamp(200px,29.7917vw,429px)] w-[clamp(500px,96vw,1500px)]"
       style={{
         background:
         "linear-gradient(180deg, #F0F0EA 0%, rgba(240, 240, 234, 0) 100%)",
@@ -225,26 +225,29 @@ export default function BeanstalkSystemSection() {
       </h2>
 
       <div className="relative z-10 mx-auto max-w-400 px-[clamp(24px,5.5556vw,80px)] text-center">
-        <div className="mt-[clamp(24px,10.213vw,141px)] flex flex-col">
+        <div className="mt-[clamp(24px,10.213vw,141px)] flex flex-col items-center">
           <p
             ref={fivePlantingsRef}
             className="whitespace-nowrap font-anton-sc text-[clamp(22px,5.4167vw,78px)] uppercase leading-none text-black"
           >
             <TypewriterChars text="Five Plantings. One Unstoppable" />
           </p>
-          <p
-            ref={growthEngineRef}
-            className="mt-[clamp(-39px,-2.7083vw,-11px)] whitespace-pre font-alex-brush text-[clamp(48px,14.0278vw,202px)] leading-none text-[#AC40FF]"
-          >
-            Growth    Engine.
-          </p>
-        <p
-          ref={descriptionRef}
-          className="mt-[clamp(-22px,-1.5278vw,-5px)] max-w-[clamp(280px,32.6389vw,470px)] font-poppins text-[clamp(16px,1.8056vw,26px)] font-medium leading-none text-black/70 text-start"
-        >
-          Jack didn&apos;t climb by accident — he planted the right seed in
-          the right ground. We do the same for your business on LinkedIn.
-        </p>
+          <div className="flex flex-col items-start">
+            <p
+              ref={growthEngineRef}
+              className="mt-[clamp(-39px,-2.7083vw,-11px)] whitespace-pre font-alex-brush text-[clamp(48px,14.0278vw,202px)] leading-none text-[#AC40FF]"
+            >
+              Growth    Engine.
+            </p>
+            <p
+              ref={descriptionRef}
+              className="mt-[clamp(-22px,-1.5278vw,-5px)] max-w-[clamp(280px,32.6389vw,470px)] font-poppins text-[clamp(16px,1.8056vw,26px)] font-medium leading-none text-black/70 text-start"
+            >
+              Jack didn&apos;t climb by accident — he planted the right seed
+              in the right ground. We do the same for your business on
+              LinkedIn.
+            </p>
+          </div>
         </div>
         <div className="relative z-10 mt-[clamp(48px,6.6667vw,96px)] flex flex-col items-center gap-[clamp(32px,4.4444vw,64px)]">
           {CARDS.map((card, index) => (

@@ -11,7 +11,7 @@ export default function PickYourBeanstalkSection() {
           src="/images/big-branch.png"
           alt=""
           fill
-          sizes="(min-width: 768px) 55vw, 55vw"
+          sizes="(min-width: 500px) 40vw, 40vw"
           className="object-cover select-none"
         />
         {/* Mobile-only fade for the vine's flat-cut top edge; desktop uses the precisely
@@ -33,13 +33,14 @@ export default function PickYourBeanstalkSection() {
         }}
       />
 
-      <div className="relative mx-auto h-auto max-w-500 px-8 sm:px-12 lg:px-16 md:mx-0 md:h-full md:max-w-none md:px-0">
-        <h2 className="text-center font-anton-sc text-[clamp(40px,10.9722vw,158px)] leading-[0.886] uppercase text-white md:absolute md:top-0 md:left-[5%] md:w-[91.1111%]">
+      <div className="relative mx-auto h-auto max-w-11/12 px-8 sm:px-12 lg:px-16 md:mx-0 md:h-full md:max-w-none md:px-0">
+      <div className="flex justify-center">
+        <h2 className="text-center font-anton-sc text-[clamp(40px,11.81vw,170px)] leading-[1.4] uppercase text-white md:absolute md:top-0 md:left-[5%] md:w-[91.1111%]">
           Pick your Beanstalk.
         </h2>
-
-        <div className="mt-[clamp(24px,4vw,58px)] flex flex-col gap-[clamp(20px,2.5vw,36px)] md:contents">
-          <p className="max-w-40 font-poppins text-[clamp(14px,1.5972vw,23px)] leading-[1.1] text-white uppercase md:absolute md:top-[23.3859%] md:left-[5%] md:w-[38.4028%] md:max-w-none">
+        </div>
+        <div className="flex flex-col gap-[clamp(20px,2.5vw,36px)] md:contents">
+          <p className="font-poppins text-[clamp(14px,1.5972vw,23px)] leading-[1.1] text-white uppercase md:absolute md:top-[33%] md:left-[14%] md:w-[38.4028%] md:max-w-120">
             Not sure which pieces you need? Most clients start with the core
             engine, then add a rung at a time as the pipeline compounds. Book
             a call and we will map the right starting point for you.
