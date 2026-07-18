@@ -200,7 +200,24 @@ export default function OldestGrowthStorySection() {
       });
     }, sectionRef);
 
-    return () => ctx.revert();
+    // Images (here, elsewhere in this section, and in sections above/below)
+    // can finish loading after this effect runs and change the document's
+    // total height. Any ScrollTrigger created before that happens ends up
+    // with a stale start/end position, which is why later cards can stop
+    // animating in ("scroll gets stuck") once enough layout has shifted.
+    // Refreshing on window load, plus a couple of delayed safety refreshes,
+    // realigns every trigger to the final layout.
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("load", refresh);
+    const t1 = setTimeout(refresh, 500);
+    const t2 = setTimeout(refresh, 1500);
+
+    return () => {
+      ctx.revert();
+      window.removeEventListener("load", refresh);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, []);
 
   useLayoutEffect(() => {
