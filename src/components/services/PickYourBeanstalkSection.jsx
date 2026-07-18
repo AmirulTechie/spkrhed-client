@@ -5,16 +5,33 @@ export default function PickYourBeanstalkSection() {
     <section className="relative min-h-120 overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)] md:h-[clamp(500px,48.4028vw,697px)] md:py-0">
       <div
         aria-hidden
-        className="pointer-events-none absolute right-[2%] bottom-0 h-[80vw] w-[55vw] md:right-auto md:bottom-auto md:left-[28.3868%] md:top-[15.0645%] md:h-[105.8vw] md:w-[71.8194%]"
+        className="pointer-events-none absolute right-[2%] bottom-0 h-[80vw] w-[55vw] overflow-hidden md:right-auto md:bottom-auto md:left-[28.3870%] md:top-[15.0646%] md:h-[97.3611vw] md:w-[54.7917%] md:origin-top-left md:overflow-visible md:rotate-[10.6363deg]"
       >
         <Image
           src="/images/big-branch.png"
           alt=""
-          width={2162}
-          height={3842}
-          className="absolute h-auto w-[50%] max-w-none select-none md:top-[5vw] md:left-[12.55%] md:w-[37vw]"
+          fill
+          sizes="(min-width: 768px) 55vw, 55vw"
+          className="object-cover select-none"
+        />
+        {/* Mobile-only fade for the vine's flat-cut top edge; desktop uses the precisely
+            positioned/rotated overlay below, matching the Figma design exactly. */}
+        <div
+          className="absolute inset-x-0 top-0 h-[40%] md:hidden"
+          style={{
+            background: "linear-gradient(180deg, #000000 0%, rgba(0,0,0,0) 100%)",
+          }}
         />
       </div>
+      {/* Blends the vine's flat-cut top edge into the black bg, matching the Figma overlay
+          (same size/position/rotation as the "Rectangle 164" gradient in the Figma design). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute hidden md:left-[32.9590%] md:top-[17.5036%] md:block md:h-[24.4429vw] md:w-[43.1675%] md:origin-top-left md:rotate-[5.4463deg]"
+        style={{
+          background: "linear-gradient(180deg, #000000 0%, rgba(0,0,0,0) 100%)",
+        }}
+      />
 
       <div className="relative mx-auto h-auto max-w-500 px-8 sm:px-12 lg:px-16 md:mx-0 md:h-full md:max-w-none md:px-0">
         <h2 className="text-center font-anton-sc text-[clamp(40px,10.9722vw,158px)] leading-[0.886] uppercase text-white md:absolute md:top-0 md:left-[5%] md:w-[91.1111%]">

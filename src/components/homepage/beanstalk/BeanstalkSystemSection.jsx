@@ -113,10 +113,7 @@ export default function BeanstalkSystemSection() {
     ];
 
     const ctx = gsap.context(() => {
-      // xPercent replicates the Tailwind -translate-x-1/2 centering: GSAP
-      // owns the full transform once it animates y here, so the class's
-      // translateX would otherwise be silently dropped.
-      gsap.set(bigBranchRef.current, { opacity: 0, y: 220, xPercent: -50 });
+      gsap.set(bigBranchRef.current, { opacity: 0, y: 220 });
       gsap.set(typewriterChars, { opacity: 0 });
       gsap.set(growthEngineRef.current, {
         opacity: 0,
@@ -200,23 +197,30 @@ export default function BeanstalkSystemSection() {
         alt=""
         width={2162}
         height={3842}
-        className="pointer-events-none absolute -right-150 top-[300] z-0 w-[70%] select-none"
+        className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none lg:w-[75.0694%]"
       />
       <Image
         src="/images/Home/cloud.png"
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute -bottom-100.5 left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-999"
+        className="pointer-events-none absolute bottom-[-14%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
+      />
+      <Image
+        src="/images/Home/cloud.png"
+        alt=""
+        width={3723}
+        height={1164}
+        className="pointer-events-none absolute bottom-[-16%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
       />
       <div
-      className="pointer-events-none absolute left-[clamp(120px,14.375vw,207px)] top-[clamp(200px,10vw,360px)] h-[clamp(200px,29.7917vw,429px)] w-[clamp(500px,69.9306vw,1007px)]"
+      className="pointer-events-none absolute left-[clamp(120px,14.375vw,207px)] top-[20.2083vw] h-[clamp(200px,29.7917vw,429px)] w-[clamp(500px,69.9306vw,1007px)]"
       style={{
         background:
         "linear-gradient(180deg, #F0F0EA 0%, rgba(240, 240, 234, 0) 100%)",
       }}
     />
-      <h2 className="relative z-10 w-full origin-center scale-140 text-center font-anton-sc text-[clamp(40px,8vw,160px)] uppercase leading-[100%] text-black">
+      <h2 className="relative z-10 w-full origin-center px-4 text-center font-anton-sc text-[clamp(40px,8vw,160px)] uppercase leading-[100%] text-black lg:scale-140">
         The Beanstalk System
       </h2>
 

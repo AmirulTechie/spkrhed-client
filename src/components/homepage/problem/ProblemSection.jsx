@@ -292,7 +292,7 @@ export default function ProblemSection() {
     <section
       ref={sectionRef}
       id="problem"
-      className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pt-30"
+      className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA]"
     >
       <Image
         ref={leafTopRef}
@@ -311,8 +311,8 @@ export default function ProblemSection() {
         className="pointer-events-none absolute left-[17.16%] top-[62%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none"
       />
 
-      <div className="relative mx-auto max-w-360 py-[clamp(40px,6.9444vw,100px)]">
-        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,6.1111vw,88px)] gap-y-12 lg:grid-cols-[526fr_647fr]">
+      <div className="relative mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] py-[clamp(40px,6.9444vw,100px)]">
+        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,6.1111vw,88px)] gap-y-[clamp(32px,3.3333vw,48px)] md:grid-cols-2 lg:grid-cols-[526fr_647fr]">
           <div>
             <div className="mb-4 flex items-center gap-3">
               <span ref={bulletRef} className="inline-flex opacity-0">
@@ -352,7 +352,7 @@ export default function ProblemSection() {
 
             <p
               ref={descriptionRef}
-              className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black top-50"
+              className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black lg:top-50"
             >
               <SproutChars text={DESCRIPTION_TEXT} />
             </p>

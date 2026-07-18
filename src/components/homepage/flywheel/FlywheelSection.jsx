@@ -5,19 +5,8 @@ import { ArrowUpRight } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
-
-// Same curl used by Hero's "climb to you" and Beanstalk's "Growth Engine." —
-// a vine tip unrolling into place rather than a straight vertical slide.
-// Reused here so "Outreach Makes Content Close Faster." matches that motion.
-const CLIMB_PATH = [
-  { x: 0, y: 90 },
-  { x: 26, y: 55 },
-  { x: -14, y: 22 },
-  { x: 0, y: 0 },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 const BULLET_TEXT = "The Flywheel";
 
@@ -130,15 +119,18 @@ export default function FlywheelSection() {
   // reached: the tree branch rises from below (resting position/rotation
   // untouched), "The Flywheel" is coupled to its first character exactly
   // like Hero's "This is a movement" line, the heading types on line by line
-  // the same way as Hero's display headings, "Outreach Makes Content Close
-  // Faster." climbs in with the same curl as Hero's "climb to you", and
-  // each card then pops in with a stagger.
+  // the same way as Hero's display headings, and "Outreach Makes Content
+  // Close Faster." ink-reveals line by line — each line clip-path wipes in
+  // left to right like a pen writing it, rather than the shaky curl/rotate
+  // treatment used elsewhere. Each of the 4 cards then pops in on its own
+  // ScrollTrigger as it's scrolled into view, matching ProjectsSection's
+  // project-row treatment, instead of a single staggered batch.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".sprout-char"),
     ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
-    const cards = cardRefs.current.filter(Boolean);
+    const climbLines = [...climbRef.current.querySelectorAll(".climb-line")];
 
     const ctx = gsap.context(() => {
       // Rotation is set explicitly (rather than left to the Tailwind
@@ -147,13 +139,10 @@ export default function FlywheelSection() {
       // silently dropped.
       gsap.set(treeBranchRef.current, { opacity: 0, y: 220, rotate: 12 });
       gsap.set(headingChars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
-      gsap.set(climbRef.current, {
-        opacity: 0,
-        filter: "blur(6px)",
-        rotate: -8,
-        transformOrigin: "left bottom",
-      });
-      gsap.set(cards, { opacity: 0, y: 80, scale: 0.85 });
+      // Each line starts fully clipped from the right so it can wipe into
+      // view left to right, hugging the line's own text width (the lines
+      // are inline-block) rather than the paragraph's full centered box.
+      gsap.set(climbLines, { clipPath: "inset(0% 100% 0% 0%)" });
 
       const anchorEl = bulletChars[0];
       const bulletEls = [bulletRef.current, ...bulletChars];
@@ -174,9 +163,8 @@ export default function FlywheelSection() {
 
       // Phases are deliberately overlapped rather than chained end-to-end —
       // the branch rises in the background while the bullet/heading build
-      // in front of it, and cards start popping before the climb text has
-      // even finished settling. Same beats as before, played as a chord
-      // instead of a sequence so the whole entrance resolves much quicker.
+      // in front of it. Played as a chord instead of a sequence so the
+      // whole entrance resolves quickly.
       tl.to(treeBranchRef.current, {
         opacity: 0.9,
         y: 0,
@@ -207,29 +195,42 @@ export default function FlywheelSection() {
           "-=0.15",
         )
         .to(
-          climbRef.current,
+          climbLines,
           {
-            opacity: 1,
-            filter: "blur(0px)",
-            rotate: 0,
-            duration: 0.55,
-            ease: "power2.out",
-            motionPath: { path: CLIMB_PATH, curviness: 1.5 },
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 0.7,
+            ease: "power2.inOut",
+            stagger: 0.25,
           },
-          "-=0.25",
-        )
-        .to(
-          cards,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.5,
-            ease: "back.out(1.6)",
-            stagger: 0.08,
-          },
-          "-=0.3",
+          "-=0.15",
         );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Each of the 4 flywheel steps pops in independently as the user scrolls
+  // it into view — same treatment as ProjectsSection's project rows —
+  // instead of all 4 firing together off the section's own entrance.
+  useLayoutEffect(() => {
+    const cards = cardRefs.current.filter(Boolean);
+
+    const ctx = gsap.context(() => {
+      cards.forEach((cardEl) => {
+        gsap.set(cardEl, { opacity: 0, y: 90, scale: 0.92 });
+        gsap.to(cardEl, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.9,
+          ease: "back.out(1.6)",
+          scrollTrigger: {
+            trigger: cardEl,
+            start: "top 88%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -294,11 +295,17 @@ export default function FlywheelSection() {
           ref={climbRef}
           className="mx-auto mt-[clamp(-23px,-1.5972vw,-16px)] max-w-197 font-alex-brush text-[clamp(48px,7.2917vw,105px)] leading-[0.8] text-[#AC40FF]"
         >
-          <span className="block">Outreach Makes</span>
-          <span className="block">Content Close Faster.</span>
+          <span className="block">
+            <span className="climb-line inline-block">Outreach Makes</span>
+          </span>
+          <span className="block">
+            <span className="climb-line inline-block">
+              Content Close Faster.
+            </span>
+          </span>
         </p>
 
-        <div className="relative z-10 mt-[clamp(48px,9.5139vw,137px)] grid grid-cols-1 gap-x-[clamp(30px,1.4583vw,40px)] gap-y-[clamp(40px,4.4444vw,64px)] text-left sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
+        <div className="relative z-10 mt-[clamp(48px,9.5139vw,137px)] grid grid-cols-1 gap-x-[clamp(30px,1.4583vw,40px)] gap-y-[clamp(16px,4.4444vw,64px)] text-left sm:grid-cols-2 sm:gap-y-[clamp(40px,4.4444vw,64px)] lg:grid-cols-4 lg:items-start">
           {STEPS.map((step, index) => (
             <StepCard
               key={step.number}
@@ -316,7 +323,7 @@ export default function FlywheelSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute -bottom-120 left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-9999 opacity-50"
+        className="pointer-events-none absolute bottom-[-33.3333%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-9999 opacity-50"
       />
     </section>
   );

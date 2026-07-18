@@ -208,17 +208,14 @@ export default function PricingSection() {
   const cardRefs = useRef([]);
 
   // One-time entrance, gated behind ScrollTrigger the moment the section is
-  // reached: each tree branch travels in toward its existing resting
-  // position/rotation from its own nearest edge (left branch from the left,
-  // right branch from the right), the heading and description type on
-  // together with the same char-by-char treatment, and the cards then pop in
-  // one by one.
+  // reached: cards pop in together, the heading types on char-by-char, and
+  // the description fades/slides up from below — all as one simultaneous
+  // wave. Once that wave settles, each tree branch travels in toward its
+  // existing resting position/rotation from its own nearest edge (left
+  // branch from the left, right branch from the right).
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".typewriter-char"),
-    ];
-    const descriptionChars = [
-      ...descriptionRef.current.querySelectorAll(".typewriter-char"),
     ];
     const cards = cardRefs.current.filter(Boolean);
 
@@ -229,7 +226,8 @@ export default function PricingSection() {
       // otherwise be silently dropped.
       gsap.set(leftBranchRef.current, { opacity: 0, x: -320, rotate: 45 });
       gsap.set(rightBranchRef.current, { opacity: 0, x: 320, scaleX: -1 });
-      gsap.set([...headingChars, ...descriptionChars], { opacity: 0 });
+      gsap.set(headingChars, { opacity: 0 });
+      gsap.set(descriptionRef.current, { opacity: 0, y: 40 });
       gsap.set(cards, { opacity: 0, y: 80, scale: 0.85 });
 
       const tl = gsap.timeline({
@@ -240,38 +238,33 @@ export default function PricingSection() {
         },
       });
 
-      tl.to(leftBranchRef.current, {
-        opacity: 0.9,
-        x: 0,
-        duration: 1,
-        ease: "power3.out",
+      tl.to(cards, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        ease: "back.out(1.6)",
       })
+        .to(
+          headingChars,
+          { opacity: 1, duration: 0.01, stagger: 0.02, ease: "none" },
+          "<",
+        )
+        .to(
+          descriptionRef.current,
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          "<",
+        )
+        .to(leftBranchRef.current, {
+          opacity: 0.9,
+          x: 0,
+          duration: 1,
+          ease: "power3.out",
+        })
         .to(
           rightBranchRef.current,
           { opacity: 0.9, x: 0, duration: 1, ease: "power3.out" },
           "<",
-        )
-        .to(
-          headingChars,
-          { opacity: 1, duration: 0.01, stagger: 0.02, ease: "none" },
-          "-=0.5",
-        )
-        .to(
-          descriptionChars,
-          { opacity: 1, duration: 0.01, stagger: 0.006, ease: "none" },
-          "-=0.1",
-        )
-        .to(
-          cards,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: "back.out(1.6)",
-            stagger: 0.12,
-          },
-          "-=0.2",
         );
     }, sectionRef);
 
@@ -289,7 +282,7 @@ export default function PricingSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute -left-120 -top-90 w-[50%] select-none"
+        className="pointer-events-none absolute left-[-25%] top-[-23vw] w-[50%] select-none"
       />
 
       <Image
@@ -298,7 +291,7 @@ export default function PricingSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute -right-100 -top-60 w-[50%] select-none"
+        className="pointer-events-none absolute right-[-24%] top-[-10vw] w-[50%] select-none"
       />
 
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">
@@ -313,7 +306,7 @@ export default function PricingSection() {
           ref={descriptionRef}
           className="mx-auto mt-[clamp(16px,1.875vw,27px)] max-w-3xl text-center font-poppins text-[clamp(15px,1.3194vw,19px)] leading-[0.97] text-white"
         >
-          <TypewriterChars text={DESCRIPTION_TEXT} />
+          {DESCRIPTION_TEXT}
         </p>
 
         {/* mt-top gives room for the "Most Popular" tag that sits above the Beanstalk card */}

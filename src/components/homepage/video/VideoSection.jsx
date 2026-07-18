@@ -75,6 +75,17 @@ export default function VideoSection() {
         gsap.set(cloud, { xPercent: -50 });
         gsap.set(video, { xPercent: -50, yPercent: -50 });
 
+        // Below lg, skip the pinned scroll-scrub entirely and just render
+        // everything at its resting position — pinning a full-viewport
+        // stage over a scrub is heavy and janky on mobile scroll.
+        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+        if (!isDesktop) {
+          branches.forEach((el) => gsap.set(el, { x: 0, y: 0 }));
+          gsap.set(cloud, { y: 0 });
+          gsap.set(video, { scale: 1 });
+          return;
+        }
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: stage,
