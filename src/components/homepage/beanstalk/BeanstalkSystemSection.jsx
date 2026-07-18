@@ -11,12 +11,7 @@ gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 // Same curl used by Hero's "climb to you" text — a vine tip unrolling into
 // place rather than a straight vertical slide. Reused here so "Growth
 // Engine." matches that motion exactly, per design ask.
-const CLIMB_PATH = [
-  { x: 0, y: 90 },
-  { x: 26, y: 55 },
-  { x: -14, y: 22 },
-  { x: 0, y: 0 },
-];
+// remove this whole block
 
 // Splits on words and keeps spaces as real text nodes between word-spans
 // (rather than wrapping the space itself in a span) — a lone space as the
@@ -116,11 +111,11 @@ export default function BeanstalkSystemSection() {
       gsap.set(bigBranchRef.current, { opacity: 0, y: 220 });
       gsap.set(typewriterChars, { opacity: 0 });
       gsap.set(growthEngineRef.current, {
-        opacity: 0,
-        filter: "blur(6px)",
-        rotate: -8,
-        transformOrigin: "left bottom",
-      });
+  opacity: 0,
+  y: 30,
+  scale: 0.8,
+  transformOrigin: "center bottom",
+});
       gsap.set(descriptionRef.current, { opacity: 0, x: -140 });
 
       const tl = gsap.timeline({
@@ -148,17 +143,16 @@ export default function BeanstalkSystemSection() {
           "-=0.7",
         )
         .to(
-          growthEngineRef.current,
-          {
-            opacity: 1,
-            filter: "blur(0px)",
-            rotate: 0,
-            duration: 0.9,
-            ease: "power2.out",
-            motionPath: { path: CLIMB_PATH, curviness: 1.5 },
-          },
-          "-=0.2",
-        )
+  growthEngineRef.current,
+  {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.7,
+    ease: "back.out(1.7)",
+  },
+  "-=0.2",
+)
         .to(
           descriptionRef.current,
           { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
@@ -192,13 +186,19 @@ export default function BeanstalkSystemSection() {
       className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pb-[clamp(64px,9.7222vw,140px)]"
     >
       <Image
-        ref={bigBranchRef}
-        src="/images/Home/big-branch.png"
-        alt=""
-        width={2162}
-        height={3842}
-        className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none lg:w-[75.0694%]"
-      />
+  ref={bigBranchRef}
+  src="/images/Home/big-branch.png"
+  alt=""
+  width={2162}
+  height={3842}
+  className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none lg:w-[75.0694%]"
+  style={{
+    maskImage:
+      "linear-gradient(to bottom, black 0%, black 65%, transparent 88%)",
+    WebkitMaskImage:
+      "linear-gradient(to bottom, black 0%, black 65%, transparent 88%)",
+  }}
+/>
       <Image
         src="/images/Home/cloud.png"
         alt=""
