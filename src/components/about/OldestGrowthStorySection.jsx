@@ -3,9 +3,44 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ACTIVE_FILTER = "grayscale(0) brightness(1)";
 const INACTIVE_FILTER = "grayscale(1) brightness(0.35)";
+const BULLET_TEXT = "Our Story";
+const HEADING_TEXT = "The oldest growth story there is.";
+const DESCRIPTION_TEXT =
+  "A boy trades what little he has for a handful of beans everyone swears are worthless. Overnight, they climb into a kingdom of gold. That is the whole idea behind SPKRHED. The right small investment, planted well, grows further than anyone expects. Here is how the story maps to the work we do for you.";
+
+// Splits on words, keeping spaces as real text nodes between word-spans
+// (rather than wrapping the space itself in a span, which would collapse to
+// zero width), and wraps each character in an individually animatable span —
+// the same char-level building block WhyNowClimbSection uses for its bullet,
+// heading, and description entrance.
+function SproutChars({ text, charClassName = "sprout-char" }) {
+  const words = text.split(" ");
+  const nodes = [];
+
+  words.forEach((word, wi) => {
+    nodes.push(
+      <span key={`w-${wi}`} className="inline-block">
+        {word.split("").map((char, ci) => (
+          <span
+            key={ci}
+            className={`${charClassName} inline-block opacity-0`}
+          >
+            {char}
+          </span>
+        ))}
+      </span>,
+    );
+    if (wi < words.length - 1) nodes.push(" ");
+  });
+
+  return nodes;
+}
 
 const CARDS = [
   {
@@ -70,6 +105,104 @@ export default function OldestGrowthStorySection() {
   const contentRefs = useRef([]);
   const mountedRef = useRef(false);
 
+  const sectionRef = useRef(null);
+  const bulletIconRef = useRef(null);
+  const bulletCharRefs = useRef([]);
+  const headingRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const cardRefs = useRef([]);
+
+  // One-time entrance, gated behind ScrollTrigger, mirroring
+  // WhyNowClimbSection: the bullet label is coupled to its first character
+  // and pulls apart outward from that anchor, the heading sprouts up char
+  // by char with a blur, and the description types on character by
+  // character. Each card then pops in on its own ScrollTrigger as the user
+  // scrolls it into view.
+  useLayoutEffect(() => {
+    const headingChars = [
+      ...headingRef.current.querySelectorAll(".sprout-char"),
+    ];
+    const descriptionChars = [
+      ...descriptionRef.current.querySelectorAll(".typewriter-char"),
+    ];
+    const bulletChars = bulletCharRefs.current.filter(Boolean);
+
+    const ctx = gsap.context(() => {
+      gsap.set(headingChars, {
+        opacity: 0,
+        yPercent: 60,
+        filter: "blur(6px)",
+      });
+      gsap.set(descriptionChars, { opacity: 0 });
+
+      const anchorEl = bulletChars[0];
+      const bulletEls = [bulletIconRef.current, ...bulletChars];
+      const anchorLeft = anchorEl.getBoundingClientRect().left;
+
+      gsap.set(bulletEls, {
+        opacity: 0,
+        x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      tl.to(bulletEls, {
+        x: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: { each: 0.032, from: bulletEls.indexOf(anchorEl) },
+      })
+        .to(
+          headingChars,
+          {
+            opacity: 1,
+            yPercent: 0,
+            filter: "blur(0px)",
+            duration: 0.4,
+            stagger: 0.02,
+            ease: "power2.out",
+          },
+          "-=0.15",
+        )
+        .to(
+          descriptionChars,
+          {
+            opacity: 1,
+            duration: 0.01,
+            stagger: 0.012,
+            ease: "none",
+          },
+          "-=0.2",
+        );
+
+      cardRefs.current.forEach((cardEl) => {
+        if (!cardEl) return;
+        gsap.set(cardEl, { opacity: 0, y: 90, scale: 0.92 });
+        gsap.to(cardEl, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.9,
+          ease: "back.out(1.6)",
+          scrollTrigger: {
+            trigger: cardEl,
+            start: "top 88%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   useLayoutEffect(() => {
     if (!mountedRef.current) {
       mountedRef.current = true;
@@ -93,33 +226,55 @@ export default function OldestGrowthStorySection() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]"
+    >
       <div className="relative mx-auto max-w-11/12 px-8 sm:px-12 lg:px-16">
         <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
-          <div className=" max-w-112.5">
+          <div className="max-w-112.5">
             <div className="flex items-center gap-3">
-              <Image
-                src="/images/Home/banner-bullet.png"
-                alt=""
-                width={20}
-                height={20}
-                className="h-[clamp(10px,1.0417vw,15px)] w-[clamp(10px,1.0417vw,15px)]"
-              />
+              <span ref={bulletIconRef} className="inline-flex opacity-0">
+                <Image
+                  src="/images/Home/banner-bullet.png"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-[clamp(10px,1.0417vw,15px)] w-[clamp(10px,1.0417vw,15px)]"
+                />
+              </span>
               <span className="font-poppins text-[clamp(14px,1.5vw,21px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
-                Our Story
+                {BULLET_TEXT.split("").map((char, i) => (
+                  <span
+                    key={i}
+                    ref={(el) => {
+                      bulletCharRefs.current[i] = el;
+                    }}
+                    className="inline-block opacity-0"
+                  >
+                    {/* A lone space as the sole content of an inline-block box
+                        collapses to zero width; a non-breaking space preserves it. */}
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                ))}
               </span>
             </div>
-            <h2 className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[0.9] text-white">
-              The oldest growth story there is.
+            <h2
+              ref={headingRef}
+              className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[0.9] text-white"
+            >
+              <SproutChars text={HEADING_TEXT} />
             </h2>
           </div>
 
-          <p className="max-w-190 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.3] text-white/70 text-start">
-            A boy trades what little he has for a handful of beans everyone
-            swears are worthless. Overnight, they climb into a kingdom of
-            gold. That is the whole idea behind SPKRHED. The right small
-            investment, planted well, grows further than anyone expects.
-            Here is how the story maps to the work we do for you.
+          <p
+            ref={descriptionRef}
+            className="max-w-190 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.3] text-white/70 text-start"
+          >
+            <SproutChars
+              text={DESCRIPTION_TEXT}
+              charClassName="typewriter-char"
+            />
           </p>
         </div>
 
@@ -131,6 +286,9 @@ export default function OldestGrowthStorySection() {
             return (
               <div
                 key={card.id}
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
                 onMouseEnter={() => handleHover(index)}
                 className={`relative aspect-636/240 w-full cursor-pointer overflow-hidden rounded-[clamp(14px,5.5cqw,35px)] border transition-colors duration-500 ${
                   showBorder

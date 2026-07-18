@@ -156,7 +156,7 @@ export default function DiscoveryCallSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2 max-w-none -translate-x-1/2 select-none lg:bottom-[-55%] lg:w-[160%]"
+        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2 max-w-none -translate-x-1/2 select-none lg:bottom-[max(-34.697vw,-499.64px)] lg:w-[160%]"
       />
 
       {/* Desktop — pixel-matched to the Figma canvas (1440x860) */}
@@ -167,7 +167,7 @@ export default function DiscoveryCallSection() {
           alt=""
           width={1244}
           height={1244}
-          className="pointer-events-none absolute left-[60.42%] top-[35%] z-1 w-[43.19%] select-none"
+          className="pointer-events-none absolute left-[60.42%] top-[min(22.0801vw,317.95px)] z-1 w-[43.19%] select-none"
         />
 
         <Image
@@ -176,7 +176,7 @@ export default function DiscoveryCallSection() {
           alt=""
           width={552}
           height={290}
-          className="pointer-events-none absolute left-[10.69%] top-[64.42%] z-10 w-[19.17%] select-none"
+          className="pointer-events-none absolute left-[10.69%] top-[min(40.6391vw,585.2px)] z-10 w-[19.17%] select-none"
         />
 
         <div className="relative z-4 mx-auto flex max-w-360 flex-col items-center px-[clamp(20px,3.1944vw,46px)] pb-[clamp(48px,7.6389vw,110px)] pt-[clamp(56px,8.8889vw,128px)] text-center">

@@ -194,6 +194,7 @@ export default function GrowthEngineSection() {
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
   const cardsWrapperRef = useRef(null);
+  const watermarkRef = useRef(null);
 
   useLayoutEffect(() => {
     order.forEach((cardIndex, slotIndex) => {
@@ -277,6 +278,29 @@ export default function GrowthEngineSection() {
           { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
           "-=0.3",
         );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // The SPKRHED watermark sits far below the cards, past the section's own
+  // entrance trigger, so it gets its own ScrollTrigger keyed to itself
+  // rather than riding the section-wide timeline above.
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(watermarkRef.current, { opacity: 0, y: 60 });
+
+      gsap.to(watermarkRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: watermarkRef.current,
+          start: "top 90%",
+          toggleActions: "play none none reverse",
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -398,6 +422,7 @@ export default function GrowthEngineSection() {
       </div>
 
       <Image
+        ref={watermarkRef}
         src="/images/services/growth-engine-watermark.svg"
         alt=""
         width={1441}
