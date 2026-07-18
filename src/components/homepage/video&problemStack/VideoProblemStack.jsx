@@ -15,6 +15,10 @@ export default function VideoProblemStack() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+
+      if (!isDesktop) return;
+
       ScrollTrigger.create({
         trigger: videoRef.current,
         start: "top top",

@@ -11,8 +11,16 @@ gsap.registerPlugin(MotionPathPlugin);
 // instant the preloader finishes sliding away.
 const LOADER_DURATION = 3.5;
 
-const LEFT_LINES = ["WATCH", "PLANT"];
-const RIGHT_LINES = ["THE SEED", "THE CLIENTS"];
+// Row-major order so mobile (which stacks these in DOM order, no absolute
+// positioning) reads "WATCH THE SEED / PLANT THE CLIENTS" line by line
+// instead of grouping by column. Desktop re-pairs them into the two-column
+// layout below via lg:absolute + explicit row offsets.
+const HEADLINE_LINES = [
+  { text: "WATCH", column: "left", row: 0 },
+  { text: "THE SEED", column: "right", row: 0 },
+  { text: "PLANT", column: "left", row: 1 },
+  { text: "THE CLIENTS", column: "right", row: 1 },
+];
 const MOVEMENT_TEXT = "This is a movement";
 
 // A gentle curl, like a vine tip unrolling into place rather than a
@@ -39,17 +47,13 @@ function Line({ text }) {
 }
 
 export default function Hero() {
-  const leftRef = useRef(null);
-  const rightRef = useRef(null);
+  const linesRef = useRef(null);
   const climbRef = useRef(null);
   const bulletRef = useRef(null);
   const movementCharRefs = useRef([]);
 
   useLayoutEffect(() => {
-    const chars = [
-      ...leftRef.current.querySelectorAll(".sprout-char"),
-      ...rightRef.current.querySelectorAll(".sprout-char"),
-    ];
+    const chars = [...linesRef.current.querySelectorAll(".sprout-char")];
 
     const ctx = gsap.context(() => {
       gsap.set(chars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
@@ -111,7 +115,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black">
+    <section className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-black py-24 lg:py-0">
       <Image
         src="/images/Home/hero-banner.png"
         alt=""
@@ -163,28 +167,27 @@ export default function Hero() {
         </p>
 
         <div className="flex w-full flex-col items-center">
-          <div className="relative flex w-full flex-col items-center lg:h-[calc(2*clamp(30px,6.9444vw,160px))]">
-            <div
-              ref={leftRef}
-              className="flex flex-col items-center whitespace-nowrap font-anton-sc text-[clamp(30px,6.9444vw,160px)] leading-none lg:absolute lg:top-0 lg:right-[calc(50%+clamp(24px,5.55vw,90px))] lg:items-start"
-            >
-              {LEFT_LINES.map((line) => (
-                <Line key={line} text={line} />
-              ))}
-            </div>
-            <div
-              ref={rightRef}
-              className="flex flex-col items-center whitespace-nowrap font-anton-sc text-[clamp(30px,6.9444vw,160px)] leading-none lg:absolute lg:top-0 lg:left-[calc(50%+clamp(24px,5.55vw,90px))] lg:items-start"
-            >
-              {RIGHT_LINES.map((line) => (
-                <Line key={line} text={line} />
-              ))}
-            </div>
+          <div
+            ref={linesRef}
+            className="relative flex w-full flex-col items-center lg:h-[calc(2*clamp(30px,6.9444vw,160px))]"
+          >
+            {HEADLINE_LINES.map(({ text, column, row }) => (
+              <div
+                key={text}
+                className={`whitespace-nowrap font-anton-sc text-[clamp(40px,11vw,160px)] leading-none lg:text-[clamp(30px,6.9444vw,160px)] lg:absolute ${
+                  column === "left"
+                    ? "lg:right-[calc(50%+clamp(24px,5.55vw,90px))]"
+                    : "lg:left-[calc(50%+clamp(24px,5.55vw,90px))]"
+                } ${row === 0 ? "lg:top-0" : "lg:top-[clamp(30px,6.9444vw,160px)]"}`}
+              >
+                <Line text={text} />
+              </div>
+            ))}
           </div>
 
           <p
             ref={climbRef}
-            className="-mt-[clamp(12px,2.2222vw,50px)] font-playwrite-us-trad text-[clamp(32px,5.9028vw,130px)] text-[#AC40FF] z-9999 opacity-0"
+            className="-mt-[clamp(12px,2.2222vw,50px)] font-playwrite-us-trad text-[clamp(40px,5.9028vw,130px)] text-[#AC40FF] z-9999 opacity-0"
           >
             climb to you
           </p>
