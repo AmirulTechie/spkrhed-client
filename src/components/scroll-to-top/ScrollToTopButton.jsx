@@ -64,7 +64,7 @@ export default function ScrollToTopButton() {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white shadow-[0_8px_28px_rgba(0,0,0,0.35)] backdrop-blur-md transition-colors hover:border-white/35 hover:bg-black/55 sm:right-8 sm:bottom-8"
+          className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white shadow-[0_8px_28px_rgba(0,0,0,0.35)] backdrop-blur-md transition-colors hover:border-white/35 hover:bg-black/55 sm:right-8 sm:bottom-8 cursor-pointer"
         >
           <span
             aria-hidden
