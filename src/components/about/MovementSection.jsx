@@ -352,7 +352,8 @@ export default function MovementSection() {
                 alt=""
                 aria-hidden
                 fill
-                className="object-cover blur-[1px]"
+                sizes="(min-width: 1024px) 300px, 60px"
+                className="object-cover blur-[0.4px] lg:blur-[1px]"
               />
             </div>
           </div>

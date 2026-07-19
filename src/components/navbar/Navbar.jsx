@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
+import gsap from "gsap";
 
 const SCROLL_THRESHOLD = 80;
+
+// Matches Loader.jsx's TOTAL_DURATION so the navbar's entrance starts the
+// instant the preloader finishes sliding away, same as the page heroes.
+const LOADER_DURATION = 3.5;
 
 const NAV_LINKS = [
   { label: "Work", href: "/work" },
@@ -73,9 +78,9 @@ function AnimatedNavLink({ href, children, onClick, isActive = false }) {
   );
 }
 
-function Logo() {
+function Logo({ innerRef }) {
   return (
-    <Link href="/" className="block">
+    <Link href="/" ref={innerRef} className="block opacity-0">
       <Image
         src="/images/spkrhed-logo.png"
         alt="SPKRHED"
@@ -136,6 +141,11 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollRef = useRef(0);
 
+  const logoRef = useRef(null);
+  const navListRef = useRef(null);
+  const rightGroupRef = useRef(null);
+  const menuButtonRef = useRef(null);
+
   useLenis(({ scroll, direction }) => {
     setIsScrolled(scroll > SCROLL_THRESHOLD);
 
@@ -165,6 +175,68 @@ export default function Navbar() {
     };
   }, [isMenuOpen]);
 
+  // Navbar lives in the root layout and never unmounts, so unlike the page
+  // heroes it has to re-key its entrance off pathname to replay on every
+  // route change. Logo drops in first, then the links and the NYC/CTA group
+  // stagger in right behind it — same fade + power3.out language as the
+  // heroes, timed to start the instant the preloader finishes.
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const linkItems = navListRef.current
+        ? [...navListRef.current.children]
+        : [];
+      const rightItems = rightGroupRef.current
+        ? [...rightGroupRef.current.children]
+        : [];
+      const targets = [
+        logoRef.current,
+        menuButtonRef.current,
+        ...linkItems,
+        ...rightItems,
+      ].filter(Boolean);
+
+      gsap.set(targets, { opacity: 0, y: -14 });
+
+      gsap
+        .timeline({ delay: LOADER_DURATION })
+        .to(logoRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        })
+        .to(
+          menuButtonRef.current,
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          "<",
+        )
+        .to(
+          linkItems,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power3.out",
+            stagger: 0.08,
+          },
+          "-=0.35",
+        )
+        .to(
+          rightItems,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power3.out",
+            stagger: 0.08,
+          },
+          "-=0.3",
+        );
+    });
+
+    return () => ctx.revert();
+  }, [pathname]);
+
   return (
     <motion.header
       className="fixed inset-x-0 top-0 z-99999"
@@ -181,11 +253,14 @@ export default function Navbar() {
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
         <div className="flex items-center gap-[clamp(32px,4.4444vw,96px)]">
-          <Logo />
+          <Logo innerRef={logoRef} />
 
-          <ul className="hidden items-center gap-[clamp(32px,4.4444vw,96px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 md:flex">
+          <ul
+            ref={navListRef}
+            className="hidden items-center gap-[clamp(32px,4.4444vw,96px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 lg:flex"
+          >
             {NAV_LINKS.map(({ label, href }) => (
-              <li key={href}>
+              <li key={href} className="opacity-0">
                 <AnimatedNavLink href={href} isActive={pathname === href}>
                   <span aria-hidden className="h-1 w-1 rounded-full bg-white" />
                   {label}
@@ -195,17 +270,21 @@ export default function Navbar() {
           </ul>
         </div>
 
-        <div className="hidden items-center gap-[clamp(48px,8.4722vw,180px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 md:flex">
-          {nycTime && <span>(NYC) {nycTime}</span>}
-          <PlantYourSeedButton />
+        <div
+          ref={rightGroupRef}
+          className="hidden items-center gap-[clamp(48px,8.4722vw,180px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 lg:flex"
+        >
+          <span className="opacity-0">{nycTime ? `(NYC) ${nycTime}` : " "}</span>
+          <PlantYourSeedButton className="opacity-0" />
         </div>
 
         <button
+          ref={menuButtonRef}
           type="button"
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
-          className="text-white md:hidden"
+          className="text-white opacity-0 lg:hidden"
         >
           {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -216,7 +295,7 @@ export default function Navbar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed inset-0 z-0 flex h-dvh w-full flex-col justify-between overflow-y-auto bg-black px-8 pt-32 pb-12 md:hidden"
+          className="fixed inset-0 z-0 flex h-dvh w-full flex-col justify-between overflow-y-auto bg-black px-8 pt-32 pb-12 lg:hidden"
         >
           <ul className="flex flex-col gap-6 text-3xl font-semibold text-white/90">
             {NAV_LINKS.map(({ label, href }) => (

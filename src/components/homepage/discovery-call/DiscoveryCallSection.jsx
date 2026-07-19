@@ -4,19 +4,8 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
-
-// Same curl used by Hero's "climb to you" text — a vine tip unrolling into
-// place rather than a straight vertical slide. Reused here so "You'll Never
-// Get Back" matches that motion exactly.
-const CLIMB_PATH = [
-  { x: 0, y: 90 },
-  { x: 26, y: 55 },
-  { x: -14, y: 22 },
-  { x: 0, y: 0 },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 const DESCRIPTION_TEXT =
   "One call. Within 30 days, your pipeline runs on two channels instead of zero. Qualified prospects book calls whether you posted today or not.";
@@ -61,11 +50,11 @@ export default function DiscoveryCallSection() {
   // One-time entrance, gated behind ScrollTrigger the moment the section is
   // reached: the duck glides in from the section's bottom-right corner into
   // its resting spot, the bird pack rises up from below the cloud, the
-  // heading types on character by character, "You'll Never Get Back" climbs
-  // in with the same curl as Hero's "climb to you", and the description then
-  // types on last. Desktop and mobile markup are both always mounted (shown
-  // via responsive classes, not conditional rendering), so every phase
-  // animates both copies together — only the visible one is ever seen.
+  // heading types on character by character, "You'll Never Get Back" pops
+  // up from below into place, and the description then types on last.
+  // Desktop and mobile markup are both always mounted (shown via responsive
+  // classes, not conditional rendering), so every phase animates both
+  // copies together — only the visible one is ever seen.
   useLayoutEffect(() => {
     const duckEls = [duckDesktopRef.current, duckMobileRef.current].filter(
       Boolean,
@@ -88,9 +77,9 @@ export default function DiscoveryCallSection() {
       gsap.set(headingChars, { opacity: 0 });
       gsap.set(climbEls, {
         opacity: 0,
-        filter: "blur(6px)",
-        rotate: -8,
-        transformOrigin: "left bottom",
+        y: 60,
+        scale: 0.85,
+        transformOrigin: "center bottom",
       });
       gsap.set(descriptionChars, { opacity: 0 });
 
@@ -127,11 +116,10 @@ export default function DiscoveryCallSection() {
           climbEls,
           {
             opacity: 1,
-            filter: "blur(0px)",
-            rotate: 0,
-            duration: 0.55,
-            ease: "power2.out",
-            motionPath: { path: CLIMB_PATH, curviness: 1.5 },
+            y: 0,
+            scale: 1,
+            duration: 0.65,
+            ease: "back.out(1.6)",
           },
           "-=0.12",
         )

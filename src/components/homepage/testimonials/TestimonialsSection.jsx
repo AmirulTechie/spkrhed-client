@@ -137,7 +137,13 @@ function TestimonialCard({ testimonial, className = "", ariaHidden = false }) {
     >
       {variant === "video" && (
         <div className="relative mb-[clamp(8px,0.9028vw,13px)] aspect-402/287 w-full overflow-hidden rounded-[clamp(7px,0.6597vw,9.5px)]">
-          <Image src={thumbnail} alt={name} fill className="object-cover" />
+          <Image
+            src={thumbnail}
+            alt={name}
+            fill
+            sizes="(min-width: 1024px) 402px, 90vw"
+            className="object-cover"
+          />
           <span className="absolute inset-0 m-auto flex h-[clamp(40px,4.7917vw,69px)] w-[clamp(40px,4.7917vw,69px)] items-center justify-center rounded-full bg-white/10 backdrop-blur-md">
             <PlayIcon className="h-[clamp(30px,3.6806vw,53px)] w-[clamp(30px,3.6806vw,53px)] translate-x-[6%] text-white" />
           </span>

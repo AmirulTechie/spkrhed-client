@@ -92,7 +92,7 @@ export default function ServicesHero() {
         alt=""
         fill
         priority
-        sizes="100vw"
+        sizes="(max-width: 1023px) 180vh, 100vw"
         className="object-cover"
       />
 
@@ -100,7 +100,7 @@ export default function ServicesHero() {
         src="/images/Home/Hero-banner-grids.png"
         alt=""
         fill
-        sizes="100vw"
+        sizes="(max-width: 1023px) 190vh, 100vw"
         className="object-cover opacity-20"
       />
 
