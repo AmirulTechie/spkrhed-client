@@ -70,6 +70,7 @@ const CARDS = [
     bodyWidth: 339,
     image: "/images/about/oldest-growth/handful.png",
     imageWidthPct: 55.5,
+    imageAlign: "right",
   },
   {
     id: "beanstalk-branch",
@@ -369,7 +370,10 @@ export default function OldestGrowthStorySection() {
                       src={card.image}
                       alt=""
                       fill
-                      className="object-contain object-bottom drop-shadow-[0_0_clamp(12px,5.5cqw,35px)_rgba(255,255,255,0.85)]"
+                      className="object-contain"
+                      style={{
+                        objectPosition: `${card.imageAlign ?? "center"} bottom`,
+                      }}
                     />
                   </div>
 
