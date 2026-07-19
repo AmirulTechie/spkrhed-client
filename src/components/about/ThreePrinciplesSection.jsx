@@ -269,6 +269,7 @@ export default function ThreePrinciplesSection() {
                 src="/images/about/holds-together-icon.png"
                 alt=""
                 fill
+                sizes="16px"
                 className="object-contain"
               />
             </span>

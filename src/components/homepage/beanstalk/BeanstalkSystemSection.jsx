@@ -62,9 +62,12 @@ const CARDS = [
     align: "start",
   },
 ];
-function BeanstalkCard({ card }) {
+function BeanstalkCard({ card, ref }) {
   return (
-    <div className="relative w-full max-w-143.75 rounded-[20px] bg-[#D9D9D9]/20 p-[clamp(24px,2.7778vw,40px)] backdrop-blur-sm flex flex-col items-start">
+    <div
+      ref={ref}
+      className="relative w-full max-w-143.75 rounded-[20px] bg-[#D9D9D9]/20 p-[clamp(24px,2.7778vw,40px)] backdrop-blur-sm flex flex-col items-start"
+    >
       <span className="inline-flex rounded-[70px] bg-[#AC40FF] px-5 py-2 font-poppins text-[clamp(14px,1.4583vw,21px)] font-medium leading-none text-white">
         {card.step}
       </span>
@@ -246,14 +249,16 @@ export default function BeanstalkSystemSection() {
           {CARDS.map((card, index) => (
             <div
               key={card.step}
-              ref={(el) => {
-                cardRefs.current[index] = el;
-              }}
               className={`flex w-full ${
                 card.align === "end" ? "lg:justify-end" : "lg:justify-start"
               } ${index === 1 ? "lg:-mt-8" : ""}`}
             >
-              <BeanstalkCard card={card} />
+              <BeanstalkCard
+                card={card}
+                ref={(el) => {
+                  cardRefs.current[index] = el;
+                }}
+              />
             </div>
           ))}
         </div>

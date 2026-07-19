@@ -83,6 +83,7 @@ export default function FirstStepBannerSection() {
         src="/images/about/first-step-banner.png"
         alt="A lone figure walking toward a beanstalk bridge in a misty forest"
         fill
+        sizes="100vw"
         className="object-cover"
       />
 

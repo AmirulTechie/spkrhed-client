@@ -105,7 +105,7 @@ export default function Hero() {
         alt=""
         fill
         priority
-        sizes="100vw"
+        sizes="(max-width: 1023px) 200vh, 100vw"
         className="object-cover"
       />
 
@@ -113,7 +113,7 @@ export default function Hero() {
         src="/images/Home/Hero-banner-grids.png"
         alt=""
         fill
-        sizes="100vw"
+        sizes="(max-width: 1023px) 190vh, 100vw"
         className="object-cover opacity-20"
       />
 
@@ -121,7 +121,7 @@ export default function Hero() {
         src="/images/Home/small-spots.png"
         alt=""
         fill
-        sizes="100vw"
+        sizes="(max-width: 1023px) 180vh, 100vw"
         className="object-cover opacity-80"
       />
 

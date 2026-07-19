@@ -67,7 +67,7 @@ export default function AboutHero() {
         alt=""
         fill
         priority
-        sizes="100vw"
+        sizes="(max-width: 1023px) 160vh, 100vw"
         className="object-cover"
       />
 

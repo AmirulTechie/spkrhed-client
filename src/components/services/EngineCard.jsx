@@ -61,6 +61,7 @@ export default function EngineCard({
         aria-hidden
         fill
         unoptimized
+        sizes="(min-width: 1024px) 83vw, 90vw"
         className={`pointer-events-none rounded-[clamp(18px,2.1875vw,32px)] select-none ${isBack ? "opacity-20" : "opacity-50"}`}
         style={{ objectFit: "fill" }}
       />

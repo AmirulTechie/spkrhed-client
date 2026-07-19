@@ -168,6 +168,7 @@ export default function VideoSection() {
             src="/images/Home/home-video-thumbnail.png"
             alt="Watch the story"
             fill
+            sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover"
           />
           <button
@@ -179,6 +180,7 @@ export default function VideoSection() {
               src="/images/Home/video-play-btn.png"
               alt=""
               fill
+              sizes="80px"
               className="object-contain"
             />
           </button>
