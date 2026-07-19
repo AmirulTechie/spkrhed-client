@@ -41,6 +41,9 @@ export default function MovementSection() {
   const treeLogRef = useRef(null);
   const vineLeftRef = useRef(null);
   const vineRightRef = useRef(null);
+  const leftParagraphRef = useRef(null);
+  const rightParagraphRef = useRef(null);
+  const leafRef = useRef(null);
 
   // Desktop: the SPKRHED wordmark pops in and both headings type on fast
   // the moment this section is reached from the hero (one-time entrance),
@@ -52,9 +55,6 @@ export default function MovementSection() {
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".type-char"),
-    ];
-    const subheadingChars = [
-      ...subheadingRef.current.querySelectorAll(".type-char"),
     ];
 
     const mm = gsap.matchMedia();
@@ -69,7 +69,7 @@ export default function MovementSection() {
 
         if (isDesktop) {
           gsap.set(wordmarkRef.current, { opacity: 0, scale: 0.9, y: -16 });
-          gsap.set([...headingChars, ...subheadingChars], {
+          gsap.set(headingChars, {
             opacity: 0,
             yPercent: 60,
             filter: "blur(4px)",
@@ -77,6 +77,22 @@ export default function MovementSection() {
           gsap.set(treeLogRef.current, { scale: 0.5, rotate: -16 });
           gsap.set(vineLeftRef.current, { x: "-18vw", opacity: 0 });
           gsap.set(vineRightRef.current, { x: "18vw", opacity: 0 });
+
+          // The left-column heading/paragraph and right-column paragraph
+          // stay hidden until after the tree log's scroll-scrub finishes —
+          // set here so they don't flash visible before that timeline (built
+          // below, once the pin's end point is known) plays.
+          gsap.set([subheadingRef.current, leftParagraphRef.current], {
+            opacity: 0,
+            x: "-4vw",
+          });
+          gsap.set(rightParagraphRef.current, { opacity: 0, x: "4vw" });
+          gsap.set(leafRef.current, {
+            opacity: 0,
+            x: 70,
+            y: -50,
+            rotate: -70,
+          });
 
           gsap
             .timeline({
@@ -104,18 +120,47 @@ export default function MovementSection() {
                 ease: "power2.out",
               },
               "-=0.5",
+            );
+
+          // Once the pin below releases (the tree log has finished growing
+          // into place), the left column slides in from the left, the right
+          // paragraph slides in from the right, and the leaf drifts into its
+          // resting spot — the same "settle from off-position" treatment
+          // ScaleNotStrategy uses for its leaves on the homepage. Built as a
+          // plain paused timeline (no scrollTrigger of its own) and driven by
+          // the pin's onLeave/onEnterBack/onLeaveBack below, since deriving a
+          // second scroll position for the same pinned trigger element is
+          // unreliable — GSAP's pin-spacer math for that element is already
+          // spoken for by the pin itself.
+          const revealTl = gsap
+            .timeline({ paused: true })
+            .to(subheadingRef.current, {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: "power3.out",
+            })
+            .to(
+              leftParagraphRef.current,
+              { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
+              "-=0.55",
             )
             .to(
-              subheadingChars,
+              rightParagraphRef.current,
+              { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
+              "<",
+            )
+            .to(
+              leafRef.current,
               {
                 opacity: 1,
-                yPercent: 0,
-                filter: "blur(0px)",
-                duration: 0.25,
-                stagger: 0.01,
-                ease: "power2.out",
+                x: 0,
+                y: 0,
+                rotate: -10.5,
+                duration: 0.9,
+                ease: "power3.out",
               },
-              "-=0.15",
+              "-=0.45",
             );
 
           // Pins the card in place for a fixed extra scroll distance —
@@ -123,7 +168,8 @@ export default function MovementSection() {
           // homepage — so the log's grow-and-rotate reads as directly tied
           // to each bit of scroll input, instead of a subtle pass-through
           // tween. The vines only swing in once the log is most of the way
-          // there, then the page unpins and continues normally.
+          // there, then the page unpins and continues normally, at which
+          // point revealTl (above) plays.
           gsap
             .timeline({
               scrollTrigger: {
@@ -132,6 +178,9 @@ export default function MovementSection() {
                 end: () => "+=" + window.innerHeight,
                 scrub: 0.6,
                 pin: true,
+                onLeave: () => revealTl.play(),
+                onEnterBack: () => revealTl.play(),
+                onLeaveBack: () => revealTl.reverse(),
               },
             })
             .to(
@@ -261,13 +310,16 @@ export default function MovementSection() {
 
             <h3
               ref={subheadingRef}
-              className="font-poppins text-[clamp(20px,2.9167vw,42px)] font-bold uppercase leading-[1.05] text-[#101010] lg:absolute lg:left-[5.49%] lg:top-[69.83%] lg:w-[39.95%] lg:max-w-129.25 lg:leading-[0.88]"
+              className="font-poppins text-[clamp(20px,2.9167vw,42px)] font-bold uppercase leading-[1.05] text-[#101010] lg:absolute lg:left-[5.49%] lg:top-[69.83%] lg:w-[41%] lg:max-w-129.25 lg:leading-[0.88]"
             >
-              <TypeChars text="The internet promised connection and delivered noise." />
+              The internet promised connection and delivered noise.
             </h3>
 
             <div className="flex flex-col gap-8 lg:contents">
-              <div className="font-poppins text-[clamp(14px,1.4583vw,21px)] leading-[1.4] text-[#101010] lg:absolute lg:left-[5.49%] lg:top-[79.24%] lg:w-[29%] lg:leading-[1.19]">
+              <div
+                ref={leftParagraphRef}
+                className="font-poppins text-[clamp(14px,1.4583vw,21px)] leading-[1.4] text-[#101010] lg:absolute lg:left-[5.49%] lg:top-[79.24%] lg:w-[41.27%] lg:leading-[1.19]"
+              >
                 <p>
                   Inboxes full of fake personalization. Feeds full of
                   automation pretending to be human. Buyers learned to tune all
@@ -280,7 +332,10 @@ export default function MovementSection() {
                 </p>
               </div>
 
-              <p className="font-poppins text-[clamp(14px,1.4583vw,21px)] leading-[1.4] text-black lg:absolute lg:left-[54.10%] lg:top-[79.24%] lg:w-[40.34%] lg:leading-[1.19]">
+              <p
+                ref={rightParagraphRef}
+                className="font-poppins text-[clamp(14px,1.4583vw,21px)] leading-[1.4] text-black lg:absolute lg:left-[54.10%] lg:top-[79.24%] lg:w-[40.34%] lg:leading-[1.19]"
+              >
                 This is bigger than any one campaign. Every founder who picks
                 up this banner, who chooses the human path over the easy one,
                 makes the movement stronger. That is who we build for. That is
@@ -288,7 +343,10 @@ export default function MovementSection() {
               </p>
             </div>
 
-            <div className="mx-auto h-15 w-15 rotate-[-10.5deg] overflow-hidden lg:absolute lg:left-[66.61%] lg:top-[85%] lg:mx-0 lg:h-[11.28%] lg:w-[14.37%]">
+            <div
+              ref={leafRef}
+              className="mx-auto h-13 w-13 rotate-[-10.5deg] overflow-hidden lg:absolute lg:left-[68%] lg:top-[88%] lg:mx-0 lg:h-[11.28%] lg:w-[14.37%]"
+            >
               <Image
                 src="/images/about/leaf.png"
                 alt=""

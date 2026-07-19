@@ -1,6 +1,7 @@
 import { Poppins, Anton_SC, Playwrite_US_Trad, Alex_Brush } from "next/font/google";
 import Navbar from "@/components/navbar/Navbar";
 import SmoothScroll from "@/components/smooth-scroll/SmoothScroll";
+import ScrollToTopButton from "@/components/scroll-to-top/ScrollToTopButton";
 import Loader from "@/components/loader/Loader";
 import "./globals.css";
 
@@ -38,13 +39,14 @@ export default function RootLayout({ children }) {
     <html 
       suppressHydrationWarning
       lang="en"
-      className={`${poppins.variable} ${antonSC.variable} ${playwriteUSTrad.variable} ${alexBrush.variable} h-full antialiased`}
+      className={`${poppins.variable} ${antonSC.variable} ${playwriteUSTrad.variable} ${alexBrush.variable} min-h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-poppins">
         <Loader />
         <SmoothScroll>
           <Navbar />
           {children}
+          <ScrollToTopButton />
         </SmoothScroll>
       </body>
     </html>

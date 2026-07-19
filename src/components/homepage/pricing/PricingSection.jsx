@@ -127,14 +127,33 @@ function TypewriterChars({ text }) {
 function PricingCard({ tier, cardRef }) {
   const highlight = tier.highlight;
 
+  // Hover scale is applied to this outer wrapper (not the inner card div) so
+  // the "Most Popular" tag — an absolutely positioned sibling of the inner
+  // card — scales up together with it instead of getting left behind.
+  const handleEnter = (e) => {
+    gsap.to(e.currentTarget, {
+      scale: 1.05,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+  const handleLeave = (e) => {
+    gsap.to(e.currentTarget, { scale: 1, duration: 0.3, ease: "power2.out" });
+  };
+
   return (
     // no vertical translate — all four cards share the same top edge, per Figma
-    <div ref={cardRef} className="relative h-full">
+    <div
+      ref={cardRef}
+      className="relative h-full"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
       {tier.mostPopular && (
         // Flush against the card's top edge — the tag is a narrower "neck" poking
         // above the card, same gray fill as the card's border reveal, so the two
         // read as one continuous bottle-shaped silhouette rather than two divs.
-        <div className="absolute -top-[clamp(22px,1.8889vw,27px)] left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-t-[clamp(11px,0.9722vw,14px)] bg-[#F0F0EA] px-[clamp(16px,1.3889vw,20px)] py-[clamp(6px,0.4861vw,7px)]">
+        <div className="absolute -top-[clamp(22px,1.8889vw,27px)] left-1/2 z-10 flex -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-t-[clamp(11px,0.9722vw,14px)] bg-[#F0F0EA] px-[clamp(16px,1.3889vw,20px)] py-[clamp(6px,0.4861vw,7px)]">
           <span className="font-poppins text-[clamp(10px,0.9028vw,13px)] font-semibold uppercase leading-none text-[#101010]">
             Most Popular
           </span>
