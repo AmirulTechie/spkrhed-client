@@ -180,8 +180,8 @@ export default function TestimonialsSection() {
   // movement" line (everything starts stacked on the anchor, then pulls
   // apart outward), the heading and description type on character by
   // character, the tree branch slides in from the left border, the leaf
-  // drifts in from the middle of the section, and the desktop card strip
-  // fades and rises into place. No resting position changes — only the
+  // drifts in from the middle of the section, and the card strip fades and
+  // rises into place. No resting position changes — only the
   // approach. Once in, the strip sits at the exact Figma rest position (a
   // left gap revealing the tree branch, the third card cut off on the
   // right) and becomes a bounded drag: dragging left slides the cards over
@@ -213,19 +213,19 @@ export default function TestimonialsSection() {
 
       if (viewportRef.current) gsap.set(viewportRef.current, { opacity: 0, y: 60 });
 
-      // Desktop-only: make the card strip a bounded, grab-and-drag scroller.
-      // The strip's rest position (x: 0) is the Figma layout itself — the
-      // left gap and margin-left on the track already place card one there
-      // in normal flow. Dragging left is allowed only until the last card's
-      // right edge reaches the viewport's right edge (minX); dragging right
-      // is capped at the rest position (maxX: 0). edgeResistance is < 1 so
-      // pulling past either dead end stretches like a rubber band (heavy
-      // resistance, not a 1:1 drag) and snaps back to the bound on release
-      // — no wrap. Below lg the strip is hidden entirely (see VideoSection
-      // for the same guard pattern), so skip building it there — the cards
-      // would measure at zero width.
-      const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-      if (isDesktop && trackRef.current && viewportRef.current) {
+      // Make the card strip a bounded, grab-and-drag scroller — same at
+      // every breakpoint. The strip's rest position (x: 0) is the Figma
+      // layout itself — the left gap/margin-left on the track already
+      // places card one there in normal flow. Dragging left is allowed
+      // only until the last card's right edge reaches the viewport's right
+      // edge (minX); dragging right is capped at the rest position (maxX:
+      // 0). edgeResistance is < 1 so pulling past either dead end
+      // stretches like a rubber band (heavy resistance, not a 1:1 drag)
+      // and snaps back to the bound on release — no wrap. Card width is
+      // clamp()-based (see the track below), so on narrow phones the
+      // clamp's min pins each card to roughly a full screen width and only
+      // one is visible at rest — no separate mobile layout needed.
+      if (trackRef.current && viewportRef.current) {
         const track = trackRef.current;
         const viewport = viewportRef.current;
 
@@ -424,7 +424,7 @@ export default function TestimonialsSection() {
 
       <div
         ref={viewportRef}
-        className="relative z-10 mt-[clamp(40px,4.9306vw,71px)] hidden w-full select-none overflow-hidden lg:block"
+        className="relative z-10 mt-[clamp(40px,4.9306vw,71px)] w-full select-none overflow-hidden"
       >
         <div
           ref={trackRef}
@@ -443,12 +443,6 @@ export default function TestimonialsSection() {
             )),
           )}
         </div>
-      </div>
-
-      <div className="relative z-10 mx-auto mt-10 flex max-w-160 flex-col gap-6 px-[clamp(20px,3.1944vw,46px)] lg:hidden">
-        {TESTIMONIALS.map((testimonial) => (
-          <TestimonialCard key={testimonial.id} testimonial={testimonial} className="w-full" />
-        ))}
       </div>
     </section>
   );

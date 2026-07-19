@@ -3,7 +3,7 @@ import Image from "next/image";
 function CardBlock({ block }) {
   if (block.aside) {
     return (
-      <p className="font-poppins text-[clamp(9px,0.8333vw,12px)] italic leading-tight text-white/70 uppercase">
+      <p className="font-poppins text-[clamp(9px,0.8333vw,12px)] leading-snug lg:leading-tight italic text-white/70 uppercase">
         {block.aside}
       </p>
     );
@@ -11,10 +11,10 @@ function CardBlock({ block }) {
 
   return (
     <div>
-      <p className="font-poppins text-[clamp(11px,1.0417vw,15px)] leading-tight font-bold text-white uppercase">
+      <p className="font-poppins text-[clamp(11px,1.0417vw,15px)] leading-snug lg:leading-tight font-bold text-white uppercase">
         {block.label}
       </p>
-      <p className="mt-[clamp(4px,0.4167vw,6px)] font-poppins text-[clamp(9px,0.9028vw,13px)] leading-tight text-white/70 uppercase">
+      <p className="mt-[clamp(6px,0.4167vw,6px)] font-poppins text-[clamp(9px,0.9028vw,13px)] leading-snug lg:leading-tight text-white/70 uppercase">
         {block.detail}
       </p>
     </div>
@@ -66,7 +66,15 @@ export default function EngineCard({
           {card.eyebrow}
         </p>
 
-        <h3 className="mt-[clamp(8px,1.25vw,18px)] max-w-[50%] font-anton-sc text-[clamp(24px,3.4722vw,50px)] leading-[1.02] uppercase">
+        {/*
+          The card's SVG mask cuts a diagonal notch out of the top-right
+          corner (roughly the top 19% of height, right 58% of width — see
+          foundation-card-mask.svg). A full-width heading's first line sits
+          right in that band, so on mobile it needs enough top clearance to
+          drop below the notch before going full-width; lg keeps the
+          original 50%-width layout, which never reaches the notch.
+        */}
+        <h3 className="mt-12 max-w-full lg:mt-[clamp(8px,1.25vw,18px)] lg:max-w-[50%] font-anton-sc text-[clamp(24px,3.4722vw,50px)] leading-[1.15] lg:leading-[1.02] uppercase">
           {card.headingLines.map((line, index) => (
             <span
               key={index}
@@ -77,7 +85,7 @@ export default function EngineCard({
           ))}
         </h3>
 
-        <p className="mt-[clamp(10px,1.3194vw,19px)] max-w-[51.6%] font-poppins text-[clamp(10px,1.0417vw,15px)] leading-tight text-white uppercase">
+        <p className="mt-[clamp(12px,1.3194vw,19px)] max-w-full lg:max-w-[51.6%] font-poppins text-[clamp(10px,1.0417vw,15px)] leading-relaxed lg:leading-tight text-white uppercase">
           {card.body}
         </p>
 
