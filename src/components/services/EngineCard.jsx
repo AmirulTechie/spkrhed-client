@@ -47,14 +47,9 @@ export default function EngineCard({
   return (
     <div
       ref={cardRef}
-      className={`absolute rounded-[clamp(18px,2.1875vw,32px)] ${className}`}
-      style={style}
+      className={`absolute rounded-[clamp(18px,2.1875vw,32px)] backdrop-blur-[5.5px] ${className}`}
+      style={{ ...maskStyle, ...style }}
     >
-      <div
-        aria-hidden
-        className="absolute inset-0 backdrop-blur-[5.5px]"
-        style={maskStyle}
-      />
       <Image
         src={card.shape}
         alt=""

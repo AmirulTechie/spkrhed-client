@@ -390,7 +390,7 @@ export default function WhyNowClimbSection() {
                         src={card.image}
                         alt=""
                         fill
-                        className="object-contain object-bottom drop-shadow-[0_0_clamp(12px,5.5cqw,35px)_rgba(255,255,255,0.85)]"
+                        className="object-contain object-bottom"
                       />
                     </div>
 
