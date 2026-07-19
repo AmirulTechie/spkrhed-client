@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import useMagnifierCursor from "@/components/homepage/magnifier-cursor/useMagnifierCursor";
-import MagnifierLens from "@/components/homepage/magnifier-cursor/MagnifierLens";
+import useGlassCursor from "@/components/homepage/glass-cursor/useGlassCursor";
+import GlassCursor from "@/components/homepage/glass-cursor/GlassCursor";
 
 const preventDrag = (e) => e.preventDefault();
 
 export default function CastleSection() {
-  const { sectionRef, lensRef, panRef, scaleBoxRef, zoom, handlers } =
-    useMagnifierCursor();
+  const { sectionRef, lensRef, handlers } = useGlassCursor();
 
   return (
     <section
@@ -37,29 +36,7 @@ export default function CastleSection() {
         className="pointer-events-none object-cover opacity-20"
       />
 
-      <MagnifierLens
-        lensRef={lensRef}
-        panRef={panRef}
-        scaleBoxRef={scaleBoxRef}
-        zoom={zoom}
-      >
-        <Image
-          src="/images/Home/castle-in-clouds.png"
-          alt=""
-          fill
-          sizes="100vw"
-          draggable={false}
-          className="object-cover"
-        />
-        <Image
-          src="/images/Home/Hero-banner-grids.png"
-          alt=""
-          fill
-          sizes="100vw"
-          draggable={false}
-          className="object-cover opacity-20"
-        />
-      </MagnifierLens>
+      <GlassCursor lensRef={lensRef} />
     </section>
   );
 }

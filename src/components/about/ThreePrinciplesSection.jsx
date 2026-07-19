@@ -20,6 +20,19 @@ const NUMBER_CLASS =
 
 const BULLET_TEXT = "What holds it together";
 
+// The wrapping div GSAP animates for each card is `absolute inset-0` (so its
+// children can be positioned with the Figma percentage grid), which means
+// every card's wrapper shares the exact same bounding box — GSAP's default
+// center-of-element transform-origin would scale all three from the same
+// point instead of each card's own visual center. This recovers the real
+// center from the card's border-box percentages so the pop-in scales from
+// where the card actually sits.
+function centerOrigin(box) {
+  const cx = parseFloat(box.left) + parseFloat(box.width) / 2;
+  const cy = parseFloat(box.top) + parseFloat(box.height) / 2;
+  return `${cx}% ${cy}%`;
+}
+
 // Splits on words, keeping spaces as real text nodes between word-spans
 // (rather than wrapping the space itself in a span, which would collapse to
 // zero width), and wraps each character in an individually animatable span —
@@ -111,6 +124,7 @@ export default function ThreePrinciplesSection() {
   const headingHighlightRef = useRef(null);
   const descriptionRef = useRef(null);
   const cardRefs = useRef([]);
+  const cardBoxRefs = useRef([]);
   const mobileCardRefs = useRef([]);
 
   // One-time entrance, gated behind ScrollTrigger, mirroring OldestGrowthStorySection/
@@ -216,9 +230,27 @@ export default function ThreePrinciplesSection() {
           ? cardRefs.current
           : mobileCardRefs.current;
 
-        activeCards.forEach((cardEl) => {
+        activeCards.forEach((cardEl, index) => {
           if (!cardEl) return;
-          gsap.set(cardEl, { opacity: 0, y: 90, scale: 0.92 });
+          // On desktop, cardEl is `absolute inset-0` and shares its
+          // bounding box with the other two cards, so ScrollTrigger must
+          // watch the actual bordered card box (which sits at the real
+          // per-card offset) rather than the wrapper, or all three would
+          // fire together. Mobile cards are real flow, so the card is its
+          // own trigger.
+          const triggerEl = isDesktop
+            ? cardBoxRefs.current[index] || cardEl
+            : cardEl;
+          const transformOrigin = isDesktop
+            ? centerOrigin(PRINCIPLES[index].box)
+            : "50% 50%";
+
+          gsap.set(cardEl, {
+            opacity: 0,
+            y: 90,
+            scale: 0.92,
+            transformOrigin,
+          });
           gsap.to(cardEl, {
             opacity: 1,
             y: 0,
@@ -226,7 +258,7 @@ export default function ThreePrinciplesSection() {
             duration: 0.9,
             ease: "back.out(1.6)",
             scrollTrigger: {
-              trigger: cardEl,
+              trigger: triggerEl,
               start: "top 88%",
               toggleActions: "play none none reverse",
             },
@@ -331,6 +363,9 @@ export default function ThreePrinciplesSection() {
             >
               <div
                 aria-hidden
+                ref={(el) => {
+                  cardBoxRefs.current[index] = el;
+                }}
                 className="absolute rounded-[25px] border border-[#353535]"
                 style={principle.box}
               />

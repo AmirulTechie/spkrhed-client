@@ -4,9 +4,10 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { horizontalLoop } from "@/lib/horizontalLoop";
+import { Draggable } from "gsap/Draggable";
+import { InertiaPlugin } from "gsap/InertiaPlugin";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
 
 const LOOP_COPIES = 4;
 
@@ -181,8 +182,12 @@ export default function TestimonialsSection() {
   // character, the tree branch slides in from the left border, the leaf
   // drifts in from the middle of the section, and the desktop card strip
   // fades and rises into place. No resting position changes — only the
-  // approach. Once in, the strip becomes an infinitely looping row the user
-  // can grab and drag left/right (see horizontalLoop setup below).
+  // approach. Once in, the strip sits at the exact Figma rest position (a
+  // left gap revealing the tree branch, the third card cut off on the
+  // right) and becomes a bounded drag: dragging left slides the cards over
+  // that gap until the last card's edge is flush with the viewport (hard
+  // stop, no wrap), dragging right returns to the Figma rest position (also
+  // a hard stop) — see the Draggable setup below.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".typewriter-char"),
@@ -191,6 +196,8 @@ export default function TestimonialsSection() {
       ...descriptionRef.current.querySelectorAll(".typewriter-char"),
     ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
+
+    let removeResizeListener = () => {};
 
     const ctx = gsap.context(() => {
       gsap.set(headingChars, { opacity: 0 });
@@ -206,18 +213,66 @@ export default function TestimonialsSection() {
 
       if (viewportRef.current) gsap.set(viewportRef.current, { opacity: 0, y: 60 });
 
-      // Desktop-only: turn the card strip into an infinitely looping,
-      // drag-scrubbed marquee. No autoplay — the loop timeline stays
-      // paused and only moves in response to the user grabbing a card,
-      // with momentum on release. Below lg the strip is hidden entirely
-      // (see VideoSection for the same guard pattern), so skip building it
-      // there — the cards would measure at zero width.
+      // Desktop-only: make the card strip a bounded, grab-and-drag scroller.
+      // The strip's rest position (x: 0) is the Figma layout itself — the
+      // left gap and margin-left on the track already place card one there
+      // in normal flow. Dragging left is allowed only until the last card's
+      // right edge reaches the viewport's right edge (minX); dragging right
+      // is capped at the rest position (maxX: 0). edgeResistance is < 1 so
+      // pulling past either dead end stretches like a rubber band (heavy
+      // resistance, not a 1:1 drag) and snaps back to the bound on release
+      // — no wrap. Below lg the strip is hidden entirely (see VideoSection
+      // for the same guard pattern), so skip building it there — the cards
+      // would measure at zero width.
       const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-      if (isDesktop && trackRef.current) {
-        const cards = trackRef.current.querySelectorAll(".testimonial-marquee-card");
-        if (cards.length) {
-          horizontalLoop(cards, { paused: true, draggable: true, repeat: -1 });
-        }
+      if (isDesktop && trackRef.current && viewportRef.current) {
+        const track = trackRef.current;
+        const viewport = viewportRef.current;
+
+        const getBounds = () => {
+          const viewportWidth = viewport.getBoundingClientRect().width;
+          const trackWidth = track.scrollWidth;
+          const restGap = parseFloat(getComputedStyle(track).marginLeft) || 0;
+          return { minX: Math.min(0, viewportWidth - trackWidth - restGap), maxX: 0 };
+        };
+
+        gsap.set(track, { x: 0 });
+
+        // edgeResistance gives the drag itself a heavy, rubber-band feel
+        // once past either dead end. inertia's own bounds-aware throw
+        // handles the snap-back for a real flick, but a slow drag that's
+        // released with ~zero velocity right won't generate a throw large
+        // enough to pull it back in on its own — so onDragEnd explicitly
+        // tweens it back to the nearest bound whenever release happens
+        // outside [minX, maxX], guaranteeing the rubber always retracts.
+        const [draggable] = Draggable.create(track, {
+          type: "x",
+          bounds: getBounds(),
+          edgeResistance: 0.65,
+          inertia: true,
+          onDragEnd: () => {
+            const bounds = getBounds();
+            const x = gsap.getProperty(track, "x");
+            if (x > bounds.maxX || x < bounds.minX) {
+              gsap.killTweensOf(track);
+              gsap.to(track, {
+                x: gsap.utils.clamp(bounds.minX, bounds.maxX, x),
+                duration: 0.6,
+                ease: "elastic.out(1, 0.75)",
+              });
+            }
+          },
+        });
+
+        const onResize = () => {
+          const bounds = getBounds();
+          draggable.applyBounds(bounds);
+          gsap.set(track, {
+            x: gsap.utils.clamp(bounds.minX, bounds.maxX, gsap.getProperty(track, "x")),
+          });
+        };
+        window.addEventListener("resize", onResize);
+        removeResizeListener = () => window.removeEventListener("resize", onResize);
       }
 
       // "Testimonials" is coupled to its first character — every other
@@ -286,7 +341,10 @@ export default function TestimonialsSection() {
       );
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      removeResizeListener();
+    };
   }, []);
 
   return (
@@ -366,14 +424,16 @@ export default function TestimonialsSection() {
 
       <div
         ref={viewportRef}
-        className="relative z-10 mx-auto mt-[clamp(40px,4.9306vw,71px)] hidden w-full max-w-360 select-none overflow-hidden lg:block"
+        className="relative z-10 mt-[clamp(40px,4.9306vw,71px)] hidden w-full select-none overflow-hidden lg:block"
       >
         <div
           ref={trackRef}
-          className="flex w-max cursor-grab items-start gap-[clamp(14px,1.3889vw,20px)] active:cursor-grabbing"
+          className="flex w-max cursor-grab items-start gap-[clamp(13px,1.2919vw,18.603px)] ml-[clamp(140px,16.5972vw,239px)] active:cursor-grabbing"
         >
           {Array.from({ length: LOOP_COPIES }).flatMap((_, copyIndex) =>
-            TESTIMONIALS.map((testimonial) => (
+            TESTIMONIALS.filter(
+              (testimonial) => copyIndex === 0 || testimonial.variant !== "video",
+            ).map((testimonial) => (
               <TestimonialCard
                 key={`${testimonial.id}-${copyIndex}`}
                 testimonial={testimonial}

@@ -3,8 +3,8 @@
 import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import useMagnifierCursor from "@/components/homepage/magnifier-cursor/useMagnifierCursor";
-import MagnifierLens from "@/components/homepage/magnifier-cursor/MagnifierLens";
+import useGlassCursor from "@/components/homepage/glass-cursor/useGlassCursor";
+import GlassCursor from "@/components/homepage/glass-cursor/GlassCursor";
 
 const preventDrag = (e) => e.preventDefault();
 
@@ -24,17 +24,12 @@ const HEADLINE_LINES = [
 ];
 const MOVEMENT_TEXT = "This is a movement";
 
-function Line({ text, animated = true }) {
+function Line({ text }) {
   return (
     <div className="overflow-hidden">
       <span className="block">
         {text.split("").map((char, i) => (
-          <span
-            key={i}
-            className={
-              animated ? "sprout-char inline-block opacity-0" : "inline-block"
-            }
-          >
+          <span key={i} className="sprout-char inline-block opacity-0">
             {char === " " ? " " : char}
           </span>
         ))}
@@ -48,8 +43,7 @@ export default function Hero() {
   const climbRef = useRef(null);
   const bulletRef = useRef(null);
   const movementCharRefs = useRef([]);
-  const { sectionRef, lensRef, panRef, scaleBoxRef, zoom, handlers } =
-    useMagnifierCursor();
+  const { sectionRef, lensRef, handlers } = useGlassCursor();
 
   useLayoutEffect(() => {
     const chars = [...linesRef.current.querySelectorAll(".sprout-char")];
@@ -146,86 +140,7 @@ export default function Hero() {
         className="pointer-events-none object-cover opacity-80"
       />
 
-      <MagnifierLens
-        lensRef={lensRef}
-        panRef={panRef}
-        scaleBoxRef={scaleBoxRef}
-        zoom={zoom}
-      >
-        <Image
-          src="/images/Home/hero-banner.png"
-          alt=""
-          fill
-          sizes="100vw"
-          draggable={false}
-          className="object-cover"
-        />
-        <Image
-          src="/images/Home/Hero-banner-grids.png"
-          alt=""
-          fill
-          sizes="100vw"
-          draggable={false}
-          className="object-cover opacity-20"
-        />
-        <Image
-          src="/images/Home/small-spots.png"
-          alt=""
-          fill
-          sizes="100vw"
-          draggable={false}
-          className="object-cover opacity-80"
-        />
-
-        {/* Static, always-opaque duplicate of the copy below, purely for
-            the lens to sample from — the real copy runs its own entrance
-            timeline and would otherwise read as invisible through the
-            magnifier while it is still mid-animation or at rest at
-            opacity-0 pre-animation. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-10 mx-auto flex max-w-[1800px] flex-col items-center justify-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:-mt-25"
-        >
-          <p className="mb-8 flex items-center gap-3 font-poppins text-[clamp(16px,1.6888vw,32px)] font-semibold uppercase text-white/35 lg:mb-15">
-            <span className="inline-flex">
-              <Image
-                src="/images/Home/banner-bullet.png"
-                alt=""
-                width={20}
-                height={20}
-              />
-            </span>
-            <span className="inline-block">
-              {MOVEMENT_TEXT.split("").map((char, i) => (
-                <span key={i} className="inline-block">
-                  {char === " " ? " " : char}
-                </span>
-              ))}
-            </span>
-          </p>
-
-          <div className="flex w-full flex-col items-center">
-            <div className="relative flex w-full flex-col items-center lg:h-[calc(2*clamp(30px,6.9444vw,160px))]">
-              {HEADLINE_LINES.map(({ text, column, row }) => (
-                <div
-                  key={text}
-                  className={`whitespace-nowrap font-anton-sc text-[clamp(40px,11vw,160px)] leading-none lg:text-[clamp(30px,6.9444vw,160px)] lg:absolute ${
-                    column === "left"
-                      ? "lg:right-[calc(50%+clamp(24px,5.55vw,90px))]"
-                      : "lg:left-[calc(50%+clamp(24px,5.55vw,90px))]"
-                  } ${row === 0 ? "lg:top-0" : "lg:top-[clamp(30px,6.9444vw,160px)]"}`}
-                >
-                  <Line text={text} animated={false} />
-                </div>
-              ))}
-            </div>
-
-            <p className="-mt-[clamp(12px,2.2222vw,50px)] font-playwrite-us-trad text-[clamp(40px,5.9028vw,130px)] text-[#AC40FF] z-9999">
-              climb to you
-            </p>
-          </div>
-        </div>
-      </MagnifierLens>
+      <GlassCursor lensRef={lensRef} />
 
       <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:-mt-25">
         <p className="mb-8 flex items-center gap-3 font-poppins text-[clamp(16px,1.6888vw,32px)] font-semibold uppercase text-white/35 lg:mb-15">
