@@ -39,7 +39,8 @@ export default function DiscoveryCallSection() {
   const sectionRef = useRef(null);
   const duckDesktopRef = useRef(null);
   const duckMobileRef = useRef(null);
-  const birdRef = useRef(null);
+  const birdDesktopRef = useRef(null);
+  const birdMobileRef = useRef(null);
   const headingDesktopRef = useRef(null);
   const headingMobileRef = useRef(null);
   const climbDesktopRef = useRef(null);
@@ -59,6 +60,9 @@ export default function DiscoveryCallSection() {
     const duckEls = [duckDesktopRef.current, duckMobileRef.current].filter(
       Boolean,
     );
+    const birdEls = [birdDesktopRef.current, birdMobileRef.current].filter(
+      Boolean,
+    );
     const headingChars = [
       ...headingDesktopRef.current.querySelectorAll(".typewriter-char"),
       ...headingMobileRef.current.querySelectorAll(".typewriter-char"),
@@ -73,7 +77,7 @@ export default function DiscoveryCallSection() {
 
     const ctx = gsap.context(() => {
       gsap.set(duckEls, { opacity: 0, x: 260, y: 220 });
-      gsap.set(birdRef.current, { opacity: 0, y: 240 });
+      gsap.set(birdEls, { opacity: 0, y: 240 });
       gsap.set(headingChars, { opacity: 0 });
       gsap.set(climbEls, {
         opacity: 0,
@@ -103,7 +107,7 @@ export default function DiscoveryCallSection() {
         ease: "power3.out",
       })
         .to(
-          birdRef.current,
+          birdEls,
           { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
           "<0.1",
         )
@@ -144,7 +148,7 @@ export default function DiscoveryCallSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2 max-w-none -translate-x-1/2 select-none lg:-bottom-87.5 lg:w-[160%]"
+        className="pointer-events-none absolute bottom-[-22%] left-1/2 z-2 w-[160%] max-w-none -translate-x-1/2 select-none lg:-bottom-87.5 lg:w-[160%]"
       />
 
       {/* Desktop — pinned to a fixed 1440x860 canvas matching the Figma
@@ -164,7 +168,7 @@ export default function DiscoveryCallSection() {
           />
 
           <Image
-            ref={birdRef}
+            ref={birdDesktopRef}
             src="/images/Home/bird-group.png"
             alt=""
             width={552}
@@ -217,8 +221,28 @@ export default function DiscoveryCallSection() {
         </div>
       </div>
 
-      {/* Mobile — same content, simplified stacked layout */}
-      <div className="relative z-4 flex flex-col items-center px-6 pb-14 pt-12 text-center lg:hidden">
+      {/* Mobile — same desktop composition (bird pack over the cloud on the
+          left, duck pinned to the bottom-right corner, cloud at the very
+          bottom), just scaled down; only sizes shrink, nothing reflows. */}
+      <Image
+        ref={birdMobileRef}
+        src="/images/Home/bird-group.png"
+        alt=""
+        width={552}
+        height={290}
+        className="pointer-events-none absolute bottom-3 left-2 z-10 w-24 select-none lg:hidden"
+      />
+
+      <Image
+        ref={duckMobileRef}
+        src="/images/Home/golden-duck.png"
+        alt=""
+        width={1244}
+        height={1244}
+        className="pointer-events-none absolute bottom-1 right-1 z-1 w-35 select-none lg:hidden"
+      />
+
+      <div className="relative z-4 flex flex-col items-center px-6 pb-36 pt-12 text-center lg:hidden">
         <h2
           ref={headingMobileRef}
           className="font-anton-sc text-[clamp(22px,8.2vw,30px)] uppercase leading-[0.96] text-black"
@@ -240,15 +264,6 @@ export default function DiscoveryCallSection() {
         >
           You&rsquo;ll Never Get Back
         </p>
-
-        <Image
-          ref={duckMobileRef}
-          src="/images/Home/golden-duck.png"
-          alt=""
-          width={1244}
-          height={1244}
-          className="pointer-events-none mt-4 w-36 select-none sm:w-44"
-        />
 
         <p
           ref={descriptionMobileRef}

@@ -198,7 +198,7 @@ export default function WhyLinkedInSection() {
         <div className="mt-25 grid grid-cols-1 items-center sm:grid-cols-[1fr_auto_1fr]">
           <p
             ref={leftParaRef}
-            className="font-anton-sc max-w-59.75 ml-auto mr-[clamp(24px,11.1111vw,160px)] text-[clamp(22px,2.7778vw,40px)] uppercase leading-[100%] text-white text-left"
+            className="font-anton-sc max-w-59.75 mx-auto text-center text-[clamp(22px,2.7778vw,40px)] uppercase leading-[100%] text-white sm:ml-auto sm:mr-[clamp(24px,11.1111vw,160px)] sm:text-left"
           >
             <RevealWord>No</RevealWord> <RevealWord>promotions</RevealWord>{" "}
             <RevealWord>folder,</RevealWord>
@@ -219,7 +219,7 @@ export default function WhyLinkedInSection() {
 
           <p
             ref={rightParaRef}
-            className="font-poppins ml-[clamp(16px,6.3194vw,91px)] w-full max-w-xl text-[clamp(16px,1.6667vw,24px)] font-medium leading-[97%] text-[#b7b7b7] text-left"
+            className="font-poppins mx-auto w-full max-w-xl text-center text-[clamp(16px,1.6667vw,24px)] font-medium leading-[97%] text-[#b7b7b7] sm:ml-[clamp(16px,6.3194vw,91px)] sm:mr-0 sm:text-left"
           >
             <RevealWord>LinkedIn</RevealWord> <RevealWord>messages</RevealWord>{" "}
             <RevealWord>land</RevealWord> <RevealWord>in</RevealWord>{" "}

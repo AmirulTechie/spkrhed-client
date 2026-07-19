@@ -194,13 +194,7 @@ export default function BeanstalkSystemSection() {
   alt=""
   width={2162}
   height={3842}
-  className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none lg:w-[75.0694%]"
-  style={{
-    maskImage:
-      "linear-gradient(to bottom, transparent 0%, black 18%, black 65%, transparent 88%)",
-    WebkitMaskImage:
-      "linear-gradient(to bottom, transparent 0%, black 18%, black 65%, transparent 88%)",
-  }}
+  className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] lg:w-[75.0694%] lg:[mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)] lg:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)]"
 />
       <Image
         src="/images/Home/cloud.png"
@@ -237,7 +231,7 @@ export default function BeanstalkSystemSection() {
             </p>
             <p
               ref={descriptionRef}
-              className="mt-[clamp(-22px,-1.5278vw,-5px)] max-w-[clamp(280px,32.6389vw,470px)] font-poppins text-[clamp(16px,1.8056vw,26px)] font-medium leading-none text-black/70 text-start"
+              className="mt-[clamp(-22px,-1.5278vw,-5px)] max-w-[clamp(280px,32.6389vw,470px)] font-poppins text-[clamp(16px,1.8056vw,26px)] font-medium leading-none text-black/80 text-start"
             >
               Jack didn&apos;t climb by accident — he planted the right seed
               in the right ground. We do the same for your business on

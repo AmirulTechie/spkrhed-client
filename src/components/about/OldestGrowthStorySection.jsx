@@ -58,6 +58,30 @@ const QUOTE_TOP = ch(109);
 const TITLE_FONT = fluidFont(40, 18);
 const BODY_FONT = fluidFont(13, 10);
 
+// Below the "@[560px]/card" container-query breakpoint used throughout this
+// section (the card's own rendered width, not the viewport — this grid
+// switches between 1 and 2 columns, so the same viewport width can mean very
+// different card widths) the text column and image use different
+// proportions than the desktop design: the image shrinks to a fixed 30%
+// (instead of the 43-68% each card uses on desktop) and text gets a much
+// wider fixed column (78cqw), because the floor font sizes in fluidFont()
+// stop shrinking well before narrow cards do — without the extra room, body
+// copy that wraps to 3-4 lines on a wide card wraps to 7-8 on a narrow one
+// and overflows it. Desktop keeps each card's authored proportions via the
+// `--*-desktop` custom properties, restored once the card itself (queried
+// via the named `card` container below) is wide enough. The threshold sits
+// just above where BODY_FONT's cqw-derived size first exceeds its 10px
+// floor (~489px), so the switch lands where the fixed-percentage desktop
+// layout starts having real room to work. Mirrors WhyNowClimbSection.
+//
+// The breakpoint is written as a literal string everywhere it's used (never
+// interpolated from a JS variable) because Tailwind's build-time scanner
+// extracts candidate classes from the raw source text — a
+// template-interpolated variant like `${SOME_VAR}:w-...` never appears in
+// the file as the real class string, so no CSS would be generated for it.
+const MOBILE_IMAGE_WIDTH = "w-[30%]";
+const MOBILE_TEXT_WIDTH = "w-[78cqw]";
+
 const CARDS = [
   {
     id: "magic-beans",
@@ -337,81 +361,85 @@ export default function OldestGrowthStorySection() {
                   cardRefs.current[index] = el;
                 }}
                 onMouseEnter={() => handleHover(index)}
-                className={`relative aspect-636/240 w-full cursor-pointer overflow-hidden rounded-[clamp(14px,5.5cqw,35px)] border transition-colors duration-500 ${
-                  showBorder
-                    ? "border-[rgba(255,223,130,0.55)]"
-                    : "border-transparent"
-                }`}
-                style={{ containerType: "size" }}
+                className="@container/card relative w-full"
               >
                 <div
-                  ref={(el) => {
-                    contentRefs.current[index] = el;
-                  }}
-                  className="absolute inset-0"
-                  style={{
-                    filter: index === 0 ? ACTIVE_FILTER : INACTIVE_FILTER,
-                  }}
+                  className={`relative aspect-7/5 w-full cursor-pointer overflow-hidden rounded-[clamp(14px,5.5cqw,35px)] border transition-colors duration-500 @[560px]/card:aspect-636/240 ${
+                    showBorder
+                      ? "border-[rgba(255,223,130,0.55)]"
+                      : "border-transparent"
+                  }`}
+                  style={{ containerType: "size" }}
                 >
                   <div
+                    ref={(el) => {
+                      contentRefs.current[index] = el;
+                    }}
                     className="absolute inset-0"
                     style={{
-                      backgroundColor: "#191919",
-                      backgroundImage:
-                        "linear-gradient(270deg, rgba(220,183,84,0.09) 0%, rgba(25,25,25,0) 100%)",
+                      filter: index === 0 ? ACTIVE_FILTER : INACTIVE_FILTER,
                     }}
-                  />
-
-                  <div
-                    className="absolute inset-y-0 right-0"
-                    style={{ width: `${card.imageWidthPct}%` }}
                   >
-                    <Image
-                      src={card.image}
-                      alt=""
-                      fill
-                      className="object-contain"
+                    <div
+                      className="absolute inset-0"
                       style={{
-                        objectPosition: `${card.imageAlign ?? "center"} bottom`,
+                        backgroundColor: "#191919",
+                        backgroundImage:
+                          "linear-gradient(270deg, rgba(220,183,84,0.09) 0%, rgba(25,25,25,0) 100%)",
                       }}
                     />
+
+                    <div
+                      className={`absolute inset-y-0 right-0 ${MOBILE_IMAGE_WIDTH} @[560px]/card:w-(--img-w-desktop)`}
+                      style={{ "--img-w-desktop": `${card.imageWidthPct}%` }}
+                    >
+                      <Image
+                        src={card.image}
+                        alt=""
+                        fill
+                        className="object-contain"
+                        style={{
+                          objectPosition: `${card.imageAlign ?? "center"} bottom`,
+                        }}
+                      />
+                    </div>
+
+                    <h3
+                      className="absolute z-10 whitespace-nowrap font-poppins font-bold uppercase leading-[0.875] text-[#dcb754]"
+                      style={{ left: TEXT_LEFT, top: TITLE_TOP, fontSize: TITLE_FONT }}
+                    >
+                      {card.titleLine1}
+                      <br />
+                      {card.titleLine2}
+                    </h3>
+
+                    <p
+                      className={`absolute z-10 font-poppins font-medium uppercase leading-[1.077] text-white/70 ${MOBILE_TEXT_WIDTH} @[560px]/card:w-auto @[560px]/card:whitespace-nowrap`}
+                      style={{ left: TEXT_LEFT, top: QUOTE_TOP, fontSize: BODY_FONT }}
+                    >
+                      {card.quoteLine1 ? (
+                        <>
+                          {card.quoteLine1}
+                          <br />
+                          {card.quoteLine2}
+                        </>
+                      ) : (
+                        card.quote
+                      )}
+                    </p>
+
+                    <p
+                      className={`absolute z-10 font-poppins leading-[1.077] text-white/70 ${MOBILE_TEXT_WIDTH} @[560px]/card:w-(--body-w-desktop)`}
+                      style={{
+                        left: TEXT_LEFT,
+                        top: ch(card.bodyTop),
+                        fontSize: BODY_FONT,
+                        "--body-w-desktop": cw(card.bodyWidth),
+                      }}
+                    >
+                      {card.body}
+                    </p>
                   </div>
-
-                  <h3
-                    className="absolute z-10 whitespace-nowrap font-poppins font-bold uppercase leading-[0.875] text-[#dcb754]"
-                    style={{ left: TEXT_LEFT, top: TITLE_TOP, fontSize: TITLE_FONT }}
-                  >
-                    {card.titleLine1}
-                    <br />
-                    {card.titleLine2}
-                  </h3>
-
-                  <p
-                    className="absolute z-10 whitespace-nowrap font-poppins font-medium uppercase leading-[1.077] text-white/70"
-                    style={{ left: TEXT_LEFT, top: QUOTE_TOP, fontSize: BODY_FONT }}
-                  >
-                    {card.quoteLine1 ? (
-                      <>
-                        {card.quoteLine1}
-                        <br />
-                        {card.quoteLine2}
-                      </>
-                    ) : (
-                      card.quote
-                    )}
-                  </p>
-
-                  <p
-                    className="absolute z-10 font-poppins leading-[1.077] text-white/70"
-                    style={{
-                      left: TEXT_LEFT,
-                      top: ch(card.bodyTop),
-                      width: cw(card.bodyWidth),
-                      fontSize: BODY_FONT,
-                    }}
-                  >
-                    {card.body}
-                  </p>
                 </div>
               </div>
             );

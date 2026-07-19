@@ -78,6 +78,17 @@ const CARDS = {
 // the container the cards fill edge to edge).
 const SWAP_X_PERCENT = 77.33;
 
+// Mobile shows one card at a time inside a fixed-height box (the mask that
+// gives the card its notched shape only covers that box — content past its
+// bottom edge isn't just visually spilling, it's masked to fully
+// transparent, i.e. silently clipped). Foundation has three feature blocks
+// to Amplify's two, so it needs a taller floor; these mins are the measured
+// natural content height of each card plus a small buffer, not a guess.
+const MOBILE_CARD_HEIGHT = {
+  foundation: "clamp(500px,88.5417vw,513px)",
+  amplify: "clamp(370px,88.5417vw,441px)",
+};
+
 export default function FoundationAmplifySection() {
   const [frontId, setFrontId] = useState("foundation");
   const backId = frontId === "foundation" ? "amplify" : "foundation";
@@ -356,12 +367,13 @@ export default function FoundationAmplifySection() {
       <div className="relative mx-auto w-full max-w-137 px-6 lg:hidden">
         <div
           className="relative"
-          style={{ height: "clamp(340px,88.5417vw,513px)" }}
+          style={{ height: MOBILE_CARD_HEIGHT[frontId] }}
         >
           <EngineCard
             card={CARDS[frontId]}
             cardRef={mobileFrontRef}
             variant="front"
+            className="z-20"
             style={{ left: 0, top: 0, width: "100%", height: "100%" }}
           />
 
@@ -371,10 +383,10 @@ export default function FoundationAmplifySection() {
             aria-label="Swap the engine pillar shown"
             className="absolute z-40 flex items-center justify-center rounded-full border border-white/15 bg-[#0F0F0F]/70 backdrop-blur-[5.5px] cursor-pointer"
             style={{
-              width: "56px",
-              height: "56px",
+              width: "44px",
+              height: "44px",
               right: "16px",
-              bottom: "-28px",
+              bottom: "-44px",
             }}
           >
             <ArrowRight className="h-[35%] w-[35%] text-white" strokeWidth={2} />
