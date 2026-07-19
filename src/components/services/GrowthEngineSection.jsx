@@ -131,16 +131,25 @@ function TypewriterChars({ text }) {
 // Only the front and mid slots sit in front of another card, so only they
 // get the frosted-glass treatment; the back slot has nothing behind it to
 // blur, and renders as a flat, fully opaque card per the Figma design.
-function GrowthCard({ card, slotIndex, setCardRef, onAdvance }) {
+//
+// `measure` renders the same content unconstrained (no `inset-0`, height
+// auto) and hidden, so its rendered height reveals how tall this card's
+// content actually needs to be at the current width — used to size the
+// mobile card stack, see the comment above MOBILE_CARD_BREAKPOINT.
+function GrowthCard({ card, slotIndex, setCardRef, onAdvance, measure }) {
   const isBack = slotIndex === 2;
 
   return (
     <button
       type="button"
       ref={setCardRef}
-      onClick={onAdvance}
-      aria-label={`Bring ${card.heading} to the front`}
-      className={`absolute inset-0 flex cursor-pointer flex-col rounded-[clamp(14px,1.7361vw,25px)] px-[clamp(20px,2.5694vw,37px)] py-[clamp(18px,2.4306vw,35px)] text-left ${isBack ? "" : "backdrop-blur-[5.5px]"}`}
+      onClick={measure ? undefined : onAdvance}
+      tabIndex={measure ? -1 : undefined}
+      aria-hidden={measure || undefined}
+      aria-label={
+        measure ? undefined : `Bring ${card.heading} to the front`
+      }
+      className={`flex cursor-pointer flex-col overflow-hidden rounded-[clamp(14px,1.7361vw,25px)] px-[clamp(20px,2.5694vw,37px)] py-[clamp(18px,2.4306vw,35px)] text-left ${isBack ? "" : "backdrop-blur-[5.5px]"} ${measure ? "invisible pointer-events-none absolute top-0 left-0 h-auto w-full" : "absolute inset-0"}`}
       style={{
         backgroundColor: isBack
           ? `rgb(${card.color})`
@@ -154,7 +163,7 @@ function GrowthCard({ card, slotIndex, setCardRef, onAdvance }) {
           </span>
         ))}
       </h3>
-      <p className="mt-[clamp(2px,0.2778vw,4px)] max-w-[65%] font-poppins text-[clamp(11px,0.8333vw,12px)] leading-[1.1] text-[#101010]">
+      <p className="mt-[clamp(2px,0.2778vw,4px)] max-w-[85%] font-poppins text-[clamp(11px,0.8333vw,12px)] leading-[1.1] text-[#101010] sm:max-w-[65%]">
         {card.description}
       </p>
 
@@ -181,9 +190,23 @@ function GrowthCard({ card, slotIndex, setCardRef, onAdvance }) {
   );
 }
 
+// Below this width the card stack's height is measured from actual
+// content instead of held to a fixed aspect ratio (see the effect below
+// that sets `mobileCardHeight`). The card text uses `vw`-based clamp()
+// sizing, not container-query units, so how much height its content
+// needs doesn't scale linearly with card width — line-wrap counts change
+// in steps as the viewport grows. A single fixed aspect ratio always ends
+// up wrong at some width in this range: either it overflows the card
+// (too short) or leaves a large dead gap below the content (too tall).
+// Above this width the original `sm:aspect-588/355` desktop sizing already
+// fits comfortably, so measurement is skipped and turned off entirely.
+const MOBILE_CARD_BREAKPOINT = 640;
+
 export default function GrowthEngineSection() {
   const [order, setOrder] = useState([0, 1, 2]);
+  const [mobileCardHeight, setMobileCardHeight] = useState(null);
   const cardRefs = useRef([]);
+  const measureRefs = useRef([]);
   const animatingRef = useRef(false);
 
   const sectionRef = useRef(null);
@@ -202,6 +225,41 @@ export default function GrowthEngineSection() {
       if (el) gsap.set(el, SLOTS[slotIndex]);
     });
   }, [order]);
+
+  useLayoutEffect(() => {
+    let lastWidth = null;
+
+    function recalc() {
+      const width = cardsWrapperRef.current?.offsetWidth;
+      // The wrapper's own height is set by this effect (below), so
+      // observing it will re-fire on every height change too — skip
+      // those and only recompute when the width actually moved, or a
+      // ResizeObserver height feedback loop would just re-measure
+      // against unchanged content and thrash without ever settling.
+      if (width === lastWidth) return;
+      lastWidth = width;
+
+      if (window.innerWidth >= MOBILE_CARD_BREAKPOINT) {
+        setMobileCardHeight(null);
+        return;
+      }
+      const heights = measureRefs.current
+        .filter(Boolean)
+        .map((el) => el.offsetHeight);
+      if (heights.length) setMobileCardHeight(Math.max(...heights));
+    }
+
+    recalc();
+
+    const ro = new ResizeObserver(recalc);
+    if (cardsWrapperRef.current) ro.observe(cardsWrapperRef.current);
+    window.addEventListener("resize", recalc);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", recalc);
+    };
+  }, []);
 
   // One-time entrance, played the moment the section reaches the viewport:
   // the tree branches slide in from left/right, the eyebrow line couples
@@ -405,7 +463,10 @@ export default function GrowthEngineSection() {
 
         <div
           ref={cardsWrapperRef}
-          className="relative z-10 mx-auto mt-[clamp(56px,7.6389vw,110px)] mb-[clamp(140px,20.76vw,299px)] aspect-588/355 w-full max-w-147"
+          className="relative z-10 mx-auto mt-[clamp(56px,7.6389vw,110px)] mb-[clamp(140px,20.76vw,299px)] aspect-15/16 w-full max-w-147 sm:aspect-588/355"
+          style={{
+            height: mobileCardHeight ? `${mobileCardHeight}px` : undefined,
+          }}
         >
           {CARDS.map((card, index) => (
             <GrowthCard
@@ -416,6 +477,17 @@ export default function GrowthEngineSection() {
                 cardRefs.current[index] = el;
               }}
               onAdvance={handleAdvance}
+            />
+          ))}
+          {CARDS.map((card, index) => (
+            <GrowthCard
+              key={`measure-${card.number}`}
+              card={card}
+              slotIndex={0}
+              measure
+              setCardRef={(el) => {
+                measureRefs.current[index] = el;
+              }}
             />
           ))}
         </div>

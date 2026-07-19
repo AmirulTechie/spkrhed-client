@@ -245,9 +245,15 @@ export default function FlywheelSection() {
         ref={treeBranchRef}
         src="/images/Home/tree-branch-1.png"
         alt=""
-        width={2162}
-        height={3842}
-        className="pointer-events-none absolute right-[-8%] top-[15%] z-0 hidden w-[50%] select-none sm:block"
+        width={1615}
+        height={2396}
+        className="pointer-events-none absolute right-[-20%] top-[25%] z-0 hidden w-[50%] select-none sm:block"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 62%, transparent 92%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 62%, transparent 92%)",
+        }}
       />
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
@@ -324,6 +330,12 @@ export default function FlywheelSection() {
         width={3723}
         height={1164}
         className="pointer-events-none absolute bottom-[-33.3333%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-9999 opacity-50"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 55%, transparent 90%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 55%, transparent 90%)",
+        }}
       />
     </section>
   );
