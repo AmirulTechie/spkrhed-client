@@ -194,7 +194,7 @@ export default function BeanstalkSystemSection() {
   alt=""
   width={2162}
   height={3842}
-  className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] lg:w-[75.0694%] lg:[mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)] lg:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)]"
+  className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none mask-[linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] lg:w-[75.0694%] lg:mask-[linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)] lg:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)]"
 />
       <Image
         src="/images/Home/cloud.png"
