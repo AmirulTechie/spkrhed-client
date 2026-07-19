@@ -155,6 +155,16 @@ export default function Navbar() {
     if (isMenuOpen) setIsHidden(false);
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [isMenuOpen]);
+
   return (
     <motion.header
       className="fixed inset-x-0 top-0 z-99999"
@@ -163,7 +173,7 @@ export default function Navbar() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
-        className="mx-auto flex items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16"
+        className="relative z-10 mx-auto flex items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16"
         initial={false}
         animate={{
           backgroundColor: isScrolled ? "rgba(0,0,0,1)" : "rgba(0,0,0,0)",
@@ -202,8 +212,13 @@ export default function Navbar() {
       </motion.nav>
 
       {isMenuOpen && (
-        <div className="border-t border-white/10 bg-black/90 px-8 py-6 backdrop-blur-md md:hidden">
-          <ul className="flex flex-col gap-5 text-base font-semibold text-white/90">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="fixed inset-0 z-0 flex h-dvh w-full flex-col justify-between overflow-y-auto bg-black px-8 pt-32 pb-12 md:hidden"
+        >
+          <ul className="flex flex-col gap-6 text-3xl font-semibold text-white/90">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
                 <AnimatedNavLink
@@ -211,18 +226,18 @@ export default function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   isActive={pathname === href}
                 >
-                  <span aria-hidden className="h-1 w-1 rounded-full bg-white/60" />
+                  <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-white/60" />
                   {label}
                 </AnimatedNavLink>
               </li>
             ))}
           </ul>
 
-          <div className="mt-6 flex flex-col gap-4 text-base font-semibold text-white/90">
+          <div className="flex flex-col gap-6 text-base font-semibold text-white/90">
             {nycTime && <span>(NYC) {nycTime}</span>}
             <PlantYourSeedButton onClick={() => setIsMenuOpen(false)} />
           </div>
-        </div>
+        </motion.div>
       )}
     </motion.header>
   );

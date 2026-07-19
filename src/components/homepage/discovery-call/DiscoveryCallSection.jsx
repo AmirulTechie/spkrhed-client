@@ -156,70 +156,76 @@ export default function DiscoveryCallSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2 max-w-none -translate-x-1/2 select-none lg:bottom-[max(-34.697vw,-499.64px)] lg:w-[160%]"
+        className="pointer-events-none absolute bottom-[-20%] left-1/2 z-2 max-w-none -translate-x-1/2 select-none lg:-bottom-87.5 lg:w-[160%]"
       />
 
-      {/* Desktop — pixel-matched to the Figma canvas (1440x860) */}
+      {/* Desktop — pinned to a fixed 1440x860 canvas matching the Figma
+          frame exactly, so the duck/bird/heading composition never
+          reflows with viewport width; the section's overflow-hidden
+          crops the excess symmetrically on narrower desktop windows
+          instead of letting the layout scale. */}
       <div className="relative hidden lg:block">
-        <Image
-          ref={duckDesktopRef}
-          src="/images/Home/golden-duck.png"
-          alt=""
-          width={1244}
-          height={1244}
-          className="pointer-events-none absolute left-[60.42%] top-[min(22.0801vw,317.95px)] z-1 w-[43.19%] select-none"
-        />
+        <div className="relative mx-auto w-360">
+          <Image
+            ref={duckDesktopRef}
+            src="/images/Home/golden-duck.png"
+            alt=""
+            width={1244}
+            height={1244}
+            className="pointer-events-none absolute left-[60%] top-90 z-1 w-[43.19%] select-none"
+          />
 
-        <Image
-          ref={birdRef}
-          src="/images/Home/bird-group.png"
-          alt=""
-          width={552}
-          height={290}
-          className="pointer-events-none absolute left-[10.69%] top-[min(40.6391vw,585.2px)] z-10 w-[19.17%] select-none"
-        />
+          <Image
+            ref={birdRef}
+            src="/images/Home/bird-group.png"
+            alt=""
+            width={552}
+            height={290}
+            className="pointer-events-none absolute left-[10.69%] top-[585.2px] z-10 w-[19.17%] select-none"
+          />
 
-        <div className="relative z-4 mx-auto flex max-w-360 flex-col items-center px-[clamp(20px,3.1944vw,46px)] pb-[clamp(48px,7.6389vw,110px)] pt-[clamp(56px,8.8889vw,128px)] text-center">
-          <h2
-            ref={headingDesktopRef}
-            className="font-anton-sc text-[clamp(32px,6.4583vw,93px)] uppercase leading-[0.96] text-black"
-          >
-            <span className="block">
-              <TypewriterChars text="Every Month" />
-            </span>
-            <span className="block">
-              <TypewriterChars text="Without A System Is" />
-            </span>
-            <span className="block">
-              <TypewriterChars text="A Month Of Leads" />
-            </span>
-          </h2>
+          <div className="relative z-4 flex flex-col items-center px-11.5 pb-27.5 pt-32 text-center">
+            <h2
+              ref={headingDesktopRef}
+              className="font-anton-sc text-[93px] uppercase leading-[0.96] text-black"
+            >
+              <span className="block">
+                <TypewriterChars text="Every Month" />
+              </span>
+              <span className="block">
+                <TypewriterChars text="Without A System Is" />
+              </span>
+              <span className="block">
+                <TypewriterChars text="A Month Of Leads" />
+              </span>
+            </h2>
 
-          <p
-            ref={climbDesktopRef}
-            className="-mt-[clamp(16px,2.5694vw,37px)] font-alex-brush text-[clamp(48px,6.5972vw,95px)] leading-[1.1] text-white"
-          >
-            You&rsquo;ll Never Get Back
-          </p>
+            <p
+              ref={climbDesktopRef}
+              className="-mt-9.25 font-alex-brush text-[95px] leading-[1.1] text-white"
+            >
+              You&rsquo;ll Never Get Back
+            </p>
 
-          <p
-            ref={descriptionDesktopRef}
-            className="mt-[clamp(16px,2.2222vw,32px)] max-w-121.75 font-poppins text-[clamp(14px,1.3194vw,19px)] font-semibold leading-[110%] text-black/70"
-          >
-            <TypewriterChars text={DESCRIPTION_TEXT} />
-          </p>
+            <p
+              ref={descriptionDesktopRef}
+              className="mt-8 max-w-121.75 font-poppins text-[19px] font-semibold leading-[110%] text-black/70"
+            >
+              <TypewriterChars text={DESCRIPTION_TEXT} />
+            </p>
 
-          <button
-            type="button"
-            className="mt-[clamp(40px,10.625vw,153px)] w-[clamp(260px,26.875vw,387px)] cursor-pointer rounded-lg bg-[#ac40ff] py-[clamp(8px,0.8vw,12px)] font-poppins text-[clamp(16px,1.6667vw,24px)] font-semibold uppercase leading-[1.1] text-[#101010]"
-          >
-            Book Your Discovery Call
-          </button>
+            <button
+              type="button"
+              className="mt-38.25 w-96.75 cursor-pointer rounded-lg bg-[#ac40ff] py-3 font-poppins text-[24px] font-semibold uppercase leading-[1.1] text-[#101010]"
+            >
+              Book Your Discovery Call
+            </button>
 
-          <p className="mt-[clamp(10px,1.1806vw,17px)] font-poppins text-[14px] font-medium text-black/70">
-            30-minute call &nbsp;·&nbsp; No pressure &nbsp;·&nbsp; No pitch
-            deck &nbsp;·&nbsp; Just honest strategy
-          </p>
+            <p className="mt-4.25 font-poppins text-[14px] font-medium text-black/70">
+              30-minute call &nbsp;·&nbsp; No pressure &nbsp;·&nbsp; No pitch
+              deck &nbsp;·&nbsp; Just honest strategy
+            </p>
+          </div>
         </div>
       </div>
 

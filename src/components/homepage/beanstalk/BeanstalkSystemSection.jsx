@@ -194,9 +194,9 @@ export default function BeanstalkSystemSection() {
   className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none lg:w-[75.0694%]"
   style={{
     maskImage:
-      "linear-gradient(to bottom, black 0%, black 65%, transparent 88%)",
+      "linear-gradient(to bottom, transparent 0%, black 18%, black 65%, transparent 88%)",
     WebkitMaskImage:
-      "linear-gradient(to bottom, black 0%, black 65%, transparent 88%)",
+      "linear-gradient(to bottom, transparent 0%, black 18%, black 65%, transparent 88%)",
   }}
 />
       <Image
@@ -213,13 +213,6 @@ export default function BeanstalkSystemSection() {
         height={1164}
         className="pointer-events-none absolute bottom-[-20%] left-1/2 w-[160%] max-w-none -translate-x-1/2 select-none z-99"
       />
-      <div
-      className="pointer-events-none absolute left-[clamp(120px,14.375vw,207px)] top-[20.2083vw] h-[clamp(200px,29.7917vw,429px)] w-[clamp(500px,96vw,1500px)]"
-      style={{
-        background:
-        "linear-gradient(180deg, #F0F0EA 0%, rgba(240, 240, 234, 0) 100%)",
-      }}
-    />
       <h2 className="relative z-10 w-full origin-center px-4 text-center font-anton-sc text-[clamp(40px,8vw,160px)] uppercase leading-[100%] text-black lg:scale-140">
         The Beanstalk System
       </h2>

@@ -4,8 +4,11 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { horizontalLoop } from "@/lib/horizontalLoop";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const LOOP_COPIES = 4;
 
 const CARD_BASE =
   "flex flex-col overflow-hidden rounded-[clamp(9px,0.86vw,12px)] p-[clamp(20px,2.3611vw,34px)]";
@@ -78,7 +81,6 @@ function PlayIcon({ className }) {
 const TESTIMONIALS = [
   {
     id: "zarar",
-    left: "16.6%",
     variant: "light",
     quote:
       "“Speakerhead doesn't sell you content or outreach. They sell you a pipeline. Different game entirely.”",
@@ -88,7 +90,6 @@ const TESTIMONIALS = [
   },
   {
     id: "mark",
-    left: "48.46%",
     variant: "video",
     quote:
       "“First month I stopped checking my inbox in panic. By month three I was turning prospects away. This is a different game.”",
@@ -99,7 +100,6 @@ const TESTIMONIALS = [
   },
   {
     id: "marco",
-    left: "80.33%",
     variant: "dark",
     quote:
       "“Speakerhead doesn't sell you content or outreach. They sell you a pipeline. Different game entirely.”",
@@ -126,15 +126,14 @@ const VARIANT_ASPECT = {
   dark: "lg:aspect-440/324",
 };
 
-function TestimonialCard({ testimonial, className = "", style, cardRef }) {
+function TestimonialCard({ testimonial, className = "", ariaHidden = false }) {
   const { variant, quote, name, role, logo, thumbnail } = testimonial;
 
   return (
     <div
-      ref={cardRef}
-      style={style}
       className={`${CARD_BASE} ${VARIANT_ASPECT[variant]} ${VARIANT_CLASSES[variant]} ${className}`}
       data-testimonial={testimonial.id}
+      aria-hidden={ariaHidden || undefined}
     >
       {variant === "video" && (
         <div className="relative mb-[clamp(8px,0.9028vw,13px)] aspect-402/287 w-full overflow-hidden rounded-[clamp(7px,0.6597vw,9.5px)]">
@@ -166,16 +165,18 @@ export default function TestimonialsSection() {
   const descriptionRef = useRef(null);
   const treeBranchRef = useRef(null);
   const leafRef = useRef(null);
-  const cardRefs = useRef([]);
+  const viewportRef = useRef(null);
+  const trackRef = useRef(null);
 
   // One-time entrance, gated behind ScrollTrigger: the "Testimonials" bullet
   // line is coupled to its first character exactly like Hero's "This is a
   // movement" line (everything starts stacked on the anchor, then pulls
   // apart outward), the heading and description type on character by
   // character, the tree branch slides in from the left border, the leaf
-  // drifts in from the middle of the section, and the three desktop cards
-  // converge from the left, bottom, and right respectively. No resting
-  // position changes — only the approach.
+  // drifts in from the middle of the section, and the desktop card strip
+  // fades and rises into place. No resting position changes — only the
+  // approach. Once in, the strip becomes an infinitely looping row the user
+  // can grab and drag left/right (see horizontalLoop setup below).
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".typewriter-char"),
@@ -184,7 +185,6 @@ export default function TestimonialsSection() {
       ...descriptionRef.current.querySelectorAll(".typewriter-char"),
     ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
-    const [leftCard, middleCard, rightCard] = cardRefs.current;
 
     const ctx = gsap.context(() => {
       gsap.set(headingChars, { opacity: 0 });
@@ -198,9 +198,21 @@ export default function TestimonialsSection() {
         rotate: 250,
       });
 
-      if (leftCard) gsap.set(leftCard, { opacity: 0, x: -180 });
-      if (middleCard) gsap.set(middleCard, { opacity: 0, y: 160 });
-      if (rightCard) gsap.set(rightCard, { opacity: 0, x: 180 });
+      if (viewportRef.current) gsap.set(viewportRef.current, { opacity: 0, y: 60 });
+
+      // Desktop-only: turn the card strip into an infinitely looping,
+      // drag-scrubbed marquee. No autoplay — the loop timeline stays
+      // paused and only moves in response to the user grabbing a card,
+      // with momentum on release. Below lg the strip is hidden entirely
+      // (see VideoSection for the same guard pattern), so skip building it
+      // there — the cards would measure at zero width.
+      const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+      if (isDesktop && trackRef.current) {
+        const cards = trackRef.current.querySelectorAll(".testimonial-marquee-card");
+        if (cards.length) {
+          horizontalLoop(cards, { paused: true, draggable: true, repeat: -1 });
+        }
+      }
 
       // "Testimonials" is coupled to its first character — every other
       // char and the bullet start stacked on top of it, then pull apart
@@ -245,18 +257,11 @@ export default function TestimonialsSection() {
           "-=0.3",
         );
 
-      if (leftCard || rightCard) {
+      if (viewportRef.current) {
         tl.to(
-          [leftCard, rightCard].filter(Boolean),
-          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
-          "-=0.6",
-        );
-      }
-      if (middleCard) {
-        tl.to(
-          middleCard,
+          viewportRef.current,
           { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-          "<",
+          "-=0.6",
         );
       }
 
@@ -353,18 +358,25 @@ export default function TestimonialsSection() {
         </p>
       </div>
 
-      <div className="relative z-10 mx-auto mt-[clamp(40px,4.9306vw,71px)] hidden aspect-1440/521 w-full max-w-360 lg:block">
-        {TESTIMONIALS.map((testimonial, index) => (
-          <TestimonialCard
-            key={testimonial.id}
-            testimonial={testimonial}
-            cardRef={(el) => {
-              cardRefs.current[index] = el;
-            }}
-            className="absolute top-0 w-[clamp(230px,30.5736vw,440px)]"
-            style={{ left: testimonial.left }}
-          />
-        ))}
+      <div
+        ref={viewportRef}
+        className="relative z-10 mx-auto mt-[clamp(40px,4.9306vw,71px)] hidden w-full max-w-360 select-none overflow-hidden lg:block"
+      >
+        <div
+          ref={trackRef}
+          className="flex w-max cursor-grab items-start gap-[clamp(14px,1.3889vw,20px)] active:cursor-grabbing"
+        >
+          {Array.from({ length: LOOP_COPIES }).flatMap((_, copyIndex) =>
+            TESTIMONIALS.map((testimonial) => (
+              <TestimonialCard
+                key={`${testimonial.id}-${copyIndex}`}
+                testimonial={testimonial}
+                className="testimonial-marquee-card w-[clamp(230px,30.5736vw,440px)] shrink-0"
+                ariaHidden={copyIndex !== 0}
+              />
+            )),
+          )}
+        </div>
       </div>
 
       <div className="relative z-10 mx-auto mt-10 flex max-w-160 flex-col gap-6 px-[clamp(20px,3.1944vw,46px)] lg:hidden">

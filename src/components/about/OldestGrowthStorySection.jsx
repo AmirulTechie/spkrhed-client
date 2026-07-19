@@ -42,60 +42,89 @@ function SproutChars({ text, charClassName = "sprout-char" }) {
   return nodes;
 }
 
+// Card geometry is authored 1:1 from the Figma frame (636x240) and converted
+// to container-query units so it scales exactly with the card at any size —
+// the same technique WhyNowClimbSection uses for its cards.
+const CARD_W = 636;
+const CARD_H = 240;
+const pct = (px, base) => `${+((px / base) * 100).toFixed(4)}`;
+const cw = (px) => `${pct(px, CARD_W)}cqw`;
+const ch = (px) => `${pct(px, CARD_H)}cqh`;
+const fluidFont = (px, minPx) => `clamp(${minPx}px, ${pct(px, CARD_W)}cqw, ${px}px)`;
+
+const TEXT_LEFT = cw(54);
+const TITLE_TOP = ch(34);
+const QUOTE_TOP = ch(109);
+const TITLE_FONT = fluidFont(40, 18);
+const BODY_FONT = fluidFont(13, 10);
+
 const CARDS = [
   {
     id: "magic-beans",
-    title: "The Magic Beans",
-    quote: "“A small bet that changes everything.”",
+    titleLine1: "The Magic",
+    titleLine2: "Beans",
+    quoteLine1: "“A small bet that changes",
+    quoteLine2: "everything.”",
     body: "Most founders pass on the unglamorous move. The few who plant it own the channel everyone else ignored. For you, that is LinkedIn done right.",
+    bodyTop: 175,
+    bodyWidth: 339,
     image: "/images/about/oldest-growth/handful.png",
     imageWidthPct: 55.5,
-    textMaxWidthPct: 41,
   },
   {
     id: "beanstalk-branch",
-    title: "The Beanstalk",
+    titleLine1: "The",
+    titleLine2: "Beanstalk",
     quote: "“Watch it grow overnight.”",
     body: "One system, planted once, that climbs on its own. Compounding conversations and steady upward momentum, a real pipeline instead of a monthly scramble.",
+    bodyTop: 161,
+    bodyWidth: 341,
     image: "/images/about/oldest-growth/tree-branch.png",
     imageWidthPct: 43.4,
-    textMaxWidthPct: 53,
   },
   {
     id: "singing-harp",
-    title: "The Singing Harp",
+    titleLine1: "The Singing",
+    titleLine2: "Harp",
     quote: "“Content that calls them to you.”",
     body: "The harp sang and people came. Your content does the same. Authority that pulls the right buyers toward you before you ever send a message.",
+    bodyTop: 175,
+    bodyWidth: 339,
     image: "/images/about/oldest-growth/harmony.png",
     imageWidthPct: 50.9,
-    textMaxWidthPct: 45,
   },
   {
     id: "beanstalk-duck",
-    title: "The Beanstalk",
+    titleLine1: "The",
+    titleLine2: "Beanstalk",
     quote: "“Watch it grow overnight.”",
     body: "One system, planted once, that climbs on its own. Compounding conversations and steady upward momentum, a real pipeline instead of a monthly scramble.",
+    bodyTop: 161,
+    bodyWidth: 341,
     image: "/images/about/oldest-growth/duck.png",
     imageWidthPct: 57.1,
-    textMaxWidthPct: 39,
   },
   {
     id: "giant",
-    title: "The Giant",
+    titleLine1: "The",
+    titleLine2: "Giant",
     quote: "“The loud ones fall first.”",
     body: "Market incumbents look unbeatable until you climb past them. Noise is not strength. Precision beats volume every time.",
+    bodyTop: 175,
+    bodyWidth: 339,
     image: "/images/about/oldest-growth/castle.png",
     imageWidthPct: 43.9,
-    textMaxWidthPct: 52,
   },
   {
     id: "axe",
-    title: "The Axe",
+    titleLine1: "The",
+    titleLine2: "Axe",
     quote: "“Cut what isn’t working.”",
     body: "Every climb needs one decisive move. The cold calls, the dead referrals, the site that just sits there. The old way goes so the new one can grow.",
+    bodyTop: 161,
+    bodyWidth: 301,
     image: "/images/about/oldest-growth/axe.png",
     imageWidthPct: 68.2,
-    textMaxWidthPct: 28,
   },
 ];
 
@@ -248,8 +277,8 @@ export default function OldestGrowthStorySection() {
       className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]"
     >
       <div className="relative mx-auto max-w-11/12 px-8 sm:px-12 lg:px-16">
-        <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
-          <div className="max-w-112.5">
+        <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-112.5 shrink-0">
             <div className="flex items-center gap-3">
               <span ref={bulletIconRef} className="inline-flex opacity-0">
                 <Image
@@ -260,7 +289,7 @@ export default function OldestGrowthStorySection() {
                   className="h-[clamp(10px,1.0417vw,15px)] w-[clamp(10px,1.0417vw,15px)]"
                 />
               </span>
-              <span className="font-poppins text-[clamp(14px,1.5vw,21px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
+              <span className="font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
                 {BULLET_TEXT.split("").map((char, i) => (
                   <span
                     key={i}
@@ -278,7 +307,7 @@ export default function OldestGrowthStorySection() {
             </div>
             <h2
               ref={headingRef}
-              className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[0.9] text-white"
+              className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-none text-white"
             >
               <SproutChars text={HEADING_TEXT} />
             </h2>
@@ -286,7 +315,7 @@ export default function OldestGrowthStorySection() {
 
           <p
             ref={descriptionRef}
-            className="max-w-190 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.3] text-white/70 text-start"
+            className="max-w-184.75 min-w-0 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.0526] text-white/70 text-start"
           >
             <SproutChars
               text={DESCRIPTION_TEXT}
@@ -344,20 +373,41 @@ export default function OldestGrowthStorySection() {
                     />
                   </div>
 
-                  <div
-                    className="relative z-10 flex h-full flex-col pt-[clamp(8px,10cqh,24px)] pb-[clamp(6px,5cqh,14px)] pl-[clamp(12px,7cqw,44px)] pr-[clamp(12px,7cqw,44px)]"
-                    style={{ maxWidth: `${card.textMaxWidthPct}%` }}
+                  <h3
+                    className="absolute z-10 whitespace-nowrap font-poppins font-bold uppercase leading-[0.875] text-[#dcb754]"
+                    style={{ left: TEXT_LEFT, top: TITLE_TOP, fontSize: TITLE_FONT }}
                   >
-                    <h3 className="font-poppins text-[clamp(14px,5cqw,32px)] leading-[0.95] font-bold uppercase text-[#dcb754]">
-                      {card.title}
-                    </h3>
-                    <p className="mt-[clamp(3px,3cqh,8px)] font-poppins text-[clamp(9px,1.8cqw,13px)] leading-[1.2] font-medium text-white/70 uppercase">
-                      {card.quote}
-                    </p>
-                    <p className="mt-[clamp(4px,4cqh,10px)] font-poppins text-[clamp(9px,1.8cqw,13px)] leading-tight text-white/70">
-                      {card.body}
-                    </p>
-                  </div>
+                    {card.titleLine1}
+                    <br />
+                    {card.titleLine2}
+                  </h3>
+
+                  <p
+                    className="absolute z-10 whitespace-nowrap font-poppins font-medium uppercase leading-[1.077] text-white/70"
+                    style={{ left: TEXT_LEFT, top: QUOTE_TOP, fontSize: BODY_FONT }}
+                  >
+                    {card.quoteLine1 ? (
+                      <>
+                        {card.quoteLine1}
+                        <br />
+                        {card.quoteLine2}
+                      </>
+                    ) : (
+                      card.quote
+                    )}
+                  </p>
+
+                  <p
+                    className="absolute z-10 font-poppins leading-[1.077] text-white/70"
+                    style={{
+                      left: TEXT_LEFT,
+                      top: ch(card.bodyTop),
+                      width: cw(card.bodyWidth),
+                      fontSize: BODY_FONT,
+                    }}
+                  >
+                    {card.body}
+                  </p>
                 </div>
               </div>
             );
