@@ -3,8 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import useGlassCursor from "@/components/homepage/glass-cursor/useGlassCursor";
-import GlassCursor from "@/components/homepage/glass-cursor/GlassCursor";
 
 const preventDrag = (e) => e.preventDefault();
 
@@ -43,7 +41,6 @@ export default function Hero() {
   const climbRef = useRef(null);
   const bulletRef = useRef(null);
   const movementCharRefs = useRef([]);
-  const { sectionRef, lensRef, handlers } = useGlassCursor();
 
   useLayoutEffect(() => {
     const chars = [...linesRef.current.querySelectorAll(".sprout-char")];
@@ -104,11 +101,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      {...handlers}
-      className="relative flex min-h-dvh w-full select-none items-center justify-center overflow-hidden bg-black py-24 md:cursor-none lg:py-0"
-    >
+    <section className="relative flex min-h-dvh w-full select-none items-center justify-center overflow-hidden bg-black py-24 lg:py-0">
       <Image
         src="/images/Home/hero-banner.png"
         alt=""
@@ -139,8 +132,6 @@ export default function Hero() {
         onDragStart={preventDrag}
         className="pointer-events-none object-cover opacity-80"
       />
-
-      <GlassCursor lensRef={lensRef} />
 
       <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:-mt-25">
         <p className="mb-8 flex items-center gap-3 font-poppins text-[clamp(16px,1.6888vw,32px)] font-semibold uppercase text-white/35 lg:mb-15">
