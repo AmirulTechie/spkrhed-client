@@ -103,7 +103,7 @@ export default function Hero() {
   return (
     <section className="relative flex min-h-dvh w-full select-none items-center justify-center overflow-hidden bg-black py-24 lg:py-0">
       <Image
-        src="/images/Home/hero-banner.png"
+        src="/images/Home/hero-banner-2.png"
         alt=""
         fill
         priority
