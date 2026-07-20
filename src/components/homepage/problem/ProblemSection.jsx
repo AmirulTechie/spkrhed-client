@@ -92,24 +92,24 @@ function ProblemCard({ card }) {
     <>
       <span
         style={{ color: "var(--label-color)" }}
-        className="font-poppins text-[clamp(14px,1.7361vw,25px)] font-semibold uppercase"
+        className="font-poppins text-[11px] font-semibold uppercase sm:text-[clamp(14px,1.7361vw,25px)]"
       >
         {card.label}
       </span>
-      <h3 className="mt-[clamp(20px,2.8472vw,41px)] max-w-md font-anton-sc text-[clamp(28px,4.1667vw,60px)] uppercase leading-[0.97] text-[#101010]">
+      <h3 className="mt-2 max-w-md font-anton-sc text-[20px] uppercase leading-[0.97] text-[#101010] sm:mt-[clamp(20px,2.8472vw,41px)] sm:text-[clamp(28px,4.1667vw,60px)]">
         {card.heading}
       </h3>
-      <p className="mt-[clamp(16px,2.1528vw,31px)] max-w-md font-poppins text-[clamp(14px,1.3889vw,20px)] font-medium leading-[1.1] text-[#101010]">
+      <p className="mt-2 max-w-md font-poppins text-[12px] font-medium leading-[1.2] text-[#101010] sm:mt-[clamp(16px,2.1528vw,31px)] sm:text-[clamp(14px,1.3889vw,20px)] sm:leading-[1.1]">
         {card.description}
       </p>
 
-      <div className="mt-auto flex items-end justify-between gap-4 pt-[clamp(24px,3.3333vw,48px)]">
-        <ul className="font-poppins text-[clamp(14px,1.3889vw,20px)] font-semibold leading-[1.1] text-[#101010]">
+      <div className="mt-auto flex items-end justify-between gap-4 pt-4 sm:pt-[clamp(24px,3.3333vw,48px)]">
+        <ul className="font-poppins text-[12px] font-semibold leading-[1.3] text-[#101010] sm:text-[clamp(14px,1.3889vw,20px)] sm:leading-[1.1]">
           {card.points.map((point) => (
             <li key={point}>{point}</li>
           ))}
         </ul>
-        <span className="font-anton-sc text-[clamp(56px,8.3333vw,120px)] leading-[1.1] text-[#101010]">
+        <span className="font-anton-sc text-[32px] leading-[1.1] text-[#101010] sm:text-[clamp(56px,8.3333vw,120px)]">
           {card.number}
         </span>
       </div>
@@ -292,7 +292,7 @@ export default function ProblemSection() {
     <section
       ref={sectionRef}
       id="problem"
-      className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA]"
+      className="relative z-10 -mt-[clamp(56px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA]"
     >
       <Image
         ref={leafTopRef}
@@ -367,7 +367,7 @@ export default function ProblemSection() {
             <div
               ref={backRef}
               aria-hidden="true"
-              className="absolute inset-0 flex flex-col rounded-[clamp(8px,0.8333vw,12px)] p-[clamp(24px,2.7778vw,40px)]"
+              className="absolute inset-0 flex flex-col rounded-[clamp(8px,0.8333vw,12px)] p-4 sm:p-[clamp(24px,2.7778vw,40px)]"
               style={{
                 backgroundColor: backCardStyle.bg,
                 "--label-color": backCardStyle.labelColor,
@@ -381,7 +381,7 @@ export default function ProblemSection() {
               ref={topRef}
               onClick={handleShuffle}
               aria-label="Show next problem card"
-              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(8px,0.8333vw,12px)] p-[clamp(24px,2.7778vw,40px)] text-left cursor-pointer"
+              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(8px,0.8333vw,12px)] p-4 text-left cursor-pointer sm:p-[clamp(24px,2.7778vw,40px)]"
               style={{
                 backgroundColor: topCardStyle.bg,
                 "--label-color": topCardStyle.labelColor,

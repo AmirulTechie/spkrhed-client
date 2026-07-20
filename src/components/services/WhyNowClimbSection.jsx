@@ -55,7 +55,7 @@ const QUOTE_TOP = ch(109);
 const TITLE_FONT = fluidFont(40, 18);
 const BODY_FONT = fluidFont(13, 10);
 
-// Below the "@[560px]/card" container-query breakpoint used throughout
+// Below the "@[500px]/card" container-query breakpoint used throughout
 // this section (the card's own rendered width, not the viewport — this
 // grid switches between 1 and 2 columns, so the same viewport width can
 // mean very different card widths) the text column and image use
@@ -357,7 +357,7 @@ export default function WhyNowClimbSection() {
                 className="@container/card relative w-full"
               >
                 <div
-                  className={`relative aspect-7/5 w-full cursor-pointer overflow-hidden rounded-[clamp(14px,5.5cqw,35px)] border transition-colors duration-500 @[560px]/card:aspect-636/240 ${
+                  className={`relative aspect-7/5 w-full cursor-pointer overflow-hidden rounded-[clamp(14px,5.5cqw,35px)] border transition-colors duration-500 @[500px]/card:aspect-636/240 ${
                     showBorder
                       ? "border-[rgba(255,223,130,0.55)]"
                       : "border-transparent"
@@ -383,7 +383,7 @@ export default function WhyNowClimbSection() {
                     />
 
                     <div
-                      className={`absolute inset-y-0 right-0 ${MOBILE_IMAGE_WIDTH} @[560px]/card:w-(--img-w-desktop)`}
+                      className={`absolute inset-y-0 right-0 ${MOBILE_IMAGE_WIDTH} @[500px]/card:w-(--img-w-desktop)`}
                       style={{ "--img-w-desktop": `${card.imageWidthPct}%` }}
                     >
                       <Image
@@ -395,7 +395,7 @@ export default function WhyNowClimbSection() {
                     </div>
 
                     <h3
-                      className={`absolute z-10 font-poppins font-bold uppercase leading-[0.875] text-[#dcb754] ${MOBILE_TEXT_WIDTH} @[560px]/card:w-(--title-w-desktop)`}
+                      className={`absolute z-10 font-poppins font-bold uppercase leading-[0.875] text-[#dcb754] ${MOBILE_TEXT_WIDTH} @[500px]/card:w-(--title-w-desktop)`}
                       style={{
                         left: TEXT_LEFT,
                         top: TITLE_TOP,
@@ -407,8 +407,8 @@ export default function WhyNowClimbSection() {
                     </h3>
 
                     <p
-                      className={`absolute z-10 font-poppins font-medium uppercase leading-[1.077] text-white/70 ${MOBILE_TEXT_WIDTH} @[560px]/card:w-(--quote-w-desktop) ${
-                        card.quoteNowrap ? "@[560px]/card:whitespace-nowrap" : ""
+                      className={`absolute z-10 font-poppins font-medium uppercase leading-[1.077] text-white/70 ${MOBILE_TEXT_WIDTH} @[500px]/card:w-(--quote-w-desktop) ${
+                        card.quoteNowrap ? "@[500px]/card:whitespace-nowrap" : ""
                       }`}
                       style={{
                         left: TEXT_LEFT,
@@ -423,7 +423,7 @@ export default function WhyNowClimbSection() {
                     </p>
 
                     <p
-                      className={`absolute z-10 font-poppins leading-[1.077] text-white/70 ${MOBILE_TEXT_WIDTH} @[560px]/card:w-(--body-w-desktop)`}
+                      className={`absolute z-10 font-poppins leading-[1.077] text-white/70 ${MOBILE_TEXT_WIDTH} @[500px]/card:w-(--body-w-desktop)`}
                       style={{
                         left: TEXT_LEFT,
                         top: ch(card.bodyTop),
