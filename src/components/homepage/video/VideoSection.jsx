@@ -7,32 +7,47 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Each branch carries separate mobile/desktop position strings (rather than
+// one string mixing bare and lg:-prefixed classes) so the two breakpoints
+// can be tuned independently without hunting through a combined string.
+// Both must stay full literal strings — Tailwind's build-time scanner only
+// generates CSS for arbitrary-value classes it can see verbatim in the
+// source, not ones assembled from JS variables at runtime.
 const BRANCHES = [
   {
     src: "/images/Home/tree-branch-1.png",
     width: 1615,
     height: 2396,
-    className: "left-[-7%] top-[-20%] w-[55%]",
+    mobile: "left-[-10%] top-[-20%] w-[50%]",
+    desktop: "lg:left-[-7%] lg:top-[-20%] lg:w-[55%]",
   },
   {
     src: "/images/Home/tree-branch-3.png",
     width: 1615,
     height: 2396,
-    className: "left-[-10%] top-[40%] w-[35%]",
+    mobile: "left-[-10%] top-[40%] w-[35%]",
+    desktop: "lg:left-[-10%] lg:top-[40%] lg:w-[35%]",
   },
   {
     src: "/images/Home/tree-branch-2.png",
     width: 2507,
     height: 1943,
-    className: "right-[-32%] top-[-85%] w-[90%]",
+    mobile: "right-[-32%] top-[-85%] w-[90%]",
+    desktop: "lg:right-[-32%] lg:top-[-85%] lg:w-[90%]",
   },
   {
     src: "/images/Home/tree-branch-1.png",
     width: 2507,
     height: 1943,
-    className: "right-[-16%] top-[-30%] w-[55%]",
+    mobile: "right-[-16%] top-[-30%] w-[55%]",
+    desktop: "lg:right-[-16%] lg:top-[-30%] lg:w-[55%]",
   },
 ];
+
+// Same idea for the cloud: its mobile and desktop position/size are edited
+// independently here instead of inline in the JSX below.
+const CLOUD_MOBILE = "bottom-[-35%] left-1/2 w-[115%]";
+const CLOUD_DESKTOP = "lg:bottom-[-35%] lg:left-1/2 lg:w-[115%]";
 
 export default function VideoSection() {
   const stageRef = useRef(null);
@@ -135,7 +150,7 @@ export default function VideoSection() {
     <section className="bg-[#DDDDD5] rounded-4xl">
       <div
         ref={stageRef}
-        className="relative aspect-1440/666 w-full overflow-hidden rounded-t-[clamp(24px,4vw,72px)]"
+        className="relative aspect-4/3 w-full overflow-hidden rounded-t-[clamp(24px,4vw,72px)] will-change-transform lg:aspect-1440/666"
       >
         {BRANCHES.map((branch, i) => (
           <Image
@@ -147,7 +162,7 @@ export default function VideoSection() {
             alt=""
             width={branch.width}
             height={branch.height}
-            className={`pointer-events-none absolute max-w-none select-none z-30 will-change-transform ${branch.className}`}
+            className={`pointer-events-none absolute max-w-none select-none z-0 will-change-transform lg:z-30 ${branch.mobile} ${branch.desktop}`}
           />
         ))}
 
@@ -157,12 +172,12 @@ export default function VideoSection() {
           alt=""
           width={3723}
           height={1164}
-          className="pointer-events-none absolute bottom-[-35%] left-1/2 w-[115%] max-w-none select-none z-999 will-change-transform"
+          className={`pointer-events-none absolute max-w-none select-none z-999 will-change-transform ${CLOUD_MOBILE} ${CLOUD_DESKTOP}`}
         />
 
         <div
           ref={videoRef}
-          className="absolute left-1/2 top-1/2 aspect-850/452 w-[59.03%] overflow-hidden rounded-[clamp(12px,2.2vw,32px)] z-10 will-change-transform"
+          className="absolute left-1/2 top-[38%] aspect-850/452 w-[94%] overflow-hidden rounded-[clamp(12px,2.2vw,32px)] z-10 will-change-transform lg:top-1/2 lg:w-[59.03%]"
         >
           <Image
             src="/images/Home/home-video-thumbnail.png"
