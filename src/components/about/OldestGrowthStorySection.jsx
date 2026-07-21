@@ -397,6 +397,7 @@ export default function OldestGrowthStorySection() {
                         src={card.image}
                         alt=""
                         fill
+                        sizes="(min-width: 768px) 30vw, 30vw"
                         className="object-contain"
                         style={{
                           objectPosition: `${card.imageAlign ?? "center"} bottom`,
