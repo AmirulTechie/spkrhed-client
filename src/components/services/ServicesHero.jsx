@@ -130,7 +130,7 @@ export default function ServicesHero() {
             <span className="block text-[#AC40FF]">
               <TypewriterChars text="LINKEDIN-FIRST" />
             </span>
-            <span className="block">
+            <span className="block lg:whitespace-nowrap">
               <TypewriterChars text="GROWTH AGENCY" />
             </span>
           </h1>
