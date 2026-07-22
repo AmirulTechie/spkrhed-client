@@ -80,11 +80,11 @@ export default function AboutHero() {
         <p className="mb-[clamp(16px,1.6667vw,24px)] flex items-center gap-[clamp(4px,0.4167vw,6px)] font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase text-white/30">
           <span ref={bulletRef} className="inline-flex opacity-0">
             <Image
-              src="/images/Home/banner-bullet.png"
+              src="/images/Home/leaf-2.png"
               alt=""
-              width={13}
-              height={13}
-              className="h-[clamp(9px,0.9028vw,13px)] w-[clamp(9px,0.9028vw,13px)]"
+              width={19}
+              height={19}
+              className="h-[clamp(13px,1.3542vw,19px)] w-[clamp(13px,1.3542vw,19px)] brightness-0 invert"
             />
           </span>
           <span className="inline-block">

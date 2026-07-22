@@ -204,11 +204,11 @@ export default function StatsClientsSection() {
         >
           <div className="flex items-start gap-3">
             <Image
-              src="/images/Home/banner-bullet.png"
+              src="/images/Home/leaf-2.png"
               alt=""
-              width={20}
-              height={20}
-              className="mt-[0.3em] h-[clamp(14px,1.1111vw,20px)] w-[clamp(14px,1.1111vw,20px)] shrink-0"
+              width={30}
+              height={30}
+              className="mt-[0.3em] h-[clamp(20px,1.6667vw,30px)] w-[clamp(20px,1.6667vw,30px)] shrink-0 brightness-0 invert"
             />
             <p className="max-w-90 font-poppins text-[clamp(14px,1.3194vw,30px)] font-semibold uppercase leading-none text-[#B7B7B7]">
   Clients whose realities we&apos;ve changed

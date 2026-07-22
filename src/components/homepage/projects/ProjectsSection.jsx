@@ -216,11 +216,11 @@ export default function ProjectsSection() {
         <div className="flex items-center gap-3">
           <span ref={bulletRef} className="inline-flex opacity-0">
             <Image
-              src="/images/Home/banner-bullet.png"
+              src="/images/Home/leaf-2.png"
               alt=""
-              width={20}
-              height={20}
-              className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
+              width={30}
+              height={30}
+              className="h-[clamp(15px,1.25vw,23px)] w-[clamp(15px,1.25vw,23px)] brightness-0 invert"
             />
           </span>
           <span className="font-poppins text-[clamp(14px,1.6667vw,24px)] font-semibold uppercase text-[#b7b7b7]">
