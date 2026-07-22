@@ -42,7 +42,10 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${poppins.variable} ${antonSC.variable} ${playwriteUSTrad.variable} ${alexBrush.variable} min-h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-poppins">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-background text-foreground font-poppins"
+      >
         <Loader />
         <SmoothScroll>
           <Navbar />

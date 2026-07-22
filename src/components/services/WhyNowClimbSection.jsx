@@ -390,6 +390,7 @@ export default function WhyNowClimbSection() {
                         src={card.image}
                         alt=""
                         fill
+                        sizes="(min-width: 768px) 30vw, 30vw"
                         className="object-contain object-bottom"
                       />
                     </div>
