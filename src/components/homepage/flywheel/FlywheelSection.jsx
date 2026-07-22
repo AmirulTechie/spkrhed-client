@@ -260,11 +260,11 @@ export default function FlywheelSection() {
         <div className="flex items-center justify-center gap-3">
           <span ref={bulletRef} className="inline-flex opacity-0">
             <Image
-              src="/images/Home/banner-bullet.png"
+              src="/images/Home/leaf-2.png"
               alt=""
-              width={20}
-              height={20}
-              className="h-[clamp(10px,0.8333vw,15px)] w-[clamp(10px,0.8333vw,15px)]"
+              width={30}
+              height={30}
+              className="h-[clamp(15px,1.25vw,23px)] w-[clamp(15px,1.25vw,23px)] brightness-0"
             />
           </span>
           <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#424242]">

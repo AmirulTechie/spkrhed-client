@@ -307,11 +307,11 @@ export default function OldestGrowthStorySection() {
             <div className="flex items-center gap-3">
               <span ref={bulletIconRef} className="inline-flex opacity-0">
                 <Image
-                  src="/images/Home/banner-bullet.png"
+                  src="/images/Home/leaf-2.png"
                   alt=""
-                  width={20}
-                  height={20}
-                  className="h-[clamp(10px,1.0417vw,15px)] w-[clamp(10px,1.0417vw,15px)]"
+                  width={30}
+                  height={30}
+                  className="h-[clamp(15px,1.5625vw,23px)] w-[clamp(15px,1.5625vw,23px)] brightness-0 invert"
                 />
               </span>
               <span className="font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">

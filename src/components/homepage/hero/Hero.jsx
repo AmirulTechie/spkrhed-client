@@ -133,31 +133,32 @@ export default function Hero() {
         className="pointer-events-none object-cover opacity-80"
       />
 
-      <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:-mt-25">
-        <p className="mb-8 flex items-center gap-3 font-poppins text-[clamp(16px,1.6888vw,32px)] font-semibold uppercase text-white/35 lg:mb-15">
-          <span ref={bulletRef} className="inline-flex opacity-0">
-            <Image
-              src="/images/Home/banner-bullet.png"
-              alt=""
-              width={20}
-              height={20}
-            />
-          </span>
-          <span className="inline-block">
-            {MOVEMENT_TEXT.split("").map((char, i) => (
-              <span
-                key={i}
-                ref={(el) => {
-                  movementCharRefs.current[i] = el;
-                }}
-                className="inline-block opacity-0"
-              >
-                {char === " " ? " " : char}
-              </span>
-            ))}
-          </span>
-        </p>
+      <p className="absolute bottom-[clamp(32px,6vw,100px)] right-[clamp(24px,6vw,100px)] z-10 flex items-center gap-3 font-poppins text-[clamp(18px,2.2vw,40px)] font-bold uppercase text-white">
+        <span ref={bulletRef} className="inline-flex opacity-0">
+          <Image
+            src="/images/Home/leaf-2.png"
+            alt=""
+            width={30}
+            height={30}
+            className="brightness-0 invert"
+          />
+        </span>
+        <span className="inline-block">
+          {MOVEMENT_TEXT.split("").map((char, i) => (
+            <span
+              key={i}
+              ref={(el) => {
+                movementCharRefs.current[i] = el;
+              }}
+              className="inline-block opacity-0"
+            >
+              {char === " " ? " " : char}
+            </span>
+          ))}
+        </span>
+      </p>
 
+      <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:-mt-25">
         <div className="flex w-full flex-col items-center">
           <div
             ref={linesRef}

@@ -1,5 +1,6 @@
 import { Poppins, Anton_SC, Playwrite_US_Trad, Alex_Brush } from "next/font/google";
 import Navbar from "@/components/navbar/Navbar";
+import Footer from "@/components/footer/Footer";
 import SmoothScroll from "@/components/smooth-scroll/SmoothScroll";
 import ScrollToTopButton from "@/components/scroll-to-top/ScrollToTopButton";
 import Loader from "@/components/loader/Loader";
@@ -46,6 +47,7 @@ export default function RootLayout({ children }) {
         <SmoothScroll>
           <Navbar />
           {children}
+          <Footer />
           <ScrollToTopButton />
         </SmoothScroll>
       </body>

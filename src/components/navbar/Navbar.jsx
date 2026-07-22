@@ -16,9 +16,12 @@ const SCROLL_THRESHOLD = 80;
 const LOADER_DURATION = 3.5;
 
 const NAV_LINKS = [
+  { label: "Home", href: "/" },
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const MotionLink = motion.create(Link);
@@ -68,7 +71,7 @@ function AnimatedNavLink({ href, children, onClick, isActive = false }) {
       initial="rest"
       animate={isActive ? "hover" : "rest"}
       whileHover="hover"
-      className={`relative inline-flex items-center gap-2 ${
+      className={`relative inline-flex items-center gap-1.5 ${
         isActive ? "text-white" : ""
       }`}
     >
@@ -252,12 +255,12 @@ export default function Navbar() {
         }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
-        <div className="flex items-center gap-[clamp(32px,4.4444vw,96px)]">
+        <div className="flex items-center gap-[clamp(24px,2.7778vw,64px)]">
           <Logo innerRef={logoRef} />
 
           <ul
             ref={navListRef}
-            className="hidden items-center gap-[clamp(32px,4.4444vw,96px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 lg:flex"
+            className="hidden items-center gap-[clamp(16px,1.6667vw,32px)] text-[clamp(13px,0.8333vw,15px)] font-semibold text-white/90 lg:flex"
           >
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href} className="opacity-0">
