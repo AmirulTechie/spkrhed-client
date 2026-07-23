@@ -38,7 +38,6 @@ function Line({ text }) {
 
 export default function Hero() {
   const linesRef = useRef(null);
-  const climbRef = useRef(null);
   const bulletRef = useRef(null);
   const movementCharRefs = useRef([]);
 
@@ -47,10 +46,6 @@ export default function Hero() {
 
     const ctx = gsap.context(() => {
       gsap.set(chars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
-      gsap.set(climbRef.current, {
-        opacity: 0,
-        y: 60,
-      });
 
       // "This is a movement" is coupled to the "T" — every other char and
       // the bullet start stacked on top of it, then pull apart outward in
@@ -77,24 +72,17 @@ export default function Hero() {
         duration: 0.4,
         stagger: 0.035,
         ease: "power2.out",
-      })
-        .to(
-          climbRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            ease: "power3.out",
-          },
-          "-=0.25"
-        )
-        .to(movementEls, {
+      }).to(
+        movementEls,
+        {
           x: 0,
           opacity: 1,
           duration: 0.5,
           ease: "power3.out",
           stagger: { each: 0.032, from: movementEls.indexOf(anchorEl) },
-        });
+        },
+        "-=0.25"
+      );
     });
 
     return () => ctx.revert();
@@ -177,13 +165,6 @@ export default function Hero() {
               </div>
             ))}
           </div>
-
-          <p
-            ref={climbRef}
-            className="-mt-[clamp(12px,2.2222vw,50px)] font-playwrite-us-trad text-[clamp(40px,5.9028vw,130px)] text-[#AC40FF] z-9999 opacity-0"
-          >
-            climb to you
-          </p>
         </div>
       </div>
     </section>

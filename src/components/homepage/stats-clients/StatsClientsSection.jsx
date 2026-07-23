@@ -18,7 +18,7 @@ const COPY_LINES = [
 
 const STATS = [
   { value: "10+", valueClassName: "text-white", label: "Years of\nExperience" },
-  { value: "10K+", valueClassName: "text-[#AC40FF]", label: "Targeted\nDMs / Month" },
+  { value: "50K+", valueClassName: "text-[#AC40FF]", label: "Targeted\nDMs / Month" },
 ];
 
 // Two rows of four, matching the Figma order and per-logo widths

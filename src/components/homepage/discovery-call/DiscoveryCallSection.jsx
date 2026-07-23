@@ -141,7 +141,7 @@ export default function DiscoveryCallSection() {
     <section
       ref={sectionRef}
       id="discovery-call"
-      className="relative overflow-hidden rounded-[clamp(24px,3.4722vw,50px)] bg-[#c983ff]"
+      className="relative mb-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-[clamp(24px,3.4722vw,50px)] bg-[#c983ff]"
     >
       <Image
         src="/images/Home/cloud.png"
