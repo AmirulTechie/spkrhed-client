@@ -19,6 +19,21 @@ const SOCIALS = [
   { label: "Instagram", href: "#", icon: SiInstagram },
 ];
 
+function ColumnHeading({ children }) {
+  return (
+    <p className="flex items-center gap-2 font-anton-sc text-lg uppercase tracking-wide text-white">
+      <Image
+        src="/images/Home/leaf-2.png"
+        alt=""
+        width={16}
+        height={16}
+        className="brightness-0 invert"
+      />
+      {children}
+    </p>
+  );
+}
+
 function SocialLink({ social }) {
   const Icon = social.icon;
 
@@ -42,8 +57,16 @@ function SocialLink({ social }) {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black text-white">
-      <div className="grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-black text-white">
+      <Image
+        src="/images/Home/Hero-banner-grids.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="pointer-events-none select-none object-cover opacity-[0.08]"
+      />
+
+      <div className="relative grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
         <div className="flex flex-col justify-between gap-10 p-8 lg:p-12">
           <Image
             src="/images/spkrhed-logo.png"
@@ -53,18 +76,21 @@ export default function Footer() {
             className="h-auto w-32 object-contain object-left"
           />
 
-          <div className="flex flex-col gap-6">
-            <p className="text-xs text-white/40">How to cooperate?</p>
-            <p className="text-sm font-bold uppercase tracking-widest">
-              info@speakerhead.com
+          <div className="flex flex-col gap-3">
+            <p className="text-xs uppercase tracking-widest text-white/40">
+              How to cooperate?
             </p>
+            <Link
+              href="mailto:info@speakerhead.com"
+              className="font-anton-sc text-xl uppercase tracking-wide text-white transition-colors duration-300 hover:text-[#AC40FF]"
+            >
+              info@speakerhead.com
+            </Link>
           </div>
         </div>
 
         <div className="flex flex-col gap-6 p-8 lg:p-12">
-          <p className="text-sm font-bold uppercase tracking-widest">
-            Quick Links
-          </p>
+          <ColumnHeading>Quick Links</ColumnHeading>
           <ul className="flex flex-col gap-4">
             {QUICK_LINKS.map((link) => (
               <li key={link.href}>
@@ -80,9 +106,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-6 p-8 lg:p-12">
-          <p className="text-sm font-bold uppercase tracking-widest">
-            Socials
-          </p>
+          <ColumnHeading>Socials</ColumnHeading>
           <div className="flex flex-col gap-4">
             {SOCIALS.map((social) => (
               <SocialLink key={social.label} social={social} />
@@ -91,7 +115,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 px-8 py-5 sm:flex-row lg:px-12">
+      <div className="relative flex flex-col items-center justify-between gap-3 border-t border-white/10 px-8 py-5 sm:flex-row lg:px-12">
         <p className="text-xs text-white/30">
           Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
         </p>

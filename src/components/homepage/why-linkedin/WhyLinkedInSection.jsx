@@ -139,21 +139,29 @@ export default function WhyLinkedInSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute left-[-21.7778%] top-[-25.3333vw] w-[55%] -scale-x-100 rotate-30 select-none opacity-90 sm:w-[40%]"
+        className="pointer-events-none absolute left-[-30%] top-[-25.3333vw] w-[55%] -scale-x-100 rotate-60 select-none opacity-90 sm:w-[70%]"
       />
       <Image
         src="/images/Home/tree-branch-1.png"
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute left-[-16.4444%] top-[-16.2222vw] w-[55%] -scale-x-100 rotate-60 select-none opacity-90 sm:w-[40%]"
+        className="pointer-events-none absolute left-[-50%] top-[-16.2222vw] w-[55%] -scale-x-100 rotate-60 select-none opacity-90 sm:w-[70%]"
       />
       <Image
         src="/images/Home/tree-branch-1.png"
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute right-[-20.8333%] top-[-11.1111vw] w-[55%] -rotate-50 select-none opacity-90 sm:w-[40%]"
+        className="pointer-events-none absolute right-[-35%] top-[-11.1111vw] w-[55%] -rotate-50 select-none opacity-90 sm:w-[70%]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[40%] bg-linear-to-b from-black to-transparent"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[40%] bg-linear-to-b from-transparent to-black"
       />
 
       <div className="relative mx-auto max-w-300 px-[clamp(24px,5.5556vw,80px)] text-center">

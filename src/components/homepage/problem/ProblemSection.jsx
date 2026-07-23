@@ -300,7 +300,7 @@ export default function ProblemSection() {
         alt=""
         width={200}
         height={200}
-        className="pointer-events-none absolute left-[70%] top-[7%] z-20 w-[clamp(60px,9.7014vw,140px)] select-none"
+        className="pointer-events-none absolute left-[70%] top-[7%] z-20 w-[clamp(60px,9.7014vw,140px)] select-none md:top-[2.5%]"
       />
       <Image
         ref={leafLeftRef}
@@ -308,7 +308,7 @@ export default function ProblemSection() {
         alt=""
         width={200}
         height={200}
-        className="pointer-events-none absolute left-[17.16%] top-[62%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none"
+        className="pointer-events-none absolute left-[17.16%] top-[60%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none"
       />
 
       <div className="relative mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] py-[clamp(40px,6.9444vw,100px)]">

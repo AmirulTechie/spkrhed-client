@@ -13,11 +13,18 @@ gsap.registerPlugin(ScrollTrigger);
 // Both must stay full literal strings — Tailwind's build-time scanner only
 // generates CSS for arbitrary-value classes it can see verbatim in the
 // source, not ones assembled from JS variables at runtime.
+//
+// `side` says which edge this branch exits toward on scroll, and is also
+// how branches are grouped for that exit: everything on one side is
+// translated together as a single rigid unit, so the overlap between
+// neighboring branches (tuned to match Figma) never changes — only the
+// group's shared position does.
 const BRANCHES = [
   {
     src: "/images/Home/tree-branch-1.png",
     width: 1615,
     height: 2396,
+    side: "left",
     mobile: "left-[-10%] top-[-20%] w-[50%]",
     desktop: "lg:left-[-7%] lg:top-[-20%] lg:w-[55%]",
   },
@@ -25,6 +32,7 @@ const BRANCHES = [
     src: "/images/Home/tree-branch-3.png",
     width: 1615,
     height: 2396,
+    side: "left",
     mobile: "left-[-10%] top-[40%] w-[35%]",
     desktop: "lg:left-[-10%] lg:top-[40%] lg:w-[35%]",
   },
@@ -32,6 +40,7 @@ const BRANCHES = [
     src: "/images/Home/tree-branch-2.png",
     width: 2507,
     height: 1943,
+    side: "right",
     mobile: "right-[-32%] top-[-85%] w-[90%]",
     desktop: "lg:right-[-32%] lg:top-[-85%] lg:w-[90%]",
   },
@@ -39,6 +48,7 @@ const BRANCHES = [
     src: "/images/Home/tree-branch-1.png",
     width: 2507,
     height: 1943,
+    side: "right",
     mobile: "right-[-16%] top-[-30%] w-[55%]",
     desktop: "lg:right-[-16%] lg:top-[-30%] lg:w-[55%]",
   },
@@ -49,6 +59,10 @@ const BRANCHES = [
 const CLOUD_MOBILE = "bottom-[-35%] left-1/2 w-[115%]";
 const CLOUD_DESKTOP = "lg:bottom-[-35%] lg:left-1/2 lg:w-[115%]";
 
+// How much stage width/height stays clear around the video once it has
+// scaled up to its largest, final size.
+const VIDEO_FINAL_MARGIN_RATIO = 0.03;
+
 export default function VideoSection() {
   const stageRef = useRef(null);
   const branchRefs = useRef([]);
@@ -57,29 +71,12 @@ export default function VideoSection() {
 
   useLayoutEffect(() => {
     const stage = stageRef.current;
-    const branches = branchRefs.current.filter(Boolean);
     const cloud = cloudRef.current;
     const video = videoRef.current;
-
-    // Distance (in px) each branch must travel from "gathered at the
-    // center" back to its resting spot. gsap's function-based tween
-    // values aren't evaluated on the "from" side of fromTo(), so instead
-    // we compute the offset up front, gsap.set() it as the starting
-    // transform, then tween to the resting {x:0, y:0}.
-    const branchOffset = (el) => {
-      const stageRect = stage.getBoundingClientRect();
-      const elRect = el.getBoundingClientRect();
-      return {
-        x: stageRect.left + stageRect.width / 2 - (elRect.left + elRect.width / 2),
-        y: stageRect.top + stageRect.height / 2 - (elRect.top + elRect.height / 2),
-      };
-    };
-
-    const cloudOffsetY = () => {
-      const stageRect = stage.getBoundingClientRect();
-      const elRect = cloud.getBoundingClientRect();
-      return stageRect.top + stageRect.height / 2 - (elRect.top + elRect.height / 2);
-    };
+    const branchEls = BRANCHES.map((branch, i) => ({
+      side: branch.side,
+      el: branchRefs.current[i],
+    })).filter((b) => b.el);
 
     let ctx;
 
@@ -90,13 +87,16 @@ export default function VideoSection() {
         gsap.set(cloud, { xPercent: -50 });
         gsap.set(video, { xPercent: -50, yPercent: -50 });
 
+        // Rest state: branches sit exactly where their CSS puts them
+        // (matches Figma), cloud stays put.
+        branchEls.forEach(({ el }) => gsap.set(el, { x: 0, y: 0 }));
+        gsap.set(cloud, { y: 0 });
+
         // Below lg, skip the pinned scroll-scrub entirely and just render
         // everything at its resting position — pinning a full-viewport
         // stage over a scrub is heavy and janky on mobile scroll.
         const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
         if (!isDesktop) {
-          branches.forEach((el) => gsap.set(el, { x: 0, y: 0 }));
-          gsap.set(cloud, { y: 0 });
           gsap.set(video, { scale: 1 });
           return;
         }
@@ -111,24 +111,48 @@ export default function VideoSection() {
           },
         });
 
-        branches.forEach((el) => {
-          const offset = branchOffset(el);
-          gsap.set(el, offset);
-          tl.to(el, { x: 0, y: 0, ease: "none" }, 0);
-        });
+        // Each side's branches exit toward their nearest border as one
+        // rigid group. Only the group's innermost edge (the one nearest
+        // the video, i.e. the last part of the group still in frame) is
+        // measured; the whole group is translated by the same delta until
+        // that edge sits flush with the stage border. Neighboring branches
+        // within a group never move relative to each other.
+        const stageRect = stage.getBoundingClientRect();
+        const leftEls = branchEls.filter((b) => b.side === "left").map((b) => b.el);
+        const rightEls = branchEls.filter((b) => b.side === "right").map((b) => b.el);
 
-        gsap.set(cloud, { y: cloudOffsetY() });
-        tl.to(cloud, { y: 0, ease: "none" }, 0);
+        if (leftEls.length) {
+          const innerEdge = Math.max(...leftEls.map((el) => el.getBoundingClientRect().right));
+          const delta = stageRect.left - innerEdge;
+          leftEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
+        }
+
+        if (rightEls.length) {
+          const innerEdge = Math.min(...rightEls.map((el) => el.getBoundingClientRect().left));
+          const delta = stageRect.right - innerEdge;
+          rightEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
+        }
+
+        // Scale the video up to fill the stage minus a small breathing
+        // margin, capped by whichever dimension (width or height) is
+        // tighter so it never overflows the stage.
+        const videoRect = video.getBoundingClientRect();
+        const marginX = stageRect.width * VIDEO_FINAL_MARGIN_RATIO;
+        const marginY = stageRect.height * VIDEO_FINAL_MARGIN_RATIO;
+        const targetScale = Math.min(
+          (stageRect.width - marginX * 2) / videoRect.width,
+          (stageRect.height - marginY * 2) / videoRect.height
+        );
 
         gsap.set(video, { scale: 0.4 });
-        tl.to(video, { scale: 1, ease: "none" }, 0);
+        tl.to(video, { scale: targetScale, ease: "none" }, 0);
       }, stage);
     };
 
     build();
 
-    // Rebuild from scratch on resize so the "gathered" offsets and pin
-    // distance stay correct across breakpoints.
+    // Rebuild from scratch on resize so the exit offsets, target scale,
+    // and pin distance stay correct across breakpoints.
     let resizeTimeout;
     const handleResize = () => {
       clearTimeout(resizeTimeout);
