@@ -202,9 +202,9 @@ export default function ProblemSection() {
       tl.to(soundFamiliarEls, {
         x: 0,
         opacity: 1,
-        duration: 0.5,
+        duration: 0.3,
         ease: "power3.out",
-        stagger: { each: 0.032, from: soundFamiliarEls.indexOf(anchorEl) },
+        stagger: { each: 0.018, from: soundFamiliarEls.indexOf(anchorEl) },
       })
         .to(
           headingChars,
@@ -212,31 +212,31 @@ export default function ProblemSection() {
             opacity: 1,
             yPercent: 0,
             filter: "blur(0px)",
-            duration: 0.4,
-            stagger: 0.02,
+            duration: 0.25,
+            stagger: 0.012,
             ease: "power2.out",
           },
-          "-=0.15",
+          "-=0.1",
         )
         .to(
           descriptionChars,
           {
             opacity: 1,
             yPercent: 0,
-            duration: 0.3,
-            stagger: 0.008,
+            duration: 0.18,
+            stagger: 0.005,
             ease: "power2.out",
           },
-          "-=0.3",
+          "-=0.18",
         )
         .to(
           leafLeftRef.current,
-          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
+          { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" },
           "<",
         )
         .to(
           cardsWrapperRef.current,
-          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
+          { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" },
           "<",
         )
         .to(
@@ -246,10 +246,10 @@ export default function ProblemSection() {
             x: 0,
             y: 0,
             rotate: 0,
-            duration: 0.8,
+            duration: 0.45,
             ease: "power3.out",
           },
-          "<0.1",
+          "<0.05",
         );
     }, sectionRef);
 
@@ -272,7 +272,7 @@ export default function ProblemSection() {
         y: -24,
         rotate: 14,
         opacity: 0,
-        duration: 0.45,
+        duration: 0.3,
         ease: "power2.in",
       })
       .to(
@@ -281,10 +281,10 @@ export default function ProblemSection() {
           x: 0,
           yPercent: 0,
           rotate: 0,
-          duration: 0.5,
+          duration: 0.32,
           ease: "power2.out",
         },
-        "-=0.3",
+        "-=0.2",
       );
   }
 

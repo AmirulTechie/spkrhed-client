@@ -17,6 +17,9 @@ const STEPS = [
     description:
       "Your prospect receives a personalized message. They're curious — so they click your profile.",
     offset: false,
+    icon: "/images/Home/flywheel-icon-1.png",
+    iconWidth: 268,
+    iconHeight: 230,
   },
   {
     number: "02",
@@ -24,6 +27,9 @@ const STEPS = [
     description:
       "They see polished positioning, real social proof, and a feed of content that makes them feel they already know you.",
     offset: true,
+    icon: "/images/Home/flywheel-icon-2.png",
+    iconWidth: 188,
+    iconHeight: 240,
   },
   {
     number: "03",
@@ -31,6 +37,9 @@ const STEPS = [
     description:
       "Even if they're not ready today, they follow. Every post keeps you top of mind until the timing is right.",
     offset: false,
+    icon: "/images/Home/flywheel-icon-3.png",
+    iconWidth: 234,
+    iconHeight: 234,
   },
   {
     number: "04",
@@ -38,6 +47,9 @@ const STEPS = [
     description:
       "When they're ready, you're the only name they think of. They book — already pre-sold on your value.",
     offset: true,
+    icon: "/images/Home/flywheel-icon-4.png",
+    iconWidth: 105,
+    iconHeight: 105,
   },
 ];
 
@@ -93,6 +105,14 @@ function StepCard({ step, cardRef }) {
         </div>
         <div className="mt-[clamp(9px,0.9028vw,13px)] mr-[clamp(13px,1.3194vw,19px)] border-t border-[#101010]" />
 
+        <Image
+          src={step.icon}
+          alt=""
+          width={step.iconWidth}
+          height={step.iconHeight}
+          className="mt-[clamp(12px,1.6667vw,24px)] h-[clamp(56px,7.6389vw,110px)] w-auto object-contain object-left"
+        />
+
         <div className="mt-auto pt-[clamp(6px,0.9028vw,13px)]">
           <h3 className="font-anton-sc text-[clamp(16px,1.3889vw,20px)] uppercase leading-[0.8] text-[#101010]">
             {step.title}
@@ -142,7 +162,11 @@ export default function FlywheelSection() {
       // Each line starts fully clipped from the right so it can wipe into
       // view left to right, hugging the line's own text width (the lines
       // are inline-block) rather than the paragraph's full centered box.
-      gsap.set(climbLines, { clipPath: "inset(0% 100% 0% 0%)" });
+      // Top/bottom insets are pushed well into negative px (not just a
+      // relative %) because the script font's ascenders/loops overshoot its
+      // tight 0.8 line-height box by more than the box's own height — a
+      // percentage-based inset scales off that tiny box and still clips.
+      gsap.set(climbLines, { clipPath: "inset(-100px 100% -100px 0%)" });
 
       const anchorEl = bulletChars[0];
       const bulletEls = [bulletRef.current, ...bulletChars];
@@ -197,7 +221,7 @@ export default function FlywheelSection() {
         .to(
           climbLines,
           {
-            clipPath: "inset(0% 0% 0% 0%)",
+            clipPath: "inset(-100px 0% -100px 0%)",
             duration: 0.7,
             ease: "power2.inOut",
             stagger: 0.25,
@@ -257,17 +281,17 @@ export default function FlywheelSection() {
       />
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
-        <div className="flex items-center justify-center gap-3">
-          <span ref={bulletRef} className="inline-flex opacity-0">
+        <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
+          <span ref={bulletRef} className="inline-flex shrink-0 opacity-0">
             <Image
               src="/images/Home/leaf-2.png"
               alt=""
-              width={30}
-              height={30}
-              className="h-[clamp(15px,1.25vw,23px)] w-[clamp(15px,1.25vw,23px)] brightness-0"
+              width={120}
+              height={120}
+              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0"
             />
           </span>
-          <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#424242]">
+          <span className="font-anton-sc whitespace-nowrap text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-black">
             {BULLET_TEXT.split("").map((char, i) => (
               <span
                 key={i}
@@ -284,7 +308,7 @@ export default function FlywheelSection() {
 
         <h2
           ref={headingRef}
-          className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-129.5 font-anton-sc text-[clamp(32px,5.9028vw,85px)] uppercase leading-[1.06] text-black"
+          className="mx-auto mt-[clamp(40px,5.5556vw,80px)] max-w-129.5 font-anton-sc text-[clamp(32px,5.9028vw,85px)] uppercase leading-[1.06] text-black"
         >
           <SproutLine>
             <SproutChars text="Content Makes" />

@@ -125,7 +125,7 @@ export default function ScaleNotStrategy() {
 
       <h2
         ref={headingRef}
-        className="relative mx-auto max-w-160 px-6 text-center font-anton-sc text-[clamp(40px,11.09vw,121px)] uppercase leading-none text-white"
+        className="relative mx-auto max-w-190 px-6 text-center font-anton-sc text-[clamp(48px,13.5vw,150px)] uppercase leading-none text-white"
       >
         <RevealWord>The</RevealWord> <RevealWord>problem</RevealWord>
         <br />

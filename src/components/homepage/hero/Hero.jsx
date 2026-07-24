@@ -91,7 +91,7 @@ export default function Hero() {
   return (
     <section className="relative flex min-h-dvh w-full select-none items-center justify-center overflow-hidden bg-black py-24 lg:py-0">
       <Image
-        src="/images/Home/hero-banner-2.png"
+        src="/images/Home/hero-banner-plain.png"
         alt=""
         fill
         priority
@@ -121,14 +121,26 @@ export default function Hero() {
         className="pointer-events-none object-cover opacity-80"
       />
 
-      <p className="absolute bottom-[clamp(32px,6vw,100px)] right-[clamp(24px,6vw,100px)] z-10 flex items-center gap-3 font-poppins text-[clamp(18px,2.2vw,40px)] font-bold uppercase text-white">
+      <div className="pointer-events-none absolute bottom-[9%] left-1/2 z-20 w-[clamp(380px,58vw,1050px)] -translate-x-1/2">
+        <Image
+          src="/images/Home/plant-out-bean.png"
+          alt=""
+          width={1536}
+          height={1024}
+          draggable={false}
+          onDragStart={preventDrag}
+          className="pointer-events-none h-auto w-full"
+        />
+      </div>
+
+      <p className="absolute bottom-[clamp(16px,3vw,60px)] right-[clamp(24px,6vw,100px)] z-10 flex items-center gap-3 font-poppins text-[clamp(22px,2.8vw,52px)] font-bold uppercase text-white">
         <span ref={bulletRef} className="inline-flex opacity-0">
           <Image
             src="/images/Home/leaf-2.png"
             alt=""
-            width={30}
-            height={30}
-            className="brightness-0 invert"
+            width={40}
+            height={40}
+            className="w-[clamp(26px,3.4vw,64px)] h-auto brightness-0 invert"
           />
         </span>
         <span className="inline-block">

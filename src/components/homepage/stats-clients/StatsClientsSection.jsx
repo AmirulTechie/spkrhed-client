@@ -210,7 +210,7 @@ export default function StatsClientsSection() {
               height={30}
               className="mt-[0.3em] h-[clamp(20px,1.6667vw,30px)] w-[clamp(20px,1.6667vw,30px)] shrink-0 brightness-0 invert"
             />
-            <p className="max-w-90 font-poppins text-[clamp(14px,1.3194vw,30px)] font-semibold uppercase leading-none text-[#B7B7B7]">
+            <p className="max-w-180 font-poppins text-[clamp(22px,2.7778vw,48px)] font-semibold uppercase leading-none text-white">
   Clients whose realities we&apos;ve changed
 </p>
           </div>
