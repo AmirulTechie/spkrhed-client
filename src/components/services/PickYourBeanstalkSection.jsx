@@ -134,6 +134,15 @@ export default function PickYourBeanstalkSection() {
           background: "linear-gradient(180deg, #000000 0%, rgba(0,0,0,0) 100%)",
         }}
       />
+      {/* Blends the vine's bottom edge (where the section's overflow-hidden clips it)
+          into the black bg, so it fades out before the footer rather than looking cut off. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(80px,20vw,220px)]"
+        style={{
+          background: "linear-gradient(0deg, #000000 0%, rgba(0,0,0,0) 100%)",
+        }}
+      />
 
       <div className="relative mx-auto h-auto max-w-11/12 px-8 sm:px-12 lg:px-16 md:mx-auto md:h-full md:max-w-360 md:px-0">
       <div className="flex justify-center">

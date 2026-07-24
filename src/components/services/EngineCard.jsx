@@ -61,8 +61,10 @@ export default function EngineCard({
         style={{ objectFit: "fill" }}
       />
 
-      <div className="relative flex h-full flex-col p-[clamp(26px,3.6111vw,52px)]">
-        <p className="font-poppins text-[clamp(11px,1.1111vw,16px)] font-semibold text-white">
+      <div
+        className={`relative flex h-full flex-col p-[clamp(26px,3.6111vw,52px)] ${isBack ? "opacity-35" : ""}`}
+      >
+        <p className="font-poppins text-[clamp(20px,2.7778vw,40px)] font-bold text-white">
           {card.eyebrow}
         </p>
 
@@ -74,7 +76,7 @@ export default function EngineCard({
           drop below the notch before going full-width; lg keeps the
           original 50%-width layout, which never reaches the notch.
         */}
-        <h3 className="mt-12 max-w-full lg:mt-[clamp(8px,1.25vw,18px)] lg:max-w-[50%] font-anton-sc text-[clamp(24px,3.4722vw,50px)] leading-[1.15] lg:leading-[1.02] uppercase">
+        <h3 className="mt-12 max-w-full lg:mt-[clamp(8px,1.25vw,18px)] lg:max-w-[50%] font-anton-sc text-[clamp(20px,2.7778vw,40px)] leading-[1.15] lg:leading-[1.02] uppercase">
           {card.headingLines.map((line, index) => (
             <span
               key={index}

@@ -91,3 +91,24 @@
   right: 0;
   transform: rotateZ(180deg);
 }
+
+/*
+ * Idle nudge on the Foundation/Amplify swap button's arrow: since the icon
+ * itself is a directional (right-pointing) arrow, a horizontal bounce in
+ * the direction it points reads as "press this way" much more clearly than
+ * scaling it up ever did. Stops once the user actually swaps the cards
+ * (see FoundationAmplifySection's hasSwapped state).
+ */
+@keyframes arrow-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(28%);
+  }
+}
+
+.arrow-pulse {
+  animation: arrow-nudge 1.1s ease-in-out infinite;
+}

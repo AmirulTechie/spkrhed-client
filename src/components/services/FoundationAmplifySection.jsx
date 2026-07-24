@@ -91,6 +91,7 @@ const MOBILE_CARD_HEIGHT = {
 
 export default function FoundationAmplifySection() {
   const [frontId, setFrontId] = useState("foundation");
+  const [hasSwapped, setHasSwapped] = useState(false);
   const backId = frontId === "foundation" ? "amplify" : "foundation";
 
   const sectionRef = useRef(null);
@@ -194,6 +195,7 @@ export default function FoundationAmplifySection() {
   function handleAdvance() {
     if (animatingRef.current) return;
     animatingRef.current = true;
+    setHasSwapped(true);
     setFrontId((id) => (id === "foundation" ? "amplify" : "foundation"));
   }
 
@@ -338,18 +340,18 @@ export default function FoundationAmplifySection() {
               type="button"
               onClick={handleAdvance}
               aria-label="Swap the engine pillar shown up front"
-              className="absolute z-40 flex items-center justify-center rounded-full border border-white/15 backdrop-blur-[5.5px] cursor-pointer hover:backdrop-blur-2xl"
+              className="absolute z-40 flex items-center justify-center rounded-full border border-white/25 backdrop-blur-[5.5px] cursor-pointer hover:border-white/50 hover:backdrop-blur-2xl transition-colors"
               style={{
-                width: "clamp(48px,5.9722vw,86px)",
-                height: "clamp(48px,5.9722vw,86px)",
-                right: "clamp(-54px,-6.7361vw,-97px)",
+                width: "clamp(72px,8.3333vw,120px)",
+                height: "clamp(72px,8.3333vw,120px)",
+                right: "clamp(-76px,-9.375vw,-135px)",
                 top: "60.8%",
                 transform: "translateY(-50%)",
-                backgroundColor: "rgba(15,15,15,0.5)",
+                backgroundColor: "rgba(15,15,15,0.6)",
               }}
             >
               <ArrowRight
-                className="h-[35%] w-[35%] text-white"
+                className={`h-[38%] w-[38%] text-white ${hasSwapped ? "" : "arrow-pulse"}`}
                 strokeWidth={2}
               />
             </button>
@@ -381,15 +383,18 @@ export default function FoundationAmplifySection() {
             type="button"
             onClick={handleAdvance}
             aria-label="Swap the engine pillar shown"
-            className="absolute z-40 flex items-center justify-center rounded-full border border-white/15 bg-[#0F0F0F]/70 backdrop-blur-[5.5px] cursor-pointer"
+            className="absolute z-40 flex items-center justify-center rounded-full border border-white/25 bg-[#0F0F0F]/70 backdrop-blur-[5.5px] cursor-pointer"
             style={{
-              width: "44px",
-              height: "44px",
+              width: "60px",
+              height: "60px",
               right: "16px",
-              bottom: "-44px",
+              bottom: "-60px",
             }}
           >
-            <ArrowRight className="h-[35%] w-[35%] text-white" strokeWidth={2} />
+            <ArrowRight
+              className={`h-[38%] w-[38%] text-white ${hasSwapped ? "" : "arrow-pulse"}`}
+              strokeWidth={2}
+            />
           </button>
         </div>
       </div>

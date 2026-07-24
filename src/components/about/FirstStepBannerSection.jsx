@@ -80,7 +80,7 @@ export default function FirstStepBannerSection() {
       className="relative min-h-120 w-full overflow-hidden lg:h-[clamp(480px,57.2917vw,825px)] lg:min-h-0"
     >
       <Image
-        src="/images/about/first-step-banner.png"
+        src="/images/about/first-step-banner-2.png"
         alt="A lone figure walking toward a beanstalk bridge in a misty forest"
         fill
         sizes="100vw"

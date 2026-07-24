@@ -135,7 +135,7 @@ function TypewriterChars({ text }) {
 // `measure` renders the same content unconstrained (no `inset-0`, height
 // auto) and hidden, so its rendered height reveals how tall this card's
 // content actually needs to be at the current width — used to size the
-// mobile card stack, see the comment above MOBILE_CARD_BREAKPOINT.
+// card stack, see the effect below that sets `cardHeight`.
 function GrowthCard({ card, slotIndex, setCardRef, onAdvance, measure }) {
   const isBack = slotIndex === 2;
 
@@ -190,21 +190,9 @@ function GrowthCard({ card, slotIndex, setCardRef, onAdvance, measure }) {
   );
 }
 
-// Below this width the card stack's height is measured from actual
-// content instead of held to a fixed aspect ratio (see the effect below
-// that sets `mobileCardHeight`). The card text uses `vw`-based clamp()
-// sizing, not container-query units, so how much height its content
-// needs doesn't scale linearly with card width — line-wrap counts change
-// in steps as the viewport grows. A single fixed aspect ratio always ends
-// up wrong at some width in this range: either it overflows the card
-// (too short) or leaves a large dead gap below the content (too tall).
-// Above this width the original `sm:aspect-588/355` desktop sizing already
-// fits comfortably, so measurement is skipped and turned off entirely.
-const MOBILE_CARD_BREAKPOINT = 640;
-
 export default function GrowthEngineSection() {
   const [order, setOrder] = useState([0, 1, 2]);
-  const [mobileCardHeight, setMobileCardHeight] = useState(null);
+  const [cardHeight, setCardHeight] = useState(null);
   const cardRefs = useRef([]);
   const measureRefs = useRef([]);
   const animatingRef = useRef(false);
@@ -226,6 +214,14 @@ export default function GrowthEngineSection() {
     });
   }, [order]);
 
+  // The card stack's height is always measured from actual content rather
+  // than held to a fixed aspect ratio. The card text uses `vw`-based
+  // clamp() sizing, not container-query units, so how much height its
+  // content needs doesn't scale linearly with card width — line-wrap
+  // counts change in steps as the viewport grows, and clamp() maxes out
+  // at wide viewports while the card keeps growing. A fixed aspect ratio
+  // always ends up wrong somewhere: either it overflows the card (too
+  // short) or leaves a dead gap below the content (too tall).
   useLayoutEffect(() => {
     let lastWidth = null;
 
@@ -239,14 +235,10 @@ export default function GrowthEngineSection() {
       if (width === lastWidth) return;
       lastWidth = width;
 
-      if (window.innerWidth >= MOBILE_CARD_BREAKPOINT) {
-        setMobileCardHeight(null);
-        return;
-      }
       const heights = measureRefs.current
         .filter(Boolean)
         .map((el) => el.offsetHeight);
-      if (heights.length) setMobileCardHeight(Math.max(...heights));
+      if (heights.length) setCardHeight(Math.max(...heights));
     }
 
     recalc();
@@ -397,11 +389,22 @@ export default function GrowthEngineSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0F0F0F] pt-[clamp(40px,4vw,58px)]"
+      className="relative overflow-x-clip bg-[#0F0F0F] pt-[clamp(40px,4vw,58px)]"
     >
+      {/* Fixed vw offset (not a % of the section's own height) so the vines'
+          position never moves when unrelated content above them — like the
+          eyebrow heading — changes size. A %-based top is relative to this
+          section's total rendered height, so it silently drifts every time
+          content height changes; vw is relative to the viewport only, and
+          stays put. Each branch also fades both its top AND bottom edges
+          out via a mask (rather than a black overlay div) so only the
+          vine's pixels fade — the hero image behind it never gets
+          darkened or smudged, and the overlap reads as one continuous
+          vine instead of a hard-cropped rectangle. Same technique as
+          PricingSection's tree branches. */}
       <div
         ref={leftBranchRef}
-        className="pointer-events-none absolute top-[-30%] left-[-25%] z-10 w-[50%] select-none"
+        className="pointer-events-none absolute top-[-19vw] left-[-25%] z-10 w-[50%] select-none"
       >
         <Image
           src="/images/Home/tree-branch-1.png"
@@ -409,11 +412,17 @@ export default function GrowthEngineSection() {
           width={1615}
           height={2396}
           className="h-auto w-full max-w-none select-none rotate-80 -scale-x-100"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+          }}
         />
       </div>
       <div
         ref={rightBranchRef}
-        className="pointer-events-none absolute top-[-30%] right-[-25%] z-10 w-[50%] select-none"
+        className="pointer-events-none absolute top-[-19vw] right-[-25%] z-10 w-[50%] select-none"
       >
         <Image
           src="/images/Home/tree-branch-1.png"
@@ -421,22 +430,39 @@ export default function GrowthEngineSection() {
           width={1615}
           height={2396}
           className="h-auto w-full max-w-none select-none rotate-280"
+          style={{
+            maskImage:
+              "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+          }}
         />
       </div>
-      <div className="relative mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
-        <div className="flex items-center justify-center gap-3">
-          <span ref={bulletRef} className="inline-flex opacity-0">
+      {/* z-20 keeps all the copy and cards above the z-10 vines, so the vines
+          read as a background flourish behind the text instead of a graphic
+          sitting on top of and obscuring it. */}
+      <div className="relative z-20 mx-auto max-w-300 px-8 sm:px-12 lg:px-16">
+        {/* whitespace-nowrap on the eyebrow forces it to stay a single line
+            at any width — the vw-only clamp (no fixed px floor) scales the
+            font down in lockstep with the viewport so it never overflows,
+            rather than wrapping to a second line. Breaks out of the
+            max-w-300 column (same mx-[calc(50%-50vw)] w-screen trick as
+            WhyLinkedInSection's kicker) so the large text has the full
+            viewport to scale into instead of overflowing past the
+            column's edges at wide screens. */}
+        <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-2 px-2 sm:gap-4">
+          <span ref={bulletRef} className="inline-flex shrink-0 opacity-0">
             <Image
               src="/images/Home/leaf-2.png"
               alt=""
               width={30}
               height={30}
-              className="h-[clamp(15px,1.5625vw,23px)] w-[clamp(15px,1.5625vw,23px)] brightness-0 invert"
+              className="h-[clamp(20px,4vw,58px)] w-[clamp(20px,4vw,58px)] brightness-0 invert"
             />
           </span>
           <span
             ref={eyebrowRef}
-            className="font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase text-[rgba(122,122,122,0.4)]"
+            className="whitespace-nowrap font-poppins text-[clamp(14px,5vw,130px)] font-bold uppercase text-white"
           >
             <EyebrowChars text="The LinkedIn Growth Engine" />
           </span>
@@ -444,7 +470,7 @@ export default function GrowthEngineSection() {
 
         <h2
           ref={headingRef}
-          className="mx-auto mt-[clamp(16px,2.2222vw,32px)] max-w-181.5 text-center font-anton-sc text-[clamp(32px,5vw,72px)] uppercase leading-none"
+          className="mx-auto mt-[clamp(32px,6vw,90px)] max-w-181.5 text-center font-anton-sc text-[clamp(32px,5vw,72px)] uppercase leading-none"
         >
           <span className="text-[#AC40FF]">
             <TypewriterChars text="LinkedIn at the center." />
@@ -463,9 +489,9 @@ export default function GrowthEngineSection() {
 
         <div
           ref={cardsWrapperRef}
-          className="relative z-10 mx-auto mt-[clamp(56px,7.6389vw,110px)] mb-[clamp(140px,20.76vw,299px)] aspect-15/16 w-full max-w-147 sm:aspect-588/355"
+          className="relative z-10 mx-auto mt-[clamp(56px,7.6389vw,110px)] mb-[clamp(140px,20.76vw,299px)] w-full max-w-165"
           style={{
-            height: mobileCardHeight ? `${mobileCardHeight}px` : undefined,
+            height: cardHeight ? `${cardHeight}px` : undefined,
           }}
         >
           {CARDS.map((card, index) => (

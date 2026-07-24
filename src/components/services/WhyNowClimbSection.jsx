@@ -40,6 +40,40 @@ function SproutChars({ text, charClassName = "sprout-char" }) {
   return nodes;
 }
 
+// Same word-grouping as SproutChars (so long bullet text wraps on word
+// boundaries instead of splitting mid-word), but exposes each char's DOM
+// node via charRefs so the entrance timeline's anchor-relative x offset
+// animation can target them directly.
+function BulletChars({ text, charRefs }) {
+  const words = text.split(" ");
+  const nodes = [];
+  let index = 0;
+
+  words.forEach((word, wi) => {
+    nodes.push(
+      <span key={`w-${wi}`} className="inline-block whitespace-nowrap">
+        {word.split("").map((char) => {
+          const i = index++;
+          return (
+            <span
+              key={i}
+              ref={(el) => {
+                charRefs.current[i] = el;
+              }}
+              className="inline-block opacity-0"
+            >
+              {char}
+            </span>
+          );
+        })}
+      </span>,
+    );
+    if (wi < words.length - 1) nodes.push(" ");
+  });
+
+  return nodes;
+}
+
 // Card geometry is authored 1:1 from the Figma frame (636x240) and converted
 // to container-query units so it scales exactly with the card at any size.
 const CARD_W = 636;
@@ -307,20 +341,10 @@ export default function WhyNowClimbSection() {
                   className="h-[clamp(15px,1.5625vw,23px)] w-[clamp(15px,1.5625vw,23px)] brightness-0 invert"
                 />
               </span>
-              <span className="font-poppins text-[clamp(14px,1.5vw,21px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
-                {BULLET_TEXT.split("").map((char, i) => (
-                  <span
-                    key={i}
-                    ref={(el) => {
-                      bulletCharRefs.current[i] = el;
-                    }}
-                    className="inline-block opacity-0"
-                  >
-                    {/* A lone space as the sole content of an inline-block box
-                        collapses to zero width; a non-breaking space preserves it. */}
-                    {char === " " ? " " : char}
-                  </span>
-                ))}
+              {/* 2.0833vw/30px cap matches the Figma spec (30px at the
+                  1440px design width) — up from the previous 21px cap. */}
+              <span className="whitespace-nowrap font-poppins text-[clamp(14px,2.0833vw,30px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
+                <BulletChars text={BULLET_TEXT} charRefs={bulletCharRefs} />
               </span>
             </div>
             <h2
