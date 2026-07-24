@@ -213,17 +213,17 @@ export default function ProjectsSection() {
       className="relative overflow-hidden py-[clamp(64px,9.7222vw,140px)]"
     >
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.5556vw,80px)]">
-        <div className="flex items-center gap-3">
-          <span ref={bulletRef} className="inline-flex opacity-0">
+        <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
+          <span ref={bulletRef} className="inline-flex shrink-0 opacity-0">
             <Image
               src="/images/Home/leaf-2.png"
               alt=""
-              width={30}
-              height={30}
-              className="h-[clamp(15px,1.25vw,23px)] w-[clamp(15px,1.25vw,23px)] brightness-0 invert"
+              width={120}
+              height={120}
+              className="h-[clamp(24px,5.2083vw,75px)] w-[clamp(24px,5.2083vw,75px)] brightness-0 invert"
             />
           </span>
-          <span className="font-poppins text-[clamp(14px,1.6667vw,24px)] font-semibold uppercase text-[#b7b7b7]">
+          <span className="font-anton-sc whitespace-nowrap text-[clamp(40px,10vw,144px)] uppercase leading-none tracking-tight text-white">
             {BULLET_TEXT.split("").map((char, i) => (
               <span
                 key={i}
@@ -240,7 +240,7 @@ export default function ProjectsSection() {
           </span>
         </div>
 
-        <div className="mt-[clamp(16px,2.7778vw,40px)] flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="mt-[clamp(96px,15.2778vw,220px)] flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <h2
             ref={headingRef}
             className="font-anton-sc text-[clamp(32px,6.0417vw,87px)] uppercase leading-[0.97] text-white"
@@ -267,7 +267,7 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        <div className="mt-[clamp(48px,6.9444vw,100px)] flex flex-col gap-[clamp(32px,6.9444vw,100px)]">
+        <div className="mt-[clamp(80px,12.5vw,180px)] flex flex-col gap-[clamp(32px,6.9444vw,100px)]">
           {PROJECTS.map((project, index) => (
             <ProjectRow
               key={project.name}

@@ -10,6 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 const TIERS = [
   {
     badge: "SEED",
+    icon: "/images/Home/pricing-sprout-icon.png",
+    iconWidth: 68,
+    iconHeight: 68,
     name: "SPROUT",
     description: "Founders & consultants planting the first row.",
     features: [
@@ -25,6 +28,9 @@ const TIERS = [
   },
   {
     badge: "GIANT",
+    icon: "/images/Home/pricing-beanstalk-icon.png",
+    iconWidth: 31,
+    iconHeight: 34,
     name: "BEANSTALK",
     description: "Agencies & growing teams ready to scale past referrals.",
     features: [
@@ -43,6 +49,9 @@ const TIERS = [
   },
   {
     badge: "SKY-HIGH",
+    icon: "/images/Home/pricing-giant-icon.png",
+    iconWidth: 76,
+    iconHeight: 80,
     name: "GOLDEN GIANT",
     description: "Scale-stage founders ready to make referrals optional.",
     features: [
@@ -60,6 +69,9 @@ const TIERS = [
   },
   {
     badge: "CLOUD",
+    icon: "/images/Home/pricing-cloud-icon.png",
+    iconWidth: 90,
+    iconHeight: 62,
     name: "CLOUD KINGDOM",
     description:
       "Enterprise & PE-backed platforms the seat at the top of the beanstalk.",
@@ -167,16 +179,26 @@ function PricingCard({ tier, cardRef }) {
             : "bg-white"
         }`}
       >
-        <span className="inline-flex w-fit items-center gap-1 rounded-full bg-black px-[clamp(8px,0.6944vw,10px)] py-[clamp(4px,0.3889vw,6px)]">
-          <span className="h-1.25 w-1.25 shrink-0 rounded-full bg-[#AC40FF]" />
-          <span
-            className={`font-poppins text-[clamp(11px,1.0417vw,15px)] font-semibold leading-none ${
-              highlight ? "text-[#AC40FF]" : "text-white"
-            }`}
-          >
-            {tier.badge}
+        <div className="flex items-center justify-between">
+          <span className="inline-flex w-fit items-center gap-1 rounded-full bg-black px-[clamp(8px,0.6944vw,10px)] py-[clamp(4px,0.3889vw,6px)]">
+            <span className="h-1.25 w-1.25 shrink-0 rounded-full bg-[#AC40FF]" />
+            <span
+              className={`font-poppins text-[clamp(11px,1.0417vw,15px)] font-semibold leading-none ${
+                highlight ? "text-[#AC40FF]" : "text-white"
+              }`}
+            >
+              {tier.badge}
+            </span>
           </span>
-        </span>
+
+          <Image
+            src={tier.icon}
+            alt=""
+            width={tier.iconWidth}
+            height={tier.iconHeight}
+            className="h-[clamp(24px,2.3611vw,34px)] w-auto shrink-0 object-contain"
+          />
+        </div>
 
         <h3 className="mt-[clamp(10px,0.9375vw,13px)] font-anton-sc text-[clamp(20px,1.8056vw,26px)] uppercase leading-[0.97] text-black">
           {tier.name}
@@ -220,8 +242,6 @@ const DESCRIPTION_TEXT =
 
 export default function PricingSection() {
   const sectionRef = useRef(null);
-  const leftBranchRef = useRef(null);
-  const rightBranchRef = useRef(null);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
   const cardRefs = useRef([]);
@@ -229,9 +249,8 @@ export default function PricingSection() {
   // One-time entrance, gated behind ScrollTrigger the moment the section is
   // reached: cards pop in together, the heading types on char-by-char, and
   // the description fades/slides up from below — all as one simultaneous
-  // wave. Once that wave settles, each tree branch travels in toward its
-  // existing resting position/rotation from its own nearest edge (left
-  // branch from the left, right branch from the right).
+  // wave. The tree branches are static (no entrance animation, no position
+  // changes) — they render straight at their resting look.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".typewriter-char"),
@@ -239,12 +258,6 @@ export default function PricingSection() {
     const cards = cardRefs.current.filter(Boolean);
 
     const ctx = gsap.context(() => {
-      // Rotation/scale are set explicitly (rather than left to the Tailwind
-      // rotate-45 / -scale-x-100 classes) because GSAP owns the full
-      // transform once it animates x here — an untouched value would
-      // otherwise be silently dropped.
-      gsap.set(leftBranchRef.current, { opacity: 0, x: -320, rotate: 45 });
-      gsap.set(rightBranchRef.current, { opacity: 0, x: 320, scaleX: -1 });
       gsap.set(headingChars, { opacity: 0 });
       gsap.set(descriptionRef.current, { opacity: 0, y: 40 });
       gsap.set(cards, { opacity: 0, y: 80, scale: 0.85 });
@@ -273,17 +286,6 @@ export default function PricingSection() {
           descriptionRef.current,
           { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
           "<",
-        )
-        .to(leftBranchRef.current, {
-          opacity: 0.9,
-          x: 0,
-          duration: 1,
-          ease: "power3.out",
-        })
-        .to(
-          rightBranchRef.current,
-          { opacity: 0.9, x: 0, duration: 1, ease: "power3.out" },
-          "<",
         );
     }, sectionRef);
 
@@ -293,24 +295,44 @@ export default function PricingSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden py-[clamp(64px,9.7222vw,140px)]"
+      className="relative py-[clamp(64px,9.7222vw,140px)]"
     >
+      {/* Each branch fades both its top AND bottom edges out via a mask
+          (rather than a black overlay div) so only the vine's pixels fade —
+          the black background behind it never gets darkened or smudged.
+          The bottom fade matters because the branch is much taller than the
+          card row it runs behind: the cards (z-10) cover the middle of the
+          branch, but its tail extends well past the last card and would
+          otherwise show a hard, unmasked cut in open black space. Size/
+          position are the same fixed formula on every breakpoint (no
+          shrinking to a small mobile accent) so the branch reads with the
+          same visual weight everywhere. */}
       <Image
-        ref={leftBranchRef}
         src="/images/Home/tree-branch-1.png"
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute left-[-25%] top-[-23vw] w-[50%] select-none"
+        className="pointer-events-none absolute left-[-25%] top-[-23vw] w-[50%] rotate-45 select-none opacity-90"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+        }}
       />
 
       <Image
-        ref={rightBranchRef}
         src="/images/Home/tree-branch-1.png"
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute right-[-24%] top-[-20vw] w-[50%] select-none"
+        className="pointer-events-none absolute right-[-24%] top-[-6vw] w-[50%] -scale-x-100 select-none opacity-90"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+        }}
       />
 
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">

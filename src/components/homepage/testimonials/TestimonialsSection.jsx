@@ -379,17 +379,17 @@ export default function TestimonialsSection() {
       />
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
-        <div className="flex items-center justify-center gap-3">
-          <span ref={bulletIconRef} className="inline-flex opacity-0">
+        <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
+          <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
             <Image
               src="/images/Home/leaf-2.png"
               alt=""
-              width={30}
-              height={30}
-              className="h-[clamp(15px,1.25vw,23px)] w-[clamp(15px,1.25vw,23px)] brightness-0 invert"
+              width={120}
+              height={120}
+              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0 invert"
             />
           </span>
-          <span className="font-poppins text-[clamp(20px,2.6389vw,38px)] font-semibold uppercase text-[#b7b7b7]">
+          <span className="font-anton-sc whitespace-nowrap text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-white">
             {BULLET_TEXT.split("").map((char, i) => (
               <span
                 key={i}
@@ -406,7 +406,7 @@ export default function TestimonialsSection() {
 
         <h2
           ref={headingRef}
-          className="mx-auto mt-[clamp(16px,1.875vw,27px)] max-w-217 font-anton-sc text-[clamp(32px,6.8056vw,98px)] uppercase leading-[1.02] text-white"
+          className="mx-auto mt-[clamp(40px,5.5556vw,80px)] max-w-217 font-anton-sc text-[clamp(32px,6.8056vw,98px)] uppercase leading-[1.02] text-white"
         >
           <TypewriterChars text="In Their" />{" "}
           <span className="text-[#ac40ff]">

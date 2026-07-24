@@ -14,7 +14,7 @@ const KICKER_TEXT = "Why LinkedIn?";
 // homepage but at word granularity — same convention as ScaleNotStrategy.jsx.
 function RevealWord({ children, className = "" }) {
   return (
-    <span className={`inline-block overflow-hidden align-top ${className}`}>
+    <span className={`inline-block overflow-hidden align-top pb-[0.2em] mb-[-0.2em] ${className}`}>
       <span className="reveal-word inline-block opacity-0">{children}</span>
     </span>
   );
@@ -146,7 +146,7 @@ export default function WhyLinkedInSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute left-[-50%] top-[-16.2222vw] w-[55%] -scale-x-100 rotate-60 select-none opacity-90 sm:w-[70%]"
+        className="pointer-events-none absolute left-[-35%] top-[-45vw] w-[55%] -scale-x-100 rotate-45 select-none sm:w-[70%]"
       />
       <Image
         src="/images/Home/tree-branch-1.png"
@@ -165,17 +165,17 @@ export default function WhyLinkedInSection() {
       />
 
       <div className="relative mx-auto max-w-300 px-[clamp(24px,5.5556vw,80px)] text-center">
-        <div className="mb-15 mt-20 flex justify-center items-center gap-3">
-          <span ref={kickerIconRef} className="inline-flex opacity-0">
+        <div className="mx-[calc(50%-50vw)] mb-15 mt-20 flex w-screen justify-center items-center gap-3 sm:gap-6 sm:mb-36 px-2">
+          <span ref={kickerIconRef} className="inline-flex shrink-0 opacity-0">
             <Image
               src="/images/Home/leaf-2.png"
               alt=""
-              width={30}
-              height={30}
-              className="h-[clamp(15px,1.25vw,23px)] w-[clamp(15px,1.25vw,23px)] brightness-0 invert"
+              width={120}
+              height={120}
+              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0 invert"
             />
           </span>
-          <span className="font-poppins text-[clamp(14px,1.5972vw,23px)] font-semibold uppercase tracking-wide text-[#b7b7b7]">
+          <span className="font-anton-sc whitespace-nowrap text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-white">
             {KICKER_TEXT.split("").map((char, i) => (
               <span
                 key={i}
@@ -184,7 +184,7 @@ export default function WhyLinkedInSection() {
                 }}
                 className="inline-block opacity-0"
               >
-                {char === " " ? " " : char}
+                {char === " " ? " " : char}
               </span>
             ))}
           </span>

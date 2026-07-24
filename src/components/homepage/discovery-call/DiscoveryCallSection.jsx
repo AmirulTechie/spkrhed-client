@@ -148,7 +148,7 @@ export default function DiscoveryCallSection() {
         alt=""
         width={3723}
         height={1164}
-        className="pointer-events-none absolute bottom-[-22%] left-1/2 z-2 w-[160%] max-w-none -translate-x-1/2 select-none lg:-bottom-87.5 lg:w-[160%]"
+        className="pointer-events-none absolute bottom-[-22%] left-1/2 z-2 h-[clamp(160px,30vw,220px)] w-[160%] max-w-none -translate-x-1/2 object-cover object-top select-none lg:-bottom-87.5 lg:h-auto lg:w-[160%]"
       />
 
       {/* Desktop — pinned to a fixed 1440x860 canvas matching the Figma
@@ -164,7 +164,7 @@ export default function DiscoveryCallSection() {
             alt=""
             width={1244}
             height={1244}
-            className="pointer-events-none absolute left-[60%] top-90 z-1 w-[43.19%] select-none"
+            className="pointer-events-none absolute left-[59.44%] top-36.25 z-1 w-[73.96%] select-none"
           />
 
           <Image
@@ -173,7 +173,7 @@ export default function DiscoveryCallSection() {
             alt=""
             width={552}
             height={290}
-            className="pointer-events-none absolute left-[10.69%] top-[585.2px] z-10 w-[19.17%] select-none"
+            className="pointer-events-none absolute left-[-2.15%] top-89.5 z-10 w-[40.14%] select-none"
           />
 
           <div className="relative z-4 flex flex-col items-center px-11.5 pb-27.5 pt-32 text-center">
@@ -230,7 +230,7 @@ export default function DiscoveryCallSection() {
         alt=""
         width={552}
         height={290}
-        className="pointer-events-none absolute bottom-3 left-2 z-10 w-24 select-none lg:hidden"
+        className="pointer-events-none absolute bottom-3 left-2 z-10 w-[clamp(120px,40vw,220px)] select-none lg:hidden"
       />
 
       <Image
@@ -239,7 +239,7 @@ export default function DiscoveryCallSection() {
         alt=""
         width={1244}
         height={1244}
-        className="pointer-events-none absolute bottom-1 right-1 z-1 w-35 select-none lg:hidden"
+        className="pointer-events-none absolute right-[clamp(-126px,-26vw,-71px)] bottom-[clamp(-78px,-16.12vw,-44px)] z-1 w-[clamp(170px,62vw,300px)] select-none lg:hidden"
       />
 
       <div className="relative z-4 flex flex-col items-center px-6 pb-36 pt-12 text-center lg:hidden">

@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
     >
       <body
         suppressHydrationWarning
-        className="min-h-full flex flex-col bg-background text-foreground font-poppins"
+        className="min-h-full flex flex-col overflow-x-hidden bg-background text-foreground font-poppins"
       >
         <Loader />
         <SmoothScroll>
