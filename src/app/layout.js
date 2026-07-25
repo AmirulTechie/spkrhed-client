@@ -4,6 +4,7 @@ import Footer from "@/components/footer/Footer";
 import SmoothScroll from "@/components/smooth-scroll/SmoothScroll";
 import ScrollToTopButton from "@/components/scroll-to-top/ScrollToTopButton";
 import Loader from "@/components/loader/Loader";
+import { LoaderTimingProvider } from "@/components/loader/LoaderTimingContext";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -46,13 +47,15 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
         className="min-h-full flex flex-col overflow-x-hidden bg-background text-foreground font-poppins"
       >
-        <Loader />
-        <SmoothScroll>
-          <Navbar />
-          {children}
-          <Footer />
-          <ScrollToTopButton />
-        </SmoothScroll>
+        <LoaderTimingProvider>
+          <Loader />
+          <SmoothScroll>
+            <Navbar />
+            {children}
+            <Footer />
+            <ScrollToTopButton />
+          </SmoothScroll>
+        </LoaderTimingProvider>
       </body>
     </html>
   );

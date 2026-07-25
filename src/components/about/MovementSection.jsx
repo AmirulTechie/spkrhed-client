@@ -39,8 +39,6 @@ export default function MovementSection() {
   const headingRef = useRef(null);
   const subheadingRef = useRef(null);
   const treeLogRef = useRef(null);
-  const vineLeftRef = useRef(null);
-  const vineRightRef = useRef(null);
   const leftParagraphRef = useRef(null);
   const rightParagraphRef = useRef(null);
   const leafRef = useRef(null);
@@ -49,9 +47,8 @@ export default function MovementSection() {
   // the moment this section is reached from the hero (one-time entrance),
   // then a separate scrub timeline ties the tree log's grow-and-rotate to
   // continued scroll — it starts small and only reaches full size/rotation
-  // as the user keeps scrolling, with the two vine flourishes staying out
-  // past the frame edges until the log is most of the way there. Mobile
-  // skips all of that and only gets a single smooth pop-in for the section.
+  // as the user keeps scrolling. Mobile skips all of that and only gets a
+  // single smooth pop-in for the section.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".type-char"),
@@ -74,9 +71,7 @@ export default function MovementSection() {
             yPercent: 60,
             filter: "blur(4px)",
           });
-          gsap.set(treeLogRef.current, { scale: 0.5, rotate: -16 });
-          gsap.set(vineLeftRef.current, { x: "-18vw", opacity: 0 });
-          gsap.set(vineRightRef.current, { x: "18vw", opacity: 0 });
+          gsap.set(treeLogRef.current, { scale: 0.4, rotate: -16 });
 
           // The left-column heading/paragraph and right-column paragraph
           // stay hidden until after the tree log's scroll-scrub finishes —
@@ -167,9 +162,8 @@ export default function MovementSection() {
           // mirroring VideoSection's pinned scroll-scrub stage on the
           // homepage — so the log's grow-and-rotate reads as directly tied
           // to each bit of scroll input, instead of a subtle pass-through
-          // tween. The vines only swing in once the log is most of the way
-          // there, then the page unpins and continues normally, at which
-          // point revealTl (above) plays.
+          // tween. Once the log finishes growing, the page unpins and
+          // continues normally, at which point revealTl (above) plays.
           gsap
             .timeline({
               scrollTrigger: {
@@ -183,21 +177,7 @@ export default function MovementSection() {
                 onLeaveBack: () => revealTl.reverse(),
               },
             })
-            .to(
-              treeLogRef.current,
-              { scale: 1, rotate: 0, ease: "none" },
-              0,
-            )
-            .to(
-              vineLeftRef.current,
-              { x: "0vw", opacity: 0.95, ease: "none" },
-              0.55,
-            )
-            .to(
-              vineRightRef.current,
-              { x: "0vw", opacity: 0.95, ease: "none" },
-              0.55,
-            );
+            .to(treeLogRef.current, { scale: 1, rotate: 0, ease: "none" }, 0);
         } else {
           gsap.set(sectionRef.current, { opacity: 0, scale: 0.96, y: 24 });
 
@@ -233,6 +213,11 @@ export default function MovementSection() {
         width={1441}
         height={235}
         className="pointer-events-none h-auto w-full select-none"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent, black 60%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent, black 60%)",
+        }}
       />
 
       <div className="relative mt-[clamp(8px,1.3889vw,20px)] px-[clamp(20px,5.0694vw,73px)]">
@@ -245,33 +230,6 @@ export default function MovementSection() {
                 "radial-gradient(circle at -8.6% -3.5%, rgba(172,64,255,0.38) 0%, rgba(172,64,255,0.16) 26%, rgba(172,64,255,0) 55%), radial-gradient(circle at 95.6% 97.7%, rgba(172,64,255,0.38) 0%, rgba(172,64,255,0.16) 26%, rgba(172,64,255,0) 55%)",
             }}
           />
-
-          {/* Vine flourishes are desktop-only decoration; on narrow screens they overflow
-              the stacked mobile layout awkwardly, so they're hidden below lg. */}
-          <div
-            ref={vineLeftRef}
-            className="pointer-events-none absolute left-[-32%] top-[45%] z-10 hidden w-[50%] rotate-[132.62deg] select-none opacity-95 will-change-transform lg:block"
-          >
-            <Image
-              src="/images/about/tree-vine.png"
-              alt=""
-              width={1400}
-              height={787}
-              className="h-auto w-full"
-            />
-          </div>
-          <div
-            ref={vineRightRef}
-            className="pointer-events-none absolute right-[-25%] top-[15%] z-10 hidden w-[50%] select-none opacity-95 rotate-110 will-change-transform lg:block"
-          >
-            <Image
-              src="/images/about/tree-vine.png"
-              alt=""
-              width={1400}
-              height={787}
-              className="h-auto w-full"
-            />
-          </div>
 
           {/* Below lg: normal stacked flow. At lg and up: absolute, percentage-positioned
               to match the Figma desktop frame exactly. */}
@@ -345,7 +303,7 @@ export default function MovementSection() {
 
             <div
               ref={leafRef}
-              className="mx-auto h-13 w-13 rotate-[-10.5deg] overflow-hidden lg:absolute lg:left-[68%] lg:top-[88%] lg:mx-0 lg:h-[11.28%] lg:w-[14.37%]"
+              className="mx-auto h-13 w-13 rotate-[-10.5deg] overflow-hidden lg:absolute lg:left-[68%] lg:top-[94.3%] lg:z-30 lg:mx-0 lg:h-[11.28%] lg:w-[14.37%]"
             >
               <Image
                 src="/images/about/leaf.png"
@@ -353,7 +311,7 @@ export default function MovementSection() {
                 aria-hidden
                 fill
                 sizes="(min-width: 1024px) 300px, 60px"
-                className="object-cover blur-[0.4px] lg:blur-[1px]"
+                className="object-cover"
               />
             </div>
           </div>

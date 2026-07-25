@@ -16,7 +16,7 @@ const CARD_QUOTE_CLASS =
 const CARD_ATTRIBUTION_CLASS =
   "font-poppins text-[clamp(13px,1.3194vw,19px)] uppercase leading-[1.16] text-white/60";
 const NUMBER_CLASS =
-  "absolute pointer-events-none select-none bg-linear-to-b from-[rgba(255,255,255,0.12)] to-transparent bg-clip-text font-anton-sc text-[clamp(76px,18.4722vw,266px)] leading-none text-transparent";
+  "absolute pointer-events-none select-none bg-linear-to-b from-[rgba(255,255,255,0.28)] to-transparent bg-clip-text font-anton-sc text-[clamp(76px,18.4722vw,266px)] leading-none text-transparent";
 
 const BULLET_TEXT = "What holds it together";
 
@@ -291,21 +291,22 @@ export default function ThreePrinciplesSection() {
       className="relative w-full overflow-hidden bg-black py-20 sm:py-24 lg:py-[clamp(64px,8.3333vw,120px)]"
     >
       <div className="mx-auto flex w-full max-w-360 flex-col items-center gap-12 px-6 sm:gap-16 sm:px-10 lg:gap-20 lg:px-0">
-        <div className="flex flex-col items-center gap-4 text-center sm:gap-5">
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <span
-              ref={bulletIconRef}
-              className="relative inline-flex size-2.5 shrink-0 opacity-0 sm:size-3 lg:size-[clamp(8px,0.9028vw,13px)]"
-            >
+        <div className="flex flex-col items-center text-center">
+          {/* Breaks out of the max-w-360 column (same mx-[calc(50%-50vw)] w-screen
+              trick as GrowthEngineSection's "The LinkedIn Growth Engine" kicker) so
+              this much larger eyebrow has the full viewport to scale into instead
+              of overflowing past the column's edges at wide screens. */}
+          <div className="mx-[calc(50%-50vw)] mb-[clamp(32px,6vw,100px)] flex w-screen items-center justify-center gap-2 px-2 sm:gap-4">
+            <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
               <Image
-                src="/images/about/holds-together-icon.png"
+                src="/images/Home/leaf-2.png"
                 alt=""
-                fill
-                sizes="16px"
-                className="object-contain"
+                width={30}
+                height={30}
+                className="h-[clamp(22px,4.6vw,68px)] w-[clamp(22px,4.6vw,68px)] brightness-0 invert"
               />
             </span>
-            <p className="font-poppins text-xs font-medium uppercase leading-none text-[rgba(122,122,122,0.4)] sm:text-sm lg:text-[clamp(16px,2.0833vw,30px)]">
+            <p className="whitespace-nowrap font-poppins text-[clamp(16px,6vw,152px)] font-bold uppercase text-white">
               {BULLET_TEXT.split("").map((char, i) => (
                 <span
                   key={i}
@@ -324,7 +325,7 @@ export default function ThreePrinciplesSection() {
 
           <h2
             ref={headingRef}
-            className="flex flex-col items-center justify-center font-anton-sc text-[clamp(36px,9.7222vw,140px)] uppercase leading-[0.95] text-white"
+            className="mb-[clamp(28px,5vw,72px)] flex flex-col items-center justify-center font-anton-sc text-[clamp(34px,8.3333vw,120px)] uppercase leading-[0.95] text-white"
           >
             <span ref={headingLine1Ref} className="block">
               <SproutChars text="Three principles." />
@@ -428,7 +429,7 @@ export default function ThreePrinciplesSection() {
                 <h3 className={CARD_TITLE_CLASS}>{principle.titleText}</h3>
                 <p
                   aria-hidden
-                  className="shrink-0 select-none bg-linear-to-b from-white/10 to-transparent bg-clip-text font-anton-sc text-[56px] leading-none text-transparent sm:text-[72px]"
+                  className="shrink-0 select-none bg-linear-to-b from-white/25 to-transparent bg-clip-text font-anton-sc text-[56px] leading-none text-transparent sm:text-[72px]"
                 >
                   {principle.digits}
                 </p>

@@ -73,18 +73,23 @@ export default function AboutHero() {
 
       <div
         aria-hidden
+        className="absolute inset-x-0 top-0 h-[40%] bg-linear-to-b from-black to-transparent"
+      />
+
+      <div
+        aria-hidden
         className="absolute inset-x-0 bottom-0 h-[38%] bg-linear-to-b from-transparent to-[#0f0f0f]"
       />
 
       <div className="relative z-10 w-full px-8 pb-[clamp(28px,3.1944vw,46px)] text-white sm:px-12 lg:px-16">
-        <p className="mb-[clamp(16px,1.6667vw,24px)] flex items-center gap-[clamp(4px,0.4167vw,6px)] font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase text-white/30">
+        <p className="mb-[clamp(16px,1.6667vw,24px)] flex items-center gap-[clamp(4px,0.4167vw,6px)] font-poppins text-[clamp(34px,5.5556vw,80px)] font-bold uppercase text-white">
           <span ref={bulletRef} className="inline-flex opacity-0">
             <Image
               src="/images/Home/leaf-2.png"
               alt=""
               width={19}
               height={19}
-              className="h-[clamp(13px,1.3542vw,19px)] w-[clamp(13px,1.3542vw,19px)] brightness-0 invert"
+              className="h-[clamp(21px,3.4722vw,50px)] w-[clamp(21px,3.4722vw,50px)] brightness-0 invert"
             />
           </span>
           <span className="inline-block">
@@ -108,13 +113,13 @@ export default function AboutHero() {
             alt="SPKRHED"
             width={469}
             height={75}
-            className="h-auto w-[clamp(220px,32.5694vw,469px)]"
+            className="h-auto w-[clamp(160px,23.6111vw,340px)]"
           />
         </div>
 
         <p
           ref={descriptionRef}
-          className="mt-[clamp(12px,1.4583vw,21px)] max-w-150.5 font-poppins text-[clamp(15px,1.5972vw,23px)] leading-[1.124] text-white/60 opacity-0"
+          className="mt-[clamp(12px,1.4583vw,21px)] max-w-150.5 font-poppins text-[clamp(13px,1.25vw,18px)] leading-[1.124] text-white opacity-0"
         >
           SPKRHED is not another agency. We are a movement to put the human
           back into how companies grow. While the rest of the market drowns

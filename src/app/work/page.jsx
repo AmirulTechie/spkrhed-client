@@ -1,3 +1,6 @@
+import WorkHero from "@/components/work/WorkHero";
+import WorkGrid from "@/components/work/WorkGrid";
+
 export const metadata = {
   title: "Work | SPKRHED",
   description:
@@ -12,6 +15,8 @@ export const metadata = {
 export default function WorkPage() {
   return (
     <>
+      <WorkHero />
+      <WorkGrid />
     </>
   );
 }

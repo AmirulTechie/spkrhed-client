@@ -134,12 +134,23 @@ export default function TakeFirstStepSection() {
           background: "linear-gradient(180deg, #000000 0%, rgba(0,0,0,0) 100%)",
         }}
       />
+      {/* The vine's fixed height (97.3611vw) runs well past the section's capped
+          height, so its bottom gets a hard rectangular clip from the section's
+          overflow-hidden right where the footer begins. This fades that cut edge
+          into the black background instead, mirroring the top overlay above. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[18%] lg:block"
+        style={{
+          background: "linear-gradient(0deg, #000000 0%, rgba(0,0,0,0) 100%)",
+        }}
+      />
 
       <div className="relative mx-auto h-auto max-w-11/12 px-8 sm:px-12 lg:mx-auto lg:h-full lg:max-w-360 lg:px-0 xl:px-16">
       <div className="flex justify-center">
         <h2
           ref={headingRef}
-          className="text-center font-anton-sc text-[clamp(40px,12.1528vw,175px)] leading-[1.4] uppercase text-white lg:absolute lg:top-0 lg:left-[4.6528%] lg:w-[90.7639%] lg:whitespace-nowrap lg:leading-[0.8]"
+          className="text-center font-anton-sc text-[clamp(40px,12.1528vw,175px)] leading-[1.4] uppercase text-white lg:absolute lg:top-[clamp(6px,1.6667vw,24px)] lg:left-[4.6528%] lg:w-[90.7639%] lg:whitespace-nowrap lg:leading-[0.8]"
         >
           <TypewriterChars text={HEADING_TEXT} />
         </h2>

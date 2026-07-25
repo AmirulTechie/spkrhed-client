@@ -4,13 +4,12 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import gsap from "gsap";
-
-const EXIT_DURATION = 0.45;
-const TOTAL_DURATION = 3.5;
-const HOLD_DURATION = TOTAL_DURATION - EXIT_DURATION;
+import { useLoaderDuration } from "./LoaderTimingContext";
 
 export default function Loader() {
   const pathname = usePathname();
+  const { total, exit } = useLoaderDuration();
+  const hold = total - exit;
   const overlayRef = useRef(null);
   const [gifKey, setGifKey] = useState(0);
 
@@ -26,14 +25,14 @@ export default function Loader() {
     // slide-in), holds, then exits by sliding out to the right.
     tl.set(overlay, { display: "flex", xPercent: 0 }).to(
       overlay,
-      { xPercent: 100, duration: EXIT_DURATION, ease: "power3.in" },
-      `+=${HOLD_DURATION}`
+      { xPercent: 100, duration: exit, ease: "power3.in" },
+      `+=${hold}`
     );
 
     tl.set(overlay, { display: "none" });
 
     return () => tl.kill();
-  }, [pathname]);
+  }, [pathname, total, exit, hold]);
 
   return (
     <div

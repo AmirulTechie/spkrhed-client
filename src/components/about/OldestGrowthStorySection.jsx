@@ -302,41 +302,43 @@ export default function OldestGrowthStorySection() {
       className="relative overflow-hidden bg-black py-[clamp(64px,9.7222vw,140px)]"
     >
       <div className="relative mx-auto max-w-11/12 px-8 sm:px-12 lg:px-16">
+        {/* Breaks out to the full viewport width and centers, matching WhyLinkedInSection's
+            "Why LinkedIn?" kicker treatment on the homepage, and the bottom margin pushes the
+            heading/description row further down below this now much larger eyebrow. */}
+        <div className="mx-[calc(50%-50vw)] mb-[clamp(32px,6vw,90px)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
+          <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
+            <Image
+              src="/images/Home/leaf-2.png"
+              alt=""
+              width={120}
+              height={120}
+              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0 invert"
+            />
+          </span>
+          <span className="whitespace-nowrap font-anton-sc text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-white">
+            {BULLET_TEXT.split("").map((char, i) => (
+              <span
+                key={i}
+                ref={(el) => {
+                  bulletCharRefs.current[i] = el;
+                }}
+                className="inline-block opacity-0"
+              >
+                {/* A lone space as the sole content of an inline-block box
+                    collapses to zero width; a non-breaking space preserves it. */}
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </span>
+        </div>
+
         <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-112.5 shrink-0">
-            <div className="flex items-center gap-3">
-              <span ref={bulletIconRef} className="inline-flex opacity-0">
-                <Image
-                  src="/images/Home/leaf-2.png"
-                  alt=""
-                  width={30}
-                  height={30}
-                  className="h-[clamp(15px,1.5625vw,23px)] w-[clamp(15px,1.5625vw,23px)] brightness-0 invert"
-                />
-              </span>
-              <span className="font-poppins text-[clamp(16px,2.0833vw,30px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
-                {BULLET_TEXT.split("").map((char, i) => (
-                  <span
-                    key={i}
-                    ref={(el) => {
-                      bulletCharRefs.current[i] = el;
-                    }}
-                    className="inline-block opacity-0"
-                  >
-                    {/* A lone space as the sole content of an inline-block box
-                        collapses to zero width; a non-breaking space preserves it. */}
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                ))}
-              </span>
-            </div>
-            <h2
-              ref={headingRef}
-              className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-none text-white"
-            >
-              <SproutChars text={HEADING_TEXT} />
-            </h2>
-          </div>
+          <h2
+            ref={headingRef}
+            className="max-w-112.5 shrink-0 font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-none text-white"
+          >
+            <SproutChars text={HEADING_TEXT} />
+          </h2>
 
           <p
             ref={descriptionRef}
