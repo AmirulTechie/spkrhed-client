@@ -176,9 +176,6 @@ export default function OldestGrowthStorySection() {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".sprout-char"),
     ];
-    const descriptionChars = [
-      ...descriptionRef.current.querySelectorAll(".typewriter-char"),
-    ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
 
     const ctx = gsap.context(() => {
@@ -187,7 +184,7 @@ export default function OldestGrowthStorySection() {
         yPercent: 60,
         filter: "blur(6px)",
       });
-      gsap.set(descriptionChars, { opacity: 0 });
+      gsap.set(descriptionRef.current, { opacity: 0, x: -80 });
 
       const anchorEl = bulletChars[0];
       const bulletEls = [bulletIconRef.current, ...bulletChars];
@@ -226,13 +223,8 @@ export default function OldestGrowthStorySection() {
           "-=0.15",
         )
         .to(
-          descriptionChars,
-          {
-            opacity: 1,
-            duration: 0.01,
-            stagger: 0.012,
-            ease: "none",
-          },
+          descriptionRef.current,
+          { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
           "-=0.2",
         );
 
@@ -344,10 +336,7 @@ export default function OldestGrowthStorySection() {
             ref={descriptionRef}
             className="max-w-184.75 min-w-0 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.0526] text-white/70 text-start"
           >
-            <SproutChars
-              text={DESCRIPTION_TEXT}
-              charClassName="typewriter-char"
-            />
+            {DESCRIPTION_TEXT}
           </p>
         </div>
 

@@ -205,15 +205,12 @@ export default function WhyNowClimbSection() {
   // One-time entrance, gated behind ScrollTrigger, mirroring ProjectsSection:
   // the bullet label is coupled to its first character and pulls apart
   // outward from that anchor, the heading sprouts up char by char with a
-  // blur, and the description types on character by character. Each card
-  // then pops in on its own ScrollTrigger as the user scrolls it into view,
-  // rising out of the grid the same way ProjectsSection's rows do.
+  // blur, and the description slides in from the left as one block. Each
+  // card then pops in on its own ScrollTrigger as the user scrolls it into
+  // view, rising out of the grid the same way ProjectsSection's rows do.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".sprout-char"),
-    ];
-    const descriptionChars = [
-      ...descriptionRef.current.querySelectorAll(".typewriter-char"),
     ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
 
@@ -223,7 +220,7 @@ export default function WhyNowClimbSection() {
         yPercent: 60,
         filter: "blur(6px)",
       });
-      gsap.set(descriptionChars, { opacity: 0 });
+      gsap.set(descriptionRef.current, { opacity: 0, x: -80 });
 
       const anchorEl = bulletChars[0];
       const bulletEls = [bulletIconRef.current, ...bulletChars];
@@ -262,13 +259,8 @@ export default function WhyNowClimbSection() {
           "-=0.15",
         )
         .to(
-          descriptionChars,
-          {
-            opacity: 1,
-            duration: 0.01,
-            stagger: 0.012,
-            ease: "none",
-          },
+          descriptionRef.current,
+          { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" },
           "-=0.2",
         );
 
@@ -329,40 +321,44 @@ export default function WhyNowClimbSection() {
       />
 
       <div className="relative mx-auto max-w-11/12 px-8 sm:px-12 lg:px-16">
+        {/* Breaks out to the full viewport width and centers, matching WhyLinkedInSection's
+            "Why LinkedIn?" kicker treatment on the homepage — the bottom margin pushes the
+            heading/description row further down below this now much larger eyebrow. Sized
+            more conservatively than that reference (which is a much shorter phrase) so this
+            longer bullet stays on one line without clipping past the viewport at common
+            desktop widths. */}
+        <div className="mx-[calc(50%-50vw)] mb-[clamp(28px,5vw,72px)] flex w-screen items-center justify-center gap-2 px-2 sm:gap-4">
+          <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
+            <Image
+              src="/images/Home/leaf-2.png"
+              alt=""
+              width={30}
+              height={30}
+              className="h-[clamp(20px,4.5vw,56px)] w-[clamp(20px,4.5vw,56px)] brightness-0 invert"
+            />
+          </span>
+          <span className="whitespace-nowrap font-anton-sc text-[clamp(24px,8vw,100px)] uppercase leading-none tracking-tight text-white">
+            <BulletChars text={BULLET_TEXT} charRefs={bulletCharRefs} />
+          </span>
+        </div>
+
         <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
-          <div className="max-w-159">
-            <div className="flex items-center gap-3">
-              <span ref={bulletIconRef} className="inline-flex opacity-0">
-                <Image
-                  src="/images/Home/leaf-2.png"
-                  alt=""
-                  width={30}
-                  height={30}
-                  className="h-[clamp(15px,1.5625vw,23px)] w-[clamp(15px,1.5625vw,23px)] brightness-0 invert"
-                />
-              </span>
-              {/* 2.0833vw/30px cap matches the Figma spec (30px at the
-                  1440px design width) — up from the previous 21px cap. */}
-              <span className="whitespace-nowrap font-poppins text-[clamp(14px,2.0833vw,30px)] font-medium uppercase tracking-wide text-[rgba(122,122,122,0.4)]">
-                <BulletChars text={BULLET_TEXT} charRefs={bulletCharRefs} />
-              </span>
-            </div>
-            <h2
-              ref={headingRef}
-              className="mt-[clamp(12px,1.6667vw,24px)] font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[1.1] text-white"
-            >
-              <SproutChars text={HEADING_TEXT} />
-            </h2>
-          </div>
+          <h2
+            ref={headingRef}
+            className="max-w-159 font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[1.1] text-white"
+          >
+            <SproutChars text={HEADING_TEXT} />
+          </h2>
 
           <p
             ref={descriptionRef}
             className="max-w-156.25 font-poppins text-[clamp(11px,0.9028vw,13px)] leading-[1.23] text-white uppercase md:text-right"
           >
-            <SproutChars
-              text="Before SPKRHED, growth means burning your best hours on cold calls, dead referrals, and a website that just sits there. Meanwhile the buyers worth the most are sitting one climb above where your competitors bother to look. Here is what changes the moment you plant the beans."
-              charClassName="typewriter-char"
-            />
+            Before SPKRHED, growth means burning your best hours on cold
+            calls, dead referrals, and a website that just sits there.
+            Meanwhile the buyers worth the most are sitting one climb above
+            where your competitors bother to look. Here is what changes the
+            moment you plant the beans.
           </p>
         </div>
 

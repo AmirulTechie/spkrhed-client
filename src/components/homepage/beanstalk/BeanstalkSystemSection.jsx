@@ -8,11 +8,6 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-// Same curl used by Hero's "climb to you" text — a vine tip unrolling into
-// place rather than a straight vertical slide. Reused here so "Growth
-// Engine." matches that motion exactly, per design ask.
-// remove this whole block
-
 // Splits on words and keeps spaces as real text nodes between word-spans
 // (rather than wrapping the space itself in a span) — a lone space as the
 // sole content of an inline-block collapses to zero width otherwise.
@@ -114,23 +109,22 @@ export default function BeanstalkSystemSection() {
 
   // One-time entrance, gated behind ScrollTrigger the moment the section is
   // reached: the big-branch rises from below (position untouched), the
-  // heading types on, "Growth Engine." climbs in exactly like Hero's "climb
-  // to you", and the description slides in from the left. Each card then
-  // pops in on its own ScrollTrigger as the user scrolls past it.
+  // heading types on, "Growth Engine." ink-reveals with a fast clip-path
+  // wipe left to right — same treatment as Flywheel's "Outreach Makes
+  // Content Close Faster." — and the description slides in from the left.
+  // Each card then pops in on its own ScrollTrigger as the user scrolls
+  // past it.
   useLayoutEffect(() => {
     const typewriterChars = [
       ...fivePlantingsRef.current.querySelectorAll(".typewriter-char"),
     ];
+    const growthEngineLine =
+      growthEngineRef.current.querySelector(".growth-engine-line");
 
     const ctx = gsap.context(() => {
       gsap.set(bigBranchRef.current, { opacity: 0, y: 220 });
       gsap.set(typewriterChars, { opacity: 0 });
-      gsap.set(growthEngineRef.current, {
-  opacity: 0,
-  y: 30,
-  scale: 0.8,
-  transformOrigin: "center bottom",
-});
+      gsap.set(growthEngineLine, { clipPath: "inset(-100px 100% -100px 0%)" });
       gsap.set(descriptionRef.current, { opacity: 0, x: -140 });
 
       const tl = gsap.timeline({
@@ -158,16 +152,14 @@ export default function BeanstalkSystemSection() {
           "-=0.7",
         )
         .to(
-  growthEngineRef.current,
-  {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 0.7,
-    ease: "back.out(1.7)",
-  },
-  "-=0.2",
-)
+          growthEngineLine,
+          {
+            clipPath: "inset(-100px 0% -100px 0%)",
+            duration: 0.45,
+            ease: "power2.inOut",
+          },
+          "-=0.2",
+        )
         .to(
           descriptionRef.current,
           { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
@@ -239,7 +231,9 @@ export default function BeanstalkSystemSection() {
               ref={growthEngineRef}
               className="mt-[clamp(-39px,-2.7083vw,-11px)] whitespace-pre font-alex-brush text-[clamp(48px,14.0278vw,202px)] leading-none text-[#AC40FF]"
             >
-              Growth    Engine.
+              <span className="growth-engine-line inline-block">
+                Growth    Engine.
+              </span>
             </p>
             <p
               ref={descriptionRef}

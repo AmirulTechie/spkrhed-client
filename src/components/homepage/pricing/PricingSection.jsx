@@ -295,7 +295,7 @@ export default function PricingSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-[clamp(64px,9.7222vw,140px)]"
+      className="relative overflow-x-clip py-[clamp(64px,9.7222vw,140px)]"
     >
       {/* Each branch fades both its top AND bottom edges out via a mask
           (rather than a black overlay div) so only the vine's pixels fade —
@@ -312,7 +312,7 @@ export default function PricingSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute left-[-25%] top-[-23vw] w-[50%] rotate-45 select-none opacity-90"
+        className="pointer-events-none absolute left-[-25%] top-[-17vw] w-[50%] rotate-45 select-none opacity-90"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
@@ -326,7 +326,7 @@ export default function PricingSection() {
         alt=""
         width={1615}
         height={2396}
-        className="pointer-events-none absolute right-[-24%] top-[-6vw] w-[50%] -scale-x-100 select-none opacity-90"
+        className="pointer-events-none absolute right-[-24%] top-0 w-[50%] -scale-x-100 select-none opacity-90"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",

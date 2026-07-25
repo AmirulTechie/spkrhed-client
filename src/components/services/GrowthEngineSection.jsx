@@ -128,9 +128,16 @@ function TypewriterChars({ text }) {
   return nodes;
 }
 
-// Only the front and mid slots sit in front of another card, so only they
-// get the frosted-glass treatment; the back slot has nothing behind it to
-// blur, and renders as a flat, fully opaque card per the Figma design.
+// The back slot has nothing behind it to blur, and reads as a flat, fully
+// opaque card per the Figma design — but backdrop-blur-[5.5px] stays on
+// every card regardless of slot (rather than being toggled by `isBack`) so
+// there's no discrete class swap to pop when a card's slot changes: at full
+// opacity the blur has no visible effect, so the back slot still renders
+// flat, and when the shuffle animates a card's alpha down to 0.9 for the
+// front/mid slots the blur is already there to fade in smoothly with it.
+// See `handleAdvance` below, which tweens this same backgroundColor value
+// in lockstep with the position/rotation so the two never fall out of sync
+// mid-transition.
 //
 // `measure` renders the same content unconstrained (no `inset-0`, height
 // auto) and hidden, so its rendered height reveals how tall this card's
@@ -149,11 +156,9 @@ function GrowthCard({ card, slotIndex, setCardRef, onAdvance, measure }) {
       aria-label={
         measure ? undefined : `Bring ${card.heading} to the front`
       }
-      className={`flex cursor-pointer flex-col overflow-hidden rounded-[clamp(14px,1.7361vw,25px)] px-[clamp(20px,2.5694vw,37px)] py-[clamp(18px,2.4306vw,35px)] text-left ${isBack ? "" : "backdrop-blur-[5.5px]"} ${measure ? "invisible pointer-events-none absolute top-0 left-0 h-auto w-full" : "absolute inset-0"}`}
+      className={`flex cursor-pointer flex-col overflow-hidden rounded-[clamp(14px,1.7361vw,25px)] px-[clamp(20px,2.5694vw,37px)] py-[clamp(18px,2.4306vw,35px)] text-left backdrop-blur-[5.5px] ${measure ? "invisible pointer-events-none absolute top-0 left-0 h-auto w-full" : "absolute inset-0"}`}
       style={{
-        backgroundColor: isBack
-          ? `rgb(${card.color})`
-          : `rgba(${card.color},0.9)`,
+        backgroundColor: `rgba(${card.color},${isBack ? 1 : 0.9})`,
       }}
     >
       <h3 className="max-w-[75%] font-anton-sc text-[clamp(20px,2.4306vw,35px)] uppercase leading-[1.05] text-[#101010]">
@@ -371,6 +376,7 @@ export default function GrowthEngineSection() {
     newOrder.forEach((cardIndex, slotIndex) => {
       const el = cardRefs.current[cardIndex];
       if (!el) return;
+      const isBack = slotIndex === 2;
       gsap.set(el, { zIndex: SLOTS[slotIndex].zIndex });
       tl.to(
         el,
@@ -378,6 +384,7 @@ export default function GrowthEngineSection() {
           xPercent: SLOTS[slotIndex].xPercent,
           yPercent: SLOTS[slotIndex].yPercent,
           rotate: SLOTS[slotIndex].rotate,
+          backgroundColor: `rgba(${CARDS[cardIndex].color},${isBack ? 1 : 0.9})`,
           duration: 0.6,
           ease: "power2.inOut",
         },
