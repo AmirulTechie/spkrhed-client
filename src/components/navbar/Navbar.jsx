@@ -4,9 +4,11 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
+import { FaLinkedin } from "react-icons/fa";
+import { SiInstagram } from "react-icons/si";
 import gsap from "gsap";
 
 const SCROLL_THRESHOLD = 80;
@@ -24,6 +26,11 @@ const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ];
 
+const SOCIALS = [
+  { label: "LinkedIn", href: "#", icon: FaLinkedin },
+  { label: "Instagram", href: "#", icon: SiInstagram },
+];
+
 const MotionLink = motion.create(Link);
 
 const underlineVariants = {
@@ -31,24 +38,63 @@ const underlineVariants = {
   hover: { scaleX: 1 },
 };
 
-function useNycTime() {
-  const [time, setTime] = useState(null);
+const mobileOverlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.35, ease: "easeInOut" } },
+  exit: { opacity: 0, transition: { duration: 0.25, ease: "easeInOut" } },
+};
+
+const mobileListVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.15 } },
+  exit: {},
+};
+
+const mobileItemVariants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: { opacity: 0, y: 12, transition: { duration: 0.2, ease: "easeInOut" } },
+};
+
+const WORLD_CLOCK_ZONES = [
+  { key: "nyc", label: "NYC", timeZone: "America/New_York" },
+  { key: "sf", label: "SF", timeZone: "America/Los_Angeles" },
+  { key: "paris", label: "Paris", timeZone: "Europe/Paris" },
+];
+
+function useWorldClocks() {
+  const [times, setTimes] = useState(null);
 
   useEffect(() => {
-    const formatter = new Intl.DateTimeFormat("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-      timeZone: "America/New_York",
-    });
+    const formatters = WORLD_CLOCK_ZONES.map(({ key, timeZone }) => ({
+      key,
+      formatter: new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone,
+      }),
+    }));
 
-    const tick = () => setTime(formatter.format(new Date()));
+    const tick = () => {
+      const now = new Date();
+      setTimes(
+        formatters.reduce((acc, { key, formatter: fmt }) => {
+          acc[key] = fmt.format(now);
+          return acc;
+        }, {}),
+      );
+    };
     tick();
     const interval = setInterval(tick, 1000 * 30);
     return () => clearInterval(interval);
   }, []);
 
-  return time;
+  return times;
 }
 
 function Underline() {
@@ -83,7 +129,7 @@ function AnimatedNavLink({ href, children, onClick, isActive = false }) {
 
 function Logo({ innerRef }) {
   return (
-    <Link href="/" ref={innerRef} className="block opacity-0">
+    <Link href="/" ref={innerRef} className="block shrink-0 opacity-0">
       <Image
         src="/images/spkrhed-logo.png"
         alt="SPKRHED"
@@ -138,7 +184,7 @@ function PlantYourSeedButton({ onClick, className = "" }) {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const nycTime = useNycTime();
+  const worldTimes = useWorldClocks();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -149,7 +195,7 @@ export default function Navbar() {
   const rightGroupRef = useRef(null);
   const menuButtonRef = useRef(null);
 
-  useLenis(({ scroll, direction }) => {
+  const lenis = useLenis(({ scroll, direction }) => {
     setIsScrolled(scroll > SCROLL_THRESHOLD);
 
     if (scroll <= SCROLL_THRESHOLD) {
@@ -171,12 +217,16 @@ export default function Navbar() {
   useEffect(() => {
     if (!isMenuOpen) return;
 
+    // Lenis drives scroll itself (wheel/touch on the window), so locking
+    // body overflow alone doesn't stop it — the instance must be paused too.
+    lenis?.stop();
     const { overflow } = document.body.style;
     document.body.style.overflow = "hidden";
     return () => {
+      lenis?.start();
       document.body.style.overflow = overflow;
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, lenis]);
 
   // Navbar lives in the root layout and never unmounts, so unlike the page
   // heroes it has to re-key its entrance off pathname to replay on every
@@ -248,19 +298,19 @@ export default function Navbar() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
-        className="relative z-10 mx-auto flex items-center justify-between px-8 py-8 text-white sm:px-12 lg:px-16"
+        className="relative z-10 mx-auto flex items-center justify-between gap-x-4 px-8 py-8 text-white sm:px-12 lg:px-6 2xl:px-16"
         initial={false}
         animate={{
           backgroundColor: isScrolled ? "rgba(0,0,0,1)" : "rgba(0,0,0,0)",
         }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
-        <div className="flex items-center gap-[clamp(24px,2.7778vw,64px)]">
+        <div className="flex items-center gap-[clamp(12px,1.8vw,56px)]">
           <Logo innerRef={logoRef} />
 
           <ul
             ref={navListRef}
-            className="hidden items-center gap-[clamp(16px,1.6667vw,32px)] text-[clamp(13px,0.8333vw,15px)] font-semibold text-white/90 lg:flex"
+            className="hidden items-center gap-[clamp(8px,1vw,28px)] text-[clamp(13px,0.9vw,20px)] font-semibold text-white/90 xl:flex"
           >
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href} className="opacity-0">
@@ -275,10 +325,16 @@ export default function Navbar() {
 
         <div
           ref={rightGroupRef}
-          className="hidden items-center gap-[clamp(48px,8.4722vw,180px)] text-[clamp(16px,1.1111vw,20px)] font-semibold text-white/90 lg:flex"
+          className="hidden shrink-0 items-center gap-[clamp(12px,2.2vw,64px)] whitespace-nowrap text-[clamp(13px,0.9vw,20px)] font-semibold text-white/90 xl:flex"
         >
-          <span className="opacity-0">{nycTime ? `(NYC) ${nycTime}` : " "}</span>
-          <PlantYourSeedButton className="opacity-0" />
+          <div className="flex items-center gap-[clamp(8px,1vw,20px)] opacity-0">
+            {WORLD_CLOCK_ZONES.map(({ key, label }) => (
+              <span key={key}>
+                {worldTimes ? `(${label}) ${worldTimes[key]}` : " "}
+              </span>
+            ))}
+          </div>
+          <PlantYourSeedButton className="whitespace-nowrap opacity-0" />
         </div>
 
         <button
@@ -287,40 +343,109 @@ export default function Navbar() {
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
-          className="text-white opacity-0 lg:hidden"
+          className="text-white opacity-0 xl:hidden"
         >
           {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </motion.nav>
 
-      {isMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed inset-0 z-0 flex h-dvh w-full flex-col justify-between overflow-y-auto bg-black px-8 pt-32 pb-12 lg:hidden"
-        >
-          <ul className="flex flex-col gap-6 text-3xl font-semibold text-white/90">
-            {NAV_LINKS.map(({ label, href }) => (
-              <li key={href}>
-                <AnimatedNavLink
-                  href={href}
-                  onClick={() => setIsMenuOpen(false)}
-                  isActive={pathname === href}
-                >
-                  <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-white/60" />
-                  {label}
-                </AnimatedNavLink>
-              </li>
-            ))}
-          </ul>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            key="mobile-nav-overlay"
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={mobileOverlayVariants}
+            className="fixed inset-0 z-0 h-dvh w-full overflow-hidden bg-black xl:hidden"
+          >
+            <Image
+              src="/images/Home/Hero-banner-grids.png"
+              alt=""
+              fill
+              sizes="100vw"
+              className="pointer-events-none select-none object-cover opacity-[0.06]"
+            />
 
-          <div className="flex flex-col gap-6 text-base font-semibold text-white/90">
-            {nycTime && <span>(NYC) {nycTime}</span>}
-            <PlantYourSeedButton onClick={() => setIsMenuOpen(false)} />
-          </div>
-        </motion.div>
-      )}
+            <div className="relative flex h-full flex-col justify-between overflow-y-auto px-8 pt-32 pb-10">
+              <motion.ul
+                variants={mobileListVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="flex flex-col"
+              >
+                {NAV_LINKS.map(({ label, href }, index) => {
+                  const isActive = pathname === href;
+                  return (
+                    <motion.li
+                      key={href}
+                      variants={mobileItemVariants}
+                      className="border-b border-white/10 py-4 first:pt-0"
+                    >
+                      <Link
+                        href={href}
+                        onClick={() => setIsMenuOpen(false)}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`group flex items-center justify-between gap-4 font-anton-sc text-[clamp(28px,9vw,44px)] uppercase leading-none transition-colors duration-300 ${
+                          isActive ? "text-[#AC40FF]" : "text-white/90 hover:text-white"
+                        }`}
+                      >
+                        {label}
+                        <span
+                          aria-hidden
+                          className={`font-poppins text-xs font-semibold transition-colors duration-300 ${
+                            isActive
+                              ? "text-[#AC40FF]"
+                              : "text-white/30 group-hover:text-white/60"
+                          }`}
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </Link>
+                    </motion.li>
+                  );
+                })}
+              </motion.ul>
+
+              <motion.div
+                variants={mobileItemVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="flex flex-col gap-6 border-t border-white/10 pt-6"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-5">
+                    {SOCIALS.map(({ label, href, icon: Icon }) => (
+                      <Link
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className="text-white/50 transition-colors duration-300 hover:text-[#AC40FF]"
+                      >
+                        <Icon size={18} />
+                      </Link>
+                    ))}
+                  </div>
+                  {worldTimes && (
+                    <span className="font-poppins text-sm font-semibold text-white/50">
+                      (NYC) {worldTimes.nyc}
+                    </span>
+                  )}
+                </div>
+
+                <PlantYourSeedButton
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-full justify-center"
+                />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

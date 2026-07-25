@@ -48,8 +48,8 @@ export default function RootLayout({ children }) {
         className="min-h-full flex flex-col overflow-x-hidden bg-background text-foreground font-poppins"
       >
         <LoaderTimingProvider>
-          <Loader />
           <SmoothScroll>
+            <Loader />
             <Navbar />
             {children}
             <Footer />

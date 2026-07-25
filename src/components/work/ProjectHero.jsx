@@ -77,7 +77,7 @@ export default function ProjectHero({ project }) {
         <button
           type="button"
           onClick={handleBack}
-          className="font-poppins text-[clamp(13px,0.9722vw,14px)] font-semibold uppercase tracking-wide text-white/60 transition-colors hover:text-white"
+          className="font-poppins text-[clamp(13px,0.9722vw,14px)] font-semibold uppercase tracking-wide text-white/60 transition-colors hover:text-white cursor-pointer"
         >
           ← Work
         </button>

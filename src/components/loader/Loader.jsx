@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import gsap from "gsap";
+import { useLenis } from "lenis/react";
 import { useLoaderDuration } from "./LoaderTimingContext";
 
 export default function Loader() {
@@ -12,6 +13,7 @@ export default function Loader() {
   const hold = total - exit;
   const overlayRef = useRef(null);
   const [gifKey, setGifKey] = useState(0);
+  const lenis = useLenis();
 
   useLayoutEffect(() => {
     const overlay = overlayRef.current;
@@ -19,7 +21,17 @@ export default function Loader() {
 
     setGifKey((key) => key + 1);
 
-    const tl = gsap.timeline();
+    // Lenis drives scroll itself (wheel/touch on the window), so locking
+    // body overflow alone doesn't stop it — the instance must be paused too.
+    lenis?.stop();
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    const unlockScroll = () => {
+      lenis?.start();
+      document.body.style.overflow = overflow;
+    };
+
+    const tl = gsap.timeline({ onComplete: unlockScroll });
 
     // Loader takes over the screen instantly on every route change (no
     // slide-in), holds, then exits by sliding out to the right.
@@ -31,8 +43,11 @@ export default function Loader() {
 
     tl.set(overlay, { display: "none" });
 
-    return () => tl.kill();
-  }, [pathname, total, exit, hold]);
+    return () => {
+      tl.kill();
+      unlockScroll();
+    };
+  }, [pathname, total, exit, hold, lenis]);
 
   return (
     <div

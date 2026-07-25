@@ -44,6 +44,11 @@ const PROBLEM_CARDS = [
   },
 ];
 
+// Matches the `lg:` breakpoint that gives the card stack a fixed
+// aspect-ratio. Below it, the stack's height tracks the front card's
+// content instead (see the height-FLIP note in ProblemSection).
+const LG_BREAKPOINT_QUERY = "(min-width: 1024px)";
+
 const PURPLE_STYLE = { bg: "#AC40FF", labelColor: "#FFFFFF" };
 const GRAY_STYLE = { bg: "#CECECE", labelColor: "#101010" };
 
@@ -134,6 +139,7 @@ export default function ProblemSection() {
   const topRef = useRef(null);
   const backRef = useRef(null);
   const animatingRef = useRef(false);
+  const pendingHeightRef = useRef(null);
 
   const topIndex = order[0];
   const backIndex = order[1 % order.length];
@@ -151,6 +157,37 @@ export default function ProblemSection() {
       rotate: -1.95,
       opacity: 1,
     });
+
+    // Below `lg` the stack has no fixed aspect-ratio, so its height comes
+    // from the front card's own content (see the `h-full` button below).
+    // Swapping in a card with a different amount of text would otherwise
+    // snap the whole section taller or shorter the instant `order` updates.
+    // FLIP it instead: measure where the new card's content wants to land,
+    // then tween the wrapper from its pre-swap height to that value. No-op
+    // at `lg`+, where the aspect-ratio already keeps the height fixed.
+    const wrapper = cardsWrapperRef.current;
+    const startHeight = pendingHeightRef.current;
+    pendingHeightRef.current = null;
+
+    if (!wrapper || startHeight == null || window.matchMedia(LG_BREAKPOINT_QUERY).matches) {
+      return;
+    }
+
+    gsap.set(wrapper, { height: "auto" });
+    const endHeight = wrapper.getBoundingClientRect().height;
+
+    if (startHeight === endHeight) return;
+
+    gsap.fromTo(
+      wrapper,
+      { height: startHeight },
+      {
+        height: endHeight,
+        duration: 0.4,
+        ease: "power2.out",
+        onComplete: () => gsap.set(wrapper, { clearProps: "height" }),
+      },
+    );
   }, [order]);
 
   // One-time entrance: "Sound familiar?" sprouts in with the same
@@ -263,6 +300,8 @@ export default function ProblemSection() {
     gsap
       .timeline({
         onComplete: () => {
+          pendingHeightRef.current =
+            cardsWrapperRef.current?.getBoundingClientRect().height ?? null;
           setOrder((current) => [...current.slice(1), current[0]]);
           animatingRef.current = false;
         },
@@ -302,15 +341,6 @@ export default function ProblemSection() {
         height={200}
         className="pointer-events-none absolute left-[70%] top-[7%] z-20 w-[clamp(60px,9.7014vw,140px)] select-none md:top-[2.5%]"
       />
-      <Image
-        ref={leafLeftRef}
-        src="/images/Home/leaf.png"
-        alt=""
-        width={200}
-        height={200}
-        className="pointer-events-none absolute left-[17.16%] top-[60%] z-0 w-[clamp(54px,8.7188vw,126px)] select-none"
-      />
-
       <div className="relative mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] py-[clamp(40px,6.9444vw,100px)]">
         <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,6.1111vw,88px)] gap-y-[clamp(32px,3.3333vw,48px)] md:grid-cols-2 lg:grid-cols-[526fr_647fr]">
           <div>
@@ -350,9 +380,24 @@ export default function ProblemSection() {
               </SproutLine>
             </h2>
 
+            {/* In normal flow (not a % of the section, which also contains
+                the card stack) so it always lands between the heading and
+                description, at every breakpoint, instead of drifting into
+                either one as the card column's height changes the section's
+                total height. Bleeds past the column's left edge via negative
+                margin rather than an absolute % offset, for the same reason. */}
+            <Image
+              ref={leafLeftRef}
+              src="/images/Home/leaf.png"
+              alt=""
+              width={200}
+              height={200}
+              className="pointer-events-none relative z-0 my-[clamp(16px,2.7778vw,40px)] -ml-[clamp(20px,4.1667vw,60px)] w-[clamp(54px,8.7188vw,126px)] select-none"
+            />
+
             <p
               ref={descriptionRef}
-              className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black lg:top-50"
+              className="relative z-10 mt-4 max-w-lg font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[0.97] text-black"
             >
               <SproutChars text={DESCRIPTION_TEXT} />
             </p>
@@ -381,7 +426,7 @@ export default function ProblemSection() {
               ref={topRef}
               onClick={handleShuffle}
               aria-label="Show next problem card"
-              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(8px,0.8333vw,12px)] p-4 text-left cursor-pointer sm:p-[clamp(24px,2.7778vw,40px)]"
+              className="relative z-10 flex h-full w-full flex-col rounded-[clamp(8px,0.8333vw,12px)] p-4 text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:p-[clamp(24px,2.7778vw,40px)]"
               style={{
                 backgroundColor: topCardStyle.bg,
                 "--label-color": topCardStyle.labelColor,
