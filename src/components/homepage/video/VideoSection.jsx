@@ -7,12 +7,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Each branch carries separate mobile/desktop position strings (rather than
-// one string mixing bare and lg:-prefixed classes) so the two breakpoints
-// can be tuned independently without hunting through a combined string.
-// Both must stay full literal strings — Tailwind's build-time scanner only
-// generates CSS for arbitrary-value classes it can see verbatim in the
-// source, not ones assembled from JS variables at runtime.
+// One position per branch, used at every breakpoint (not just lg:). The
+// source PNGs are hard-cropped rectangles, not vine art that fades out at
+// its own edges — each branch must sit far enough outside the stage that
+// only the vine's natural, tapering silhouette crosses into frame, with the
+// raw crop edges clipped off by the stage's overflow-hidden. That's exactly
+// what the original lg-only values did; reusing them unscaled at every
+// breakpoint keeps that same safety margin, since they're already percentage
+// values relative to the stage.
 //
 // `side` says which edge this branch exits toward on scroll, and is also
 // how branches are grouped for that exit: everything on one side is
@@ -25,39 +27,38 @@ const BRANCHES = [
     width: 1615,
     height: 2396,
     side: "left",
-    mobile: "left-[-10%] top-[-20%] w-[50%]",
-    desktop: "lg:left-[-7%] lg:top-[-20%] lg:w-[55%]",
+    position: "left-[-7%] top-[-20%] w-[55%]",
   },
   {
     src: "/images/Home/tree-branch-3.png",
     width: 1615,
     height: 2396,
     side: "left",
-    mobile: "left-[-10%] top-[40%] w-[35%]",
-    desktop: "lg:left-[-10%] lg:top-[40%] lg:w-[35%]",
+    // top is pushed further down than the other branches: below lg the
+    // stage is a boxier aspect-4/3 (vs. lg's wide 1440/666), which leaves
+    // more vertical room and exposes this PNG's hard-cropped bottom seam
+    // at top-40%. Pushing it to top-63% restores the same clipped margin
+    // the wide desktop stage gives it for free.
+    position: "left-[-10%] top-[63%] w-[35%]",
   },
   {
     src: "/images/Home/tree-branch-2.png",
     width: 2507,
     height: 1943,
     side: "right",
-    mobile: "right-[-32%] top-[-85%] w-[90%]",
-    desktop: "lg:right-[-32%] lg:top-[-85%] lg:w-[90%]",
+    position: "right-[-32%] top-[-85%] w-[90%]",
   },
   {
     src: "/images/Home/tree-branch-1.png",
     width: 2507,
     height: 1943,
     side: "right",
-    mobile: "right-[-16%] top-[-30%] w-[55%]",
-    desktop: "lg:right-[-16%] lg:top-[-30%] lg:w-[55%]",
+    position: "right-[-16%] top-[-30%] w-[55%]",
   },
 ];
 
-// Same idea for the cloud: its mobile and desktop position/size are edited
-// independently here instead of inline in the JSX below.
-const CLOUD_MOBILE = "bottom-[-35%] left-1/2 w-[115%]";
-const CLOUD_DESKTOP = "lg:bottom-[-35%] lg:left-1/2 lg:w-[115%]";
+// Same idea for the cloud: one position, used at every breakpoint.
+const CLOUD_POSITION = "bottom-[-35%] left-1/2 w-[115%]";
 
 // How much stage width/height stays clear around the video once it has
 // scaled up to its largest, final size.
@@ -91,15 +92,6 @@ export default function VideoSection() {
         // (matches Figma), cloud stays put.
         branchEls.forEach(({ el }) => gsap.set(el, { x: 0, y: 0 }));
         gsap.set(cloud, { y: 0 });
-
-        // Below lg, skip the pinned scroll-scrub entirely and just render
-        // everything at its resting position — pinning a full-viewport
-        // stage over a scrub is heavy and janky on mobile scroll.
-        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-        if (!isDesktop) {
-          gsap.set(video, { scale: 1 });
-          return;
-        }
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -186,7 +178,7 @@ export default function VideoSection() {
             alt=""
             width={branch.width}
             height={branch.height}
-            className={`pointer-events-none absolute max-w-none select-none z-0 will-change-transform lg:z-30 ${branch.mobile} ${branch.desktop}`}
+            className={`pointer-events-none absolute max-w-none select-none z-0 will-change-transform lg:z-30 ${branch.position}`}
           />
         ))}
 
@@ -196,7 +188,7 @@ export default function VideoSection() {
           alt=""
           width={3723}
           height={1164}
-          className={`pointer-events-none absolute max-w-none select-none z-999 will-change-transform ${CLOUD_MOBILE} ${CLOUD_DESKTOP}`}
+          className={`pointer-events-none absolute max-w-none select-none z-999 will-change-transform ${CLOUD_POSITION}`}
         />
 
         <div

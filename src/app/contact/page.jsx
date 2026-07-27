@@ -1,3 +1,5 @@
+import ContactHero from "@/components/contact/ContactHero";
+
 export const metadata = {
   title: "Contact | SPKRHED",
   description:
@@ -12,6 +14,7 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <>
+      <ContactHero />
     </>
   );
 }
