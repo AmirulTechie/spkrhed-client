@@ -127,7 +127,7 @@ export default function ContactHero() {
         email: data.email,
         phone: data.phone,
         message: data.message,
-        website: data.website,
+        website: data.hp_confirm_2x,
         turnstileToken: data["cf-turnstile-response"],
       });
       setStatus("success");
@@ -250,16 +250,22 @@ export default function ContactHero() {
             />
           </div>
 
-          {/* Honeypot: hidden from real users, bots that auto-fill every field trip it. */}
+          {/* Honeypot: hidden from real users, bots that auto-fill every field trip it.
+              Field name deliberately avoids autofill-recognizable words like "website"
+              or "url" — browser/password-manager autofill was populating it for real
+              users, silently dropping their submissions. */}
           <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-            <label htmlFor="website">Leave this field empty</label>
+            <label htmlFor="hp_confirm_2x">Leave this field empty</label>
             <input
-              id="website"
-              name="website"
+              id="hp_confirm_2x"
+              name="hp_confirm_2x"
               type="text"
               tabIndex={-1}
               autoComplete="off"
               aria-hidden="true"
+              data-lpignore="true"
+              data-1p-ignore="true"
+              data-bwignore="true"
             />
           </div>
 
