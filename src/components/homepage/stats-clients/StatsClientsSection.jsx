@@ -21,21 +21,21 @@ const STATS = [
   { value: "50K+", valueClassName: "text-[#AC40FF]", label: "Targeted\nDMs / Month" },
 ];
 
-// Two rows of four, matching the Figma order and per-logo widths
-// (measured at the 1440px design frame; min/max ≈ 0.6x/1.6x).
-const LOGO_ROWS = [
-  [
-    { src: "/images/clients-logo/logo-01.svg", alt: "RubyMine", w: 120, h: 23, width: "w-[clamp(72px,8.3104vw,191px)]" },
-    { src: "/images/clients-logo/logo-02.svg", alt: "Spotify", w: 102, h: 35, width: "w-[clamp(61px,7.1174vw,164px)]" },
-    { src: "/images/clients-logo/logo-03.svg", alt: "Lexus", w: 87, h: 40, width: "w-[clamp(52px,6.0583vw,140px)]" },
-    { src: "/images/clients-logo/logo-05.svg", alt: "Coca-Cola", w: 101, h: 35, width: "w-[clamp(61px,7.0049vw,161px)]" },
-  ],
-  [
-    { src: "/images/clients-logo/logo-04.svg", alt: "NHL on TNT", w: 120, h: 37, width: "w-[clamp(72px,8.3097vw,191px)]" },
-    { src: "/images/clients-logo/logo-06.svg", alt: "Tim Hortons", w: 120, h: 26, width: "w-[clamp(72px,8.3083vw,191px)]" },
-    { src: "/images/clients-logo/logo-07.svg", alt: "Mercedes-Benz", w: 146, h: 32, width: "w-[clamp(88px,10.1597vw,234px)]" },
-    { src: "/images/clients-logo/logo-08.svg", alt: "Chevrolet", w: 88, h: 42, width: "w-[clamp(53px,6.1118vw,141px)]" },
-  ],
+// 12 real client logos, 4 per row / 3 rows on desktop. All source files are
+// square 2880x2880 exports, so they share one aspect ratio and box size.
+const LOGOS = [
+  { src: "/images/Home/Clients_logo/aeg.png", alt: "AEG" },
+  { src: "/images/Home/Clients_logo/amgen.png", alt: "Amgen" },
+  { src: "/images/Home/Clients_logo/coors.png", alt: "Coors" },
+  { src: "/images/Home/Clients_logo/cordella.png", alt: "Cordella" },
+  { src: "/images/Home/Clients_logo/global.png", alt: "Global" },
+  { src: "/images/Home/Clients_logo/hbo.png", alt: "HBO" },
+  { src: "/images/Home/Clients_logo/jack_dani.png", alt: "Jack Daniel's" },
+  { src: "/images/Home/Clients_logo/mastercard.png", alt: "Mastercard" },
+  { src: "/images/Home/Clients_logo/nike.png", alt: "Nike" },
+  { src: "/images/Home/Clients_logo/snoop.png", alt: "Snoop Dogg" },
+  { src: "/images/Home/Clients_logo/sony.png", alt: "Sony" },
+  { src: "/images/Home/Clients_logo/vdura.png", alt: "Vdura" },
 ];
 
 // Splits "10K+" into { target: 10, suffix: "K+" } so the number can be
@@ -200,35 +200,23 @@ export default function StatsClientsSection() {
       >
         <div
           ref={clientsRevealRef}
-          className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:grid-cols-[589fr_641fr]"
+          className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:items-center lg:grid-cols-[589fr_641fr]"
         >
-          <div className="flex items-start gap-3">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={30}
-              height={30}
-              className="mt-[0.3em] h-[clamp(20px,1.6667vw,30px)] w-[clamp(20px,1.6667vw,30px)] shrink-0 brightness-0 invert"
-            />
-            <p className="max-w-180 font-poppins text-[clamp(22px,2.7778vw,48px)] font-semibold uppercase leading-none text-white">
+          <p className="font-poppins text-[clamp(40px,6.5vw,112px)] font-bold uppercase leading-[0.88] text-white">
   Clients whose realities we&apos;ve changed
 </p>
-          </div>
 
-          <div className="flex flex-col gap-y-[clamp(32px,4.5139vw,104px)]">
-            {LOGO_ROWS.map((row, rowIndex) => (
-              <div key={rowIndex} className="flex items-center justify-between">
-                {row.map((logo) => (
-                  <Image
-                    key={logo.src}
-                    src={logo.src}
-                    alt={logo.alt}
-                    width={logo.w}
-                    height={logo.h}
-                    className={`h-auto opacity-60 transition-all duration-300 ease-out hover:scale-110 hover:opacity-100 ${logo.width} cursor-pointer`}
-                  />
-                ))}
-              </div>
+          <div className="grid grid-cols-2 justify-items-center gap-x-[clamp(24px,3.4722vw,80px)] gap-y-[clamp(32px,4.5139vw,104px)] sm:grid-cols-4">
+            {LOGOS.map((logo) => (
+              <Image
+                key={logo.src}
+                src={logo.src}
+                alt={logo.alt}
+                width={2880}
+                height={2880}
+                sizes="120px"
+                className="h-auto w-[clamp(64px,8.3333vw,120px)] cursor-pointer brightness-0 invert opacity-60 transition-all duration-300 ease-out hover:scale-110 hover:opacity-100"
+              />
             ))}
           </div>
         </div>
