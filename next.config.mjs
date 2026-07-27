@@ -4,12 +4,13 @@ const isDev = process.env.NODE_ENV === "development";
 // img-src/media-src/connect-src here if more third-party origins are added.
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
+  script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://res.cloudinary.com;
   media-src 'self' https://res.cloudinary.com;
   font-src 'self' data:;
-  connect-src 'self' https://res.cloudinary.com;
+  connect-src 'self' https://res.cloudinary.com https://challenges.cloudflare.com;
+  frame-src https://challenges.cloudflare.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useLoaderDuration } from "@/components/loader/LoaderTimingContext";
@@ -63,6 +64,8 @@ function SendArrowIcon({ className = "" }) {
   );
 }
 
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 export default function ContactHero() {
   const { total: loaderDuration } = useLoaderDuration();
   const headingRef = useRef(null);
@@ -119,9 +122,17 @@ export default function ContactHero() {
 
     setStatus("submitting");
     try {
-      await submitContactForm(data);
+      await submitContactForm({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message,
+        website: data.website,
+        turnstileToken: data["cf-turnstile-response"],
+      });
       setStatus("success");
       form.reset();
+      window.turnstile?.reset();
     } catch {
       setStatus("error");
     }
@@ -129,6 +140,15 @@ export default function ContactHero() {
 
   return (
     <section className="relative flex min-h-dvh w-full items-center overflow-hidden bg-black lg:items-end">
+      {turnstileSiteKey && (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="afterInteractive"
+          async
+          defer
+        />
+      )}
+
       <Image
         src="/images/Home/hero-banner-plain.png"
         alt=""
@@ -229,6 +249,23 @@ export default function ContactHero() {
               className="w-full resize-none bg-transparent font-poppins text-[clamp(18px,1.7361vw,25px)] font-light text-white placeholder-white/40 outline-none"
             />
           </div>
+
+          {/* Honeypot: hidden from real users, bots that auto-fill every field trip it. */}
+          <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+            <label htmlFor="website">Leave this field empty</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+          </div>
+
+          {turnstileSiteKey && (
+            <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark" />
+          )}
 
           <div className="mt-[clamp(8px,1.1vw,16px)] flex items-center gap-4">
             <button

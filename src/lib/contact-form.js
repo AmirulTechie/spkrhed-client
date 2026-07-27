@@ -1,12 +1,18 @@
 // Isolated submission boundary for the contact form. The UI only ever calls
-// this function — swapping the placeholder below for a real API/CRM call
-// later won't require touching ContactHero.jsx.
+// this function — the actual transport (currently our own /api/contact
+// route, which relays to Resend) can change without touching ContactHero.jsx.
 export async function submitContactForm(payload) {
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
-  if (process.env.NODE_ENV !== "production") {
-    console.log("Contact form submission (no backend wired yet):", payload);
+  const result = await response.json();
+
+  if (!response.ok || !result.ok) {
+    throw new Error(result.error ?? "Failed to send message.");
   }
 
-  return { ok: true };
+  return result;
 }
