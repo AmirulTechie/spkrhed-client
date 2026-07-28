@@ -1,4 +1,3 @@
-import WorkHero from "@/components/work/WorkHero";
 import WorkGrid from "@/components/work/WorkGrid";
 
 export const metadata = {
@@ -13,10 +12,5 @@ export const metadata = {
 };
 
 export default function WorkPage() {
-  return (
-    <>
-      <WorkHero />
-      <WorkGrid />
-    </>
-  );
+  return <WorkGrid />;
 }

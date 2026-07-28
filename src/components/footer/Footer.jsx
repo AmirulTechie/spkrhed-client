@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaLinkedin } from "react-icons/fa";
 import { SiInstagram } from "react-icons/si";
 
@@ -56,6 +57,12 @@ function SocialLink({ social }) {
 }
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // The Work page is a full-bleed drag/scroll canvas (see WorkGrid) with no
+  // natural end to scroll to, so the footer never has anywhere sensible to sit.
+  if (pathname === "/work") return null;
+
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-black text-white">
       <Image

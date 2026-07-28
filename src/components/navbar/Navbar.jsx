@@ -184,6 +184,7 @@ function PlantYourSeedButton({ onClick, className = "" }) {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isWorkPage = pathname === "/work";
   const worldTimes = useWorldClocks();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -298,10 +299,16 @@ export default function Navbar() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
-        className="relative z-10 mx-auto flex items-center justify-between gap-x-4 px-8 py-8 text-white sm:px-12 lg:px-6 2xl:px-16"
+        className={`relative z-10 mx-auto flex items-center justify-between gap-x-4 px-8 py-8 text-white sm:px-12 lg:px-6 2xl:px-16 ${
+          isWorkPage ? "backdrop-blur-md" : ""
+        }`}
         initial={false}
         animate={{
-          backgroundColor: isScrolled ? "rgba(0,0,0,1)" : "rgba(0,0,0,0)",
+          backgroundColor: isWorkPage
+            ? "rgba(0,0,0,0.45)"
+            : isScrolled
+              ? "rgba(0,0,0,1)"
+              : "rgba(0,0,0,0)",
         }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
