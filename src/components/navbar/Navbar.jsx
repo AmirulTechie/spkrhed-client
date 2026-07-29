@@ -299,19 +299,26 @@ export default function Navbar() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
-        className={`relative z-10 mx-auto flex items-center justify-between gap-x-4 px-8 py-8 text-white sm:px-12 lg:px-6 2xl:px-16 ${
-          isWorkPage ? "backdrop-blur-md" : ""
+        className={`relative z-10 mx-auto flex items-center justify-between gap-x-4 px-8 text-white sm:px-12 lg:px-6 2xl:px-16 ${
+          isWorkPage ? "py-5" : "py-8"
         }`}
         initial={false}
         animate={{
           backgroundColor: isWorkPage
-            ? "rgba(0,0,0,0.45)"
+            ? "rgba(0,0,0,0)"
             : isScrolled
               ? "rgba(0,0,0,1)"
               : "rgba(0,0,0,0)",
         }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
+        {isWorkPage && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-32 bg-linear-to-b from-black/70 to-transparent"
+          />
+        )}
+
         <div className="flex items-center gap-[clamp(12px,1.8vw,56px)]">
           <Logo innerRef={logoRef} />
 

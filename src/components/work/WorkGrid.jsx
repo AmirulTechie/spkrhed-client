@@ -40,9 +40,17 @@ function MosaicTile({ tile, col, left, top, width, height }) {
         alt={project.title}
         fill
         draggable={false}
+        loading="eager"
         sizes="(min-width: 1024px) 30vw, 60vw"
         className="pointer-events-none object-cover transition-transform duration-700 ease-out group-hover:scale-110"
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/0 to-black/0 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+      />
+      <span className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-4 font-anton-sc text-[clamp(14px,1.4vw,20px)] uppercase leading-none text-white opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+        {project.title}
+      </span>
     </Link>
   );
 }
@@ -220,10 +228,12 @@ export default function WorkGrid() {
     >
       <div ref={proxyRef} className="pointer-events-none absolute h-px w-px opacity-0" />
 
-      {Array.from({ length: copies.x }).map((_, copyX) =>
-        COLUMNS.map((tiles, col) =>
-          Array.from({ length: copies.y }).map((_, copyY) =>
-            tiles.map((tile, i) => (
+      {Array.from({ length: copies.x }).map((_, xi) => {
+        const copyX = xi - 1;
+        return COLUMNS.map((tiles, col) =>
+          Array.from({ length: copies.y }).map((_, yi) => {
+            const copyY = yi - 1;
+            return tiles.map((tile, i) => (
               <MosaicTile
                 key={`${copyX}-${col}-${copyY}-${i}`}
                 tile={tile}
@@ -233,10 +243,10 @@ export default function WorkGrid() {
                 width={tileUnit - GAP}
                 height={tile.rowSpan * tileUnit - GAP}
               />
-            )),
-          ),
-        ),
-      )}
+            ));
+          }),
+        );
+      })}
 
       <CursorLabel innerRef={cursorLabelRef} />
     </section>
