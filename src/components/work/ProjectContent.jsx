@@ -20,7 +20,7 @@ function TextBlock({ label, text, blockRef }) {
       {paragraphs.map((paragraph, i) => (
         <p
           key={i}
-          className="font-poppins text-[clamp(14px,1.1111vw,16px)] leading-[1.5] text-white/70"
+          className="font-poppins text-[clamp(14px,1.1111vw,16px)] leading-normal text-white/70"
         >
           {paragraph}
         </p>
