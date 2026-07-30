@@ -14,6 +14,12 @@ export default function Loader() {
   const overlayRef = useRef(null);
   const [gifKey, setGifKey] = useState(0);
   const lenis = useLenis();
+  // Lenis resolves from undefined to the real instance shortly after mount,
+  // which would otherwise re-trigger this effect (restarting the timeline
+  // and remounting the gif) a second time on every route change. Reading it
+  // through a ref keeps the effect reacting only to actual pathname changes.
+  const lenisRef = useRef(lenis);
+  lenisRef.current = lenis;
 
   useLayoutEffect(() => {
     const overlay = overlayRef.current;
@@ -23,11 +29,11 @@ export default function Loader() {
 
     // Lenis drives scroll itself (wheel/touch on the window), so locking
     // body overflow alone doesn't stop it — the instance must be paused too.
-    lenis?.stop();
+    lenisRef.current?.stop();
     const { overflow } = document.body.style;
     document.body.style.overflow = "hidden";
     const unlockScroll = () => {
-      lenis?.start();
+      lenisRef.current?.start();
       document.body.style.overflow = overflow;
     };
 
@@ -47,7 +53,7 @@ export default function Loader() {
       tl.kill();
       unlockScroll();
     };
-  }, [pathname, total, exit, hold, lenis]);
+  }, [pathname, total, exit, hold]);
 
   return (
     <div
@@ -57,7 +63,7 @@ export default function Loader() {
     >
       <Image
         key={gifKey}
-        src={`/loader/preloader.gif?r=${gifKey}`}
+        src="/loader/preloader.gif"
         alt=""
         width={480}
         height={270}
