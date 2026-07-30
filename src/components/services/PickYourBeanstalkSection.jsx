@@ -145,10 +145,10 @@ export default function PickYourBeanstalkSection() {
       />
 
       <div className="relative mx-auto h-auto max-w-11/12 px-8 sm:px-12 lg:px-16 md:mx-auto md:h-full md:max-w-360 md:px-0">
-      <div className="flex justify-center">
+      <div className="flex md:justify-center">
         <h2
           ref={headingRef}
-          className="text-center font-anton-sc text-[clamp(40px,10.9722vw,158px)] leading-[1.4] uppercase text-white md:absolute md:top-0 md:left-[5%] md:w-[91.1111%] md:whitespace-nowrap md:leading-[0.886]"
+          className="text-left font-anton-sc text-[clamp(40px,10.9722vw,158px)] leading-[1.4] uppercase text-white md:absolute md:top-0 md:left-[5%] md:w-[91.1111%] md:whitespace-nowrap md:leading-[0.886]"
         >
           <TypewriterChars text={HEADING_TEXT} />
         </h2>

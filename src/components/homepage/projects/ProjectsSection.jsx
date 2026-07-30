@@ -41,7 +41,7 @@ const DESCRIPTION_TEXT =
 // Splits on words, keeping spaces as real text nodes between word-spans
 // (rather than wrapping the space itself in a span, which would collapse to
 // zero width), and wraps each character in an individually animatable span —
-// the char-level building block shared by Hero/Problem/Beanstalk's type-on
+// the char-level building block shared by Hero/Problem/Beanstalk's sprout-in
 // treatments.
 function SproutChars({ text, charClassName = "sprout-char" }) {
   const words = text.split(" ");
@@ -118,16 +118,14 @@ export default function ProjectsSection() {
   // One-time entrance, gated behind ScrollTrigger: "Selected Projects" is
   // coupled to its first character exactly like Hero's "This is a movement"
   // bullet line (everything starts stacked on the anchor, then pulls apart
-  // outward), the heading types on line by line the same way as Hero's
-  // display headings, and the description types on character by character.
-  // Each project row then pops in on its own ScrollTrigger as the user
-  // scrolls it into view, rising out of the section's black background.
+  // outward), the heading sprouts in line by line the same way as Hero's
+  // display headings, and the description pops up as a block right after it,
+  // the same treatment used by each project row below. Each row then pops in
+  // on its own ScrollTrigger as the user scrolls it into view, rising out of
+  // the section's black background.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".sprout-char"),
-    ];
-    const descriptionChars = [
-      ...descriptionRef.current.querySelectorAll(".typewriter-char"),
     ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
 
@@ -137,7 +135,7 @@ export default function ProjectsSection() {
         yPercent: 60,
         filter: "blur(6px)",
       });
-      gsap.set(descriptionChars, { opacity: 0 });
+      gsap.set(descriptionRef.current, { opacity: 0, y: 40, scale: 0.92 });
 
       const anchorEl = bulletChars[0];
       const bulletEls = [bulletRef.current, ...bulletChars];
@@ -176,12 +174,13 @@ export default function ProjectsSection() {
           "-=0.15",
         )
         .to(
-          descriptionChars,
+          descriptionRef.current,
           {
             opacity: 1,
-            duration: 0.01,
-            stagger: 0.012,
-            ease: "none",
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            ease: "back.out(1.6)",
           },
           "-=0.2",
         );
@@ -263,7 +262,7 @@ export default function ProjectsSection() {
             ref={descriptionRef}
             className="font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[1.05] text-[#b7b7b7] lg:max-w-[clamp(300px,29.2361vw,421px)]"
           >
-            <SproutChars text={DESCRIPTION_TEXT} charClassName="typewriter-char" />
+            {DESCRIPTION_TEXT}
           </p>
         </div>
 

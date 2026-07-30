@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -224,14 +225,16 @@ function PricingCard({ tier, cardRef }) {
           ))}
         </ul>
 
-        <button
-          type="button"
-          className={`mt-3 w-full rounded-lg py-[clamp(8px,0.7546vw,11px)] font-poppins text-[clamp(19px,0.138vw,20px)] font-semibold uppercase cursor-pointer ${
-            highlight ? "bg-black text-[#AC40FF]" : "bg-[#AC40FF] text-black"
+        <Link
+          href="/contact"
+          className={`mt-3 flex w-full items-center justify-center rounded-lg py-[clamp(8px,0.7546vw,11px)] text-center font-poppins text-[clamp(19px,0.138vw,20px)] font-semibold uppercase transition-colors duration-300 ${
+            highlight
+              ? "bg-black text-[#AC40FF] hover:bg-white hover:text-black"
+              : "bg-[#AC40FF] text-black hover:bg-black hover:text-[#AC40FF]"
           }`}
         >
           {tier.cta}
-        </button>
+        </Link>
       </div>
     </div>
   );

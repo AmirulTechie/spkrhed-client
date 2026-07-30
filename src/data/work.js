@@ -3,50 +3,50 @@ export const WORK_PROJECTS = [
     "slug": "bqs",
     "title": "BQS Financial Advisors",
     "category": "Brand Identity & Web Design",
-    "thumbnail": "/images/work/bqs/img-1.png",
+    "thumbnail": "/images/work/bqs/img-1.jpg",
     "summary": "BQS Financial Advisors partnered with Speakerhead to establish a compelling corporate identity and digital presence. We crafted a cohesive brand identity that reflected BQS's professionalism and trustworthiness, and we brought their vision to life through a sleek and intuitive website. From logo creation to website launch, we delivered a polished foundation for their financial services brand.",
-    "images": ["/images/work/bqs/img-1.png"],
+    "images": ["/images/work/bqs/img-1.jpg"],
     "videoUrl": null,
     "sections": [
       {
         "title": "Summary",
         "text": "BQS Financial Advisors partnered with Speakerhead to establish a compelling corporate identity and digital presence. We crafted a cohesive brand identity that reflected BQS's professionalism and trustworthiness, and we brought their vision to life through a sleek and intuitive website. From logo creation to website launch, we delivered a polished foundation for their financial services brand.",
-        "images": ["/images/work/bqs/img-2.png", "/images/work/bqs/img-3.png"]
+        "images": ["/images/work/bqs/img-2.jpg", "/images/work/bqs/img-3.jpg"]
       },
       {
         "title": "Approach",
         "text": "Speakerhead focused on building BQS's brand from the ground up, ensuring their identity exuded credibility and modern sophistication. We meticulously developed their corporate identity, aligning visual elements with their mission, and seamlessly translated it into a professional online presence.",
         "images": [
-          "/images/work/bqs/img-8.png",
-          "/images/work/bqs/img-9.png",
-          "/images/work/bqs/img-10.png",
-          "/images/work/bqs/img-11.png",
-          "/images/work/bqs/img-12.png",
-          "/images/work/bqs/img-13.png",
-          "/images/work/bqs/img-14.png",
-          "/images/work/bqs/img-15.png",
-          "/images/work/bqs/img-16.png"
+          "/images/work/bqs/img-8.jpg",
+          "/images/work/bqs/img-9.jpg",
+          "/images/work/bqs/img-10.jpg",
+          "/images/work/bqs/img-11.jpg",
+          "/images/work/bqs/img-12.jpg",
+          "/images/work/bqs/img-13.jpg",
+          "/images/work/bqs/img-14.jpg",
+          "/images/work/bqs/img-15.jpg",
+          "/images/work/bqs/img-16.jpg"
         ]
       },
       {
         "title": "Corporate Identity",
         "text": "Our team designed a standout logo that encapsulated BQS Financial Advisors' core values: trust, expertise, and innovation. We established detailed brand guidelines to maintain consistency across all touchpoints and created professional stationery, including business cards and letterheads, reinforcing their corporate image.",
-        "images": ["/images/work/bqs/img-4.png"]
+        "images": ["/images/work/bqs/img-4.jpg"]
       },
       {
         "title": "Website Design & Development",
         "text": "We built a fully functional website that serves as a cornerstone of BQS's online presence. The home page and initial pages were designed to be intuitive and visually aligned with the brand identity. Using HTML, CSS, and modern design principles, we ensured the website not only looked stunning but also functioned seamlessly, offering an engaging user experience.",
-        "images": ["/images/work/bqs/img-5.png"]
+        "images": ["/images/work/bqs/img-5.jpg"]
       },
       {
         "title": "Branding",
         "text": "Speakerhead's branding strategy was rooted in sophistication and clarity. Through close collaboration with BQS, we developed a visual language that resonated with their target audience. Clean design, a refined color palette, and thoughtfully crafted elements ensured the brand reflected the values and expertise of the firm.",
-        "images": ["/images/work/bqs/img-6.png"]
+        "images": ["/images/work/bqs/img-6.jpg"]
       },
       {
         "title": "Outcome",
         "text": "Speakerhead's work empowered BQS Financial Advisors with a cohesive brand identity and a polished online presence. The project was delivered within the agreed timeline, providing BQS with a professional foundation that will serve their growth for years to come.",
-        "images": ["/images/work/bqs/img-7.png"]
+        "images": ["/images/work/bqs/img-7.jpg"]
       }
     ]
   },
@@ -54,40 +54,40 @@ export const WORK_PROJECTS = [
     "slug": "breez",
     "title": "Breez",
     "category": "Branding & Marketing",
-    "thumbnail": "/images/work/breez/img-1.jpeg",
+    "thumbnail": "/images/work/breez/img-1.jpg",
     "summary": "Automated Banner Systems turned to Speakerhead for a modern, immersive digital transformation. We revitalized their online presence with a cutting-edge website featuring 3D renders and animations, designed impactful marketing assets, executed tradeshow marketing, and launched targeted email campaigns that multiplied interest in their niche market.",
-    "images": ["/images/work/breez/img-1.jpeg"],
+    "images": ["/images/work/breez/img-1.jpg"],
     "videoUrl": null,
     "sections": [
       {
         "title": "Summary",
         "text": "Automated Banner Systems turned to Speakerhead for a modern, immersive digital transformation. We revitalized their online presence with a cutting-edge website featuring 3D renders and animations, designed impactful marketing assets, executed tradeshow marketing, and launched targeted email campaigns that multiplied interest in their niche market.",
-        "images": ["/images/work/breez/img-2.jpeg"]
+        "images": ["/images/work/breez/img-2.jpg"]
       },
       {
         "title": "Approach",
         "text": "Speakerhead focused on crafting a sleek, dynamic brand presentation that aligned with Breez's innovative product offering. From a visually stunning website redesign to tradeshow materials and strategic email outreach, we ensured every touchpoint reflected the sophistication and ingenuity of their automated systems.",
-        "images": ["/images/work/breez/img-3.jpeg"]
+        "images": ["/images/work/breez/img-3.jpg"]
       },
       {
         "title": "Website Redesign",
         "text": "We reinvented Breez's website into a visually captivating and interactive experience. By integrating 3D renders and animations, we showcased their automated systems in motion, providing a compelling, immersive view of their functionality. The new design emphasized clarity, innovation, and user engagement, delivering an intuitive and visually rich digital experience.",
-        "images": ["/images/work/breez/img-4.jpeg"]
+        "images": ["/images/work/breez/img-4.jpg"]
       },
       {
         "title": "Marketing Collateral",
         "text": "Our team created polished marketing assets, including brochures and tradeshow flyers, that effectively communicated Breez's value proposition. Each piece was meticulously designed to highlight the unique features and benefits of their automated banner systems, helping the brand stand out in a competitive market.",
-        "images": ["/images/work/breez/img-5.jpeg"]
+        "images": ["/images/work/breez/img-5.jpg"]
       },
       {
         "title": "Email Marketing",
         "text": "To boost engagement, we developed and executed targeted email marketing campaigns that captured the interest of Breez's niche market. With compelling visuals and persuasive copy, these campaigns drove increased brand awareness and generated a surge in inquiries, multiplying interest within their target audience.",
-        "images": ["/images/work/breez/img-6.jpeg"]
+        "images": ["/images/work/breez/img-6.jpg"]
       },
       {
         "title": "Tradeshow Marketing",
         "text": "To support Breez's presence at industry events, we designed an eye-catching tradeshow booth and accompanying flyers that captured attention and effectively conveyed their offerings. The cohesive design reinforced brand recognition and left a lasting impression on attendees.",
-        "images": ["/images/work/breez/img-7.jpeg"]
+        "images": ["/images/work/breez/img-7.jpg"]
       },
       {
         "title": "Outcome",
@@ -100,55 +100,55 @@ export const WORK_PROJECTS = [
     "slug": "concord-medical",
     "title": "Concord Medical Corporation",
     "category": "Healthcare Branding",
-    "thumbnail": "/images/work/concord-medical/img-1.png",
+    "thumbnail": "/images/work/concord-medical/img-1.jpg",
     "summary": "Concord Medical Corporation partnered with Speakerhead to establish a refined and professional brand identity. From logo creation to a dynamic website design, we provided a cohesive branding package, complemented by business essentials and a compelling pitch deck, positioning Concord as a trusted leader in the medical field. Our work supported their fundraising efforts by enhancing their outreach and communication tools.",
-    "images": ["/images/work/concord-medical/img-1.png"],
+    "images": ["/images/work/concord-medical/img-1.jpg"],
     "videoUrl": null,
     "sections": [
       {
         "title": "Summary",
         "text": "Concord Medical Corporation partnered with Speakerhead to establish a refined and professional brand identity. From logo creation to a dynamic website design, we provided a cohesive branding package, complemented by business essentials and a compelling pitch deck, positioning Concord as a trusted leader in the medical field. Our work supported their fundraising efforts by enhancing their outreach and communication tools.",
-        "images": ["/images/work/concord-medical/img-2.png", "/images/work/concord-medical/img-3.png"]
+        "images": ["/images/work/concord-medical/img-2.jpg", "/images/work/concord-medical/img-3.jpg"]
       },
       {
         "title": "Approach",
         "text": "Speakerhead's goal was to craft a polished and versatile brand for Concord Medical Corporation that would resonate with their audience and reflect their commitment to excellence. Through thoughtful design and strategic storytelling, we created a visual and digital identity that communicated their mission and vision while equipping them with resources to engage effectively with stakeholders.",
-        "images": ["/images/work/concord-medical/img-4.png", "/images/work/concord-medical/img-5.png"]
+        "images": ["/images/work/concord-medical/img-4.jpg", "/images/work/concord-medical/img-5.jpg"]
       },
       {
         "title": "Logo & Branding",
         "text": "We developed a modern, sophisticated logo that captured the essence of Concord Medical Corporation. Alongside the logo, we designed a comprehensive branding package, including a harmonious color palette and typography, ensuring consistency across all touchpoints.",
-        "images": ["/images/work/concord-medical/img-6.png", "/images/work/concord-medical/img-7.png"]
+        "images": ["/images/work/concord-medical/img-6.jpg", "/images/work/concord-medical/img-7.jpg"]
       },
       {
         "title": "Business Essentials",
         "text": "To reinforce their professional image, we created high-quality business cards, letterheads, and other essential stationery. These materials were designed to reflect Concord's brand identity, ensuring a strong first impression with clients and partners alike.",
-        "images": ["/images/work/concord-medical/img-8.png"]
+        "images": ["/images/work/concord-medical/img-8.jpg"]
       },
       {
         "title": "Investors Deck",
         "text": "Speakerhead crafted a visually engaging and persuasive pitch deck for Concord Medical. Combining impactful visuals with clear messaging, the presentation highlighted their expertise, services, and goals. It served as an effective tool for investor and client outreach, contributing to their fundraising success by capturing attention and building confidence.",
         "images": [
-          "/images/work/concord-medical/img-9.png",
-          "/images/work/concord-medical/img-10.png",
-          "/images/work/concord-medical/img-11.png",
-          "/images/work/concord-medical/img-12.png",
-          "/images/work/concord-medical/img-13.png",
-          "/images/work/concord-medical/img-14.png",
-          "/images/work/concord-medical/img-15.png",
-          "/images/work/concord-medical/img-16.png",
-          "/images/work/concord-medical/img-17.png"
+          "/images/work/concord-medical/img-9.jpg",
+          "/images/work/concord-medical/img-10.jpg",
+          "/images/work/concord-medical/img-11.jpg",
+          "/images/work/concord-medical/img-12.jpg",
+          "/images/work/concord-medical/img-13.jpg",
+          "/images/work/concord-medical/img-14.jpg",
+          "/images/work/concord-medical/img-15.jpg",
+          "/images/work/concord-medical/img-16.jpg",
+          "/images/work/concord-medical/img-17.jpg"
         ]
       },
       {
         "title": "Website Design",
         "text": "We designed a sleek and user-friendly website that aligned with Concord's branding. The site was thoughtfully structured to communicate their expertise while offering intuitive navigation and a professional aesthetic that underscored their credibility in the medical sector.",
-        "images": ["/images/work/concord-medical/img-18.png"]
+        "images": ["/images/work/concord-medical/img-18.jpg"]
       },
       {
         "title": "Outcome",
         "text": "Speakerhead's holistic branding and design solutions equipped Concord Medical Corporation with a strong visual and digital foundation. From business essentials to a compelling online presence, our work established Concord as a standout player in the medical industry while also playing a role in advancing their fundraising efforts.",
-        "images": ["/images/work/concord-medical/img-19.png"]
+        "images": ["/images/work/concord-medical/img-19.jpg"]
       }
     ]
   },

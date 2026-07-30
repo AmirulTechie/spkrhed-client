@@ -61,7 +61,7 @@ export default function AboutHero() {
   }, []);
 
   return (
-    <section className="relative flex h-screen w-full items-end overflow-hidden bg-black">
+    <section className="relative flex min-h-dvh w-full items-end overflow-hidden bg-black lg:h-screen">
       <Image
         src="/images/about/about-hero.png"
         alt=""

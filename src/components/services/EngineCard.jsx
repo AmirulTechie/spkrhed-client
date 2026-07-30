@@ -45,21 +45,32 @@ export default function EngineCard({
   };
 
   return (
-    <div
-      ref={cardRef}
-      className={`absolute rounded-[clamp(18px,2.1875vw,32px)] backdrop-blur-[5.5px] ${className}`}
-      style={{ ...maskStyle, ...style }}
-    >
-      <Image
-        src={card.shape}
-        alt=""
+    <div ref={cardRef} className={`absolute ${className}`} style={style}>
+      {/*
+        The mask lives on this decorative-only layer, never on the text
+        below. The mask's SVG notch (top-right corner, cut via alpha) turns
+        anything under it fully transparent past the shape's silhouette —
+        fine for a background image, but it silently disappears real text
+        that strays into that region (e.g. the eyebrow on narrow mobile
+        widths, where the notch's cut-through zone starts as low as ~42%
+        of the card's width). Keeping content outside the mask means a
+        rendering surprise shows up as visible overflow, not invisible text.
+      */}
+      <div
         aria-hidden
-        fill
-        unoptimized
-        sizes="(min-width: 1024px) 83vw, 90vw"
-        className={`pointer-events-none rounded-[clamp(18px,2.1875vw,32px)] select-none ${isBack ? "opacity-20" : "opacity-50"}`}
-        style={{ objectFit: "fill" }}
-      />
+        className="absolute inset-0 rounded-[clamp(18px,2.1875vw,32px)] backdrop-blur-[5.5px]"
+        style={maskStyle}
+      >
+        <Image
+          src={card.shape}
+          alt=""
+          fill
+          unoptimized
+          sizes="(min-width: 1024px) 83vw, 90vw"
+          className={`pointer-events-none rounded-[clamp(18px,2.1875vw,32px)] select-none ${isBack ? "opacity-20" : "opacity-50"}`}
+          style={{ objectFit: "fill" }}
+        />
+      </div>
 
       <div
         className={`relative flex h-full flex-col p-[clamp(26px,3.6111vw,52px)] ${isBack ? "opacity-35" : ""}`}

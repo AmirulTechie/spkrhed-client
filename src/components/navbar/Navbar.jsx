@@ -164,7 +164,7 @@ function LongArrowIcon({ className = "" }) {
 function PlantYourSeedButton({ onClick, className = "" }) {
   return (
     <MotionLink
-      href="#contact"
+      href="/contact"
       onClick={onClick}
       initial="rest"
       animate="rest"

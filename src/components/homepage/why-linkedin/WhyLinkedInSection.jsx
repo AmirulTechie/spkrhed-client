@@ -115,7 +115,11 @@ export default function WhyLinkedInSection() {
         .to(
           glowRef.current,
           { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-          "-=0.4"
+          // Anchored to the *start* of the paragraph tween (not its end) so
+          // the 01 badge rises in alongside the paragraphs instead of
+          // trailing behind their ~26-word stagger, which used to leave it
+          // appearing noticeably later than everything else.
+          "<+=0.1"
         );
     }, sectionRef);
 
@@ -203,7 +207,7 @@ export default function WhyLinkedInSection() {
           <RevealWord>waiting.</RevealWord>
         </h2>
 
-        <div className="mt-25 grid grid-cols-1 items-center sm:grid-cols-[1fr_auto_1fr]">
+        <div className="mt-25 grid grid-cols-1 items-center gap-y-[clamp(32px,8vw,64px)] sm:grid-cols-[1fr_auto_1fr] sm:gap-y-0">
           <p
             ref={leftParaRef}
             className="font-anton-sc max-w-59.75 mx-auto text-center text-[clamp(22px,2.7778vw,40px)] uppercase leading-[100%] text-white sm:ml-auto sm:mr-[clamp(24px,11.1111vw,160px)] sm:text-left"

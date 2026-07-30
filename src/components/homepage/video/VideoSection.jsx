@@ -79,87 +79,74 @@ export default function VideoSection() {
       el: branchRefs.current[i],
     })).filter((b) => b.el);
 
-    let ctx;
+    // Centering transforms apply at every breakpoint — they're layout, not
+    // animation, so they stay in effect even where the scroll-driven
+    // pin/scrub below is disabled.
+    gsap.set(cloud, { xPercent: -50, y: 0 });
+    gsap.set(video, { xPercent: -50, yPercent: -50 });
 
-    const build = () => {
-      ctx = gsap.context(() => {
-        // These transform components stay put for the whole animation —
-        // gsap tracks them independently of the x/y/scale tweens below.
-        gsap.set(cloud, { xPercent: -50 });
-        gsap.set(video, { xPercent: -50, yPercent: -50 });
+    // The branch/video pin-and-scrub animation, and the branches
+    // themselves, are desktop-only (see the `hidden lg:block` on the
+    // branch images below). gsap.matchMedia builds this block only when
+    // the query matches and automatically reverts it — killing the
+    // ScrollTrigger/pin and resetting tweened props — when the viewport
+    // drops below `lg`, so mobile/tablet gets a plain static video with
+    // no scroll hijacking.
+    const mm = gsap.matchMedia();
 
-        // Rest state: branches sit exactly where their CSS puts them
-        // (matches Figma), cloud stays put.
-        branchEls.forEach(({ el }) => gsap.set(el, { x: 0, y: 0 }));
-        gsap.set(cloud, { y: 0 });
+    mm.add("(min-width: 1024px)", () => {
+      // Rest state: branches sit exactly where their CSS puts them
+      // (matches Figma).
+      branchEls.forEach(({ el }) => gsap.set(el, { x: 0, y: 0 }));
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: stage,
-            start: "top top",
-            end: () => "+=" + window.innerHeight,
-            scrub: 0.6,
-            pin: true,
-          },
-        });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: stage,
+          start: "top top",
+          end: () => "+=" + window.innerHeight,
+          scrub: 0.6,
+          pin: true,
+        },
+      });
 
-        // Each side's branches exit toward their nearest border as one
-        // rigid group. Only the group's innermost edge (the one nearest
-        // the video, i.e. the last part of the group still in frame) is
-        // measured; the whole group is translated by the same delta until
-        // that edge sits flush with the stage border. Neighboring branches
-        // within a group never move relative to each other.
-        const stageRect = stage.getBoundingClientRect();
-        const leftEls = branchEls.filter((b) => b.side === "left").map((b) => b.el);
-        const rightEls = branchEls.filter((b) => b.side === "right").map((b) => b.el);
+      // Each side's branches exit toward their nearest border as one
+      // rigid group. Only the group's innermost edge (the one nearest
+      // the video, i.e. the last part of the group still in frame) is
+      // measured; the whole group is translated by the same delta until
+      // that edge sits flush with the stage border. Neighboring branches
+      // within a group never move relative to each other.
+      const stageRect = stage.getBoundingClientRect();
+      const leftEls = branchEls.filter((b) => b.side === "left").map((b) => b.el);
+      const rightEls = branchEls.filter((b) => b.side === "right").map((b) => b.el);
 
-        if (leftEls.length) {
-          const innerEdge = Math.max(...leftEls.map((el) => el.getBoundingClientRect().right));
-          const delta = stageRect.left - innerEdge;
-          leftEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
-        }
+      if (leftEls.length) {
+        const innerEdge = Math.max(...leftEls.map((el) => el.getBoundingClientRect().right));
+        const delta = stageRect.left - innerEdge;
+        leftEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
+      }
 
-        if (rightEls.length) {
-          const innerEdge = Math.min(...rightEls.map((el) => el.getBoundingClientRect().left));
-          const delta = stageRect.right - innerEdge;
-          rightEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
-        }
+      if (rightEls.length) {
+        const innerEdge = Math.min(...rightEls.map((el) => el.getBoundingClientRect().left));
+        const delta = stageRect.right - innerEdge;
+        rightEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
+      }
 
-        // Scale the video up to fill the stage minus a small breathing
-        // margin, capped by whichever dimension (width or height) is
-        // tighter so it never overflows the stage.
-        const videoRect = video.getBoundingClientRect();
-        const marginX = stageRect.width * VIDEO_FINAL_MARGIN_RATIO;
-        const marginY = stageRect.height * VIDEO_FINAL_MARGIN_RATIO;
-        const targetScale = Math.min(
-          (stageRect.width - marginX * 2) / videoRect.width,
-          (stageRect.height - marginY * 2) / videoRect.height
-        );
+      // Scale the video up to fill the stage minus a small breathing
+      // margin, capped by whichever dimension (width or height) is
+      // tighter so it never overflows the stage.
+      const videoRect = video.getBoundingClientRect();
+      const marginX = stageRect.width * VIDEO_FINAL_MARGIN_RATIO;
+      const marginY = stageRect.height * VIDEO_FINAL_MARGIN_RATIO;
+      const targetScale = Math.min(
+        (stageRect.width - marginX * 2) / videoRect.width,
+        (stageRect.height - marginY * 2) / videoRect.height
+      );
 
-        gsap.set(video, { scale: 0.4 });
-        tl.to(video, { scale: targetScale, ease: "none" }, 0);
-      }, stage);
-    };
+      gsap.set(video, { scale: 0.4 });
+      tl.to(video, { scale: targetScale, ease: "none" }, 0);
+    });
 
-    build();
-
-    // Rebuild from scratch on resize so the exit offsets, target scale,
-    // and pin distance stay correct across breakpoints.
-    let resizeTimeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        ctx.revert();
-        build();
-      }, 200);
-    };
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      clearTimeout(resizeTimeout);
-      ctx.revert();
-    };
+    return () => mm.revert();
   }, []);
 
   return (
@@ -178,7 +165,7 @@ export default function VideoSection() {
             alt=""
             width={branch.width}
             height={branch.height}
-            className={`pointer-events-none absolute max-w-none select-none z-0 will-change-transform lg:z-30 ${branch.position}`}
+            className={`pointer-events-none absolute hidden max-w-none select-none z-0 will-change-transform lg:z-30 lg:block ${branch.position}`}
           />
         ))}
 

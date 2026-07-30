@@ -78,16 +78,16 @@ const CARDS = {
 // the container the cards fill edge to edge).
 const SWAP_X_PERCENT = 77.33;
 
-// Mobile shows one card at a time inside a fixed-height box (the mask that
-// gives the card its notched shape only covers that box — content past its
-// bottom edge isn't just visually spilling, it's masked to fully
-// transparent, i.e. silently clipped). Foundation has three feature blocks
-// to Amplify's two, so it needs a taller floor; these mins are the measured
-// natural content height of each card plus a small buffer, not a guess.
-const MOBILE_CARD_HEIGHT = {
-  foundation: "clamp(500px,88.5417vw,513px)",
-  amplify: "clamp(370px,88.5417vw,441px)",
-};
+// Mobile shows one card at a time inside a fixed-height box. Foundation has
+// three feature blocks to Amplify's two, so it needs a taller floor to fit
+// its content without overflow; this is that measured natural content
+// height plus a small buffer, not a guess. Both cards share this one height
+// (rather than each getting its own, shorter value) so swapping between
+// them never changes the section's total height — Amplify just sits with
+// extra breathing room above its bottom-pinned columns instead of shrinking
+// the box, which would otherwise yank everything below the section up/down
+// on every swipe.
+const MOBILE_CARD_HEIGHT = "clamp(500px,88.5417vw,513px)";
 
 export default function FoundationAmplifySection() {
   const [frontId, setFrontId] = useState("foundation");
@@ -213,78 +213,58 @@ export default function FoundationAmplifySection() {
         the same centered box capped at Figma's 1440px design width, so
         percentages never drift out of sync between the two.
       */}
-      <div className="mx-auto h-full w-full max-w-360">
-    <Image
-      src="/images/big-branch.png"
-      alt=""
-      width={1092}
-      height={1108}
-      className="absolute top-0 object-cover select-none"
-      style={{
-        left: "12.0833%",
-        width: "75.8333%",
-        height: "clamp(550px,76.9444vw,1108px)",
-      }}
-    />
+      <div
+        className="mx-auto h-full w-full max-w-360"
+        style={{ "--branch-h": "clamp(550px,76.9444vw,1108px)" }}
+      >
+        <Image
+          src="/images/big-branch.png"
+          alt=""
+          width={1092}
+          height={1108}
+          className="absolute top-0 object-cover select-none"
+          style={{
+            left: "12.0833%",
+            width: "75.8333%",
+            height: "var(--branch-h)",
+          }}
+        />
 
-
-<div className="pointer-events-none absolute inset-0 hidden lg:block">
-  {/* Top fade — now full viewport width, no cap */}
-  <div
-    aria-hidden
-    className="absolute z-10"
-    style={{
-      left: 0,
-      width: "100%",
-      top: 0,
-      height: "clamp(260px,42.5vw,612px)",
-      background: `linear-gradient(to bottom,
-        #0f0f0f 0%,
-        rgba(15,15,15,0.95) 20%,
-        rgba(15,15,15,0.75) 40%,
-        rgba(15,15,15,0.45) 60%,
-        rgba(15,15,15,0.2) 80%,
-        rgba(15,15,15,0) 100%
-      )`,
-    }}
-  />
-
-  {/* Keep the vine image + capped fades inside the original wrapper */}
-  <div className="mx-auto h-full w-full max-w-360">
-    <Image
-      src="/images/big-branch.png"
-      alt=""
-      width={1092}
-      height={1108}
-      className="absolute top-0 object-cover select-none"
-      style={{
-        left: "12.0833%",
-        width: "75.8333%",
-        height: "clamp(550px,76.9444vw,1108px)",
-      }}
-    />
-
-    {/* bottom fade stays here, unchanged */}
-    <div
-      aria-hidden
-      className="absolute z-10 bg-linear-to-b from-transparent to-black"
-      style={{
-        left: "7.8472%",
-        width: "100%",
-        top: "clamp(340px,55.1389vw,794px)",
-        height: "clamp(135px,21.8056vw,314px)",
-      }}
-    />
-  </div>
-</div>
+        {/*
+          Both fades are expressed as a fraction of --branch-h (the same
+          clamp() driving the image itself), so they scale together at
+          every viewport — including once the image hits its 550px floor
+          on mobile. Independent clamp()s with their own floors used to
+          drift apart from the image's floor and leave a hard-cropped
+          strip uncovered; this keeps top/bottom coverage locked to the
+          image's actual rendered height on every device.
+        */}
         <div
           aria-hidden
-          className="absolute z-10 bg-linear-to-b from-transparent to-black"
+          className="pointer-events-none absolute z-10"
+          style={{
+            left: 0,
+            width: "100%",
+            top: 0,
+            height: "calc(var(--branch-h) * 0.552527)",
+            background: `linear-gradient(to bottom,
+              #0f0f0f 0%,
+              rgba(15,15,15,0.95) 20%,
+              rgba(15,15,15,0.75) 40%,
+              rgba(15,15,15,0.45) 60%,
+              rgba(15,15,15,0.2) 80%,
+              rgba(15,15,15,0) 100%
+            )`,
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute z-10 bg-linear-to-b from-transparent to-black"
           style={{
             left: "7.8472%",
             width: "100%",
-            top: "clamp(340px,55.1389vw,794px)",
-            height: "clamp(135px,21.8056vw,314px)",
+            top: "calc(var(--branch-h) * 0.716606)",
+            height: "calc(var(--branch-h) * 0.283394)",
           }}
         />
       </div>
@@ -366,11 +346,8 @@ export default function FoundationAmplifySection() {
         swap timeline above — only the visual treatment differs (a content
         pop instead of a spatial slide).
       */}
-      <div className="relative mx-auto w-full max-w-137 px-6 lg:hidden">
-        <div
-          className="relative"
-          style={{ height: MOBILE_CARD_HEIGHT[frontId] }}
-        >
+      <div className="relative mx-auto w-full max-w-137 px-6 pb-19 lg:hidden">
+        <div className="relative" style={{ height: MOBILE_CARD_HEIGHT }}>
           <EngineCard
             card={CARDS[frontId]}
             cardRef={mobileFrontRef}
@@ -379,6 +356,15 @@ export default function FoundationAmplifySection() {
             style={{ left: 0, top: 0, width: "100%", height: "100%" }}
           />
 
+          {/*
+            This button hangs 60px below the card box on purpose (the swipe
+            affordance pokes past the card edge by design). The section's
+            own bottom padding floors out at 48px on narrow viewports, which
+            used to be less than the button's overhang, so `overflow-hidden`
+            on the section clipped it. The pb-19 (76px) on this wrapper
+            (60px overhang + margin) reserves real flow space so the button
+            always has room, independent of the section's own padding.
+          */}
           <button
             type="button"
             onClick={handleAdvance}

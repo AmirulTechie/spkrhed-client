@@ -115,12 +115,24 @@ export default function TakeFirstStepSection() {
             sizes="(min-width: 500px) 40vw, 40vw"
             className="object-cover select-none"
           />
-          {/* Mobile/tablet-only fade for the vine's flat-cut top edge; desktop uses the precisely
-              positioned/rotated overlay below, matching the Figma design exactly. */}
+          {/* Mobile/tablet-only fades for the vine's flat-cut top and bottom edges,
+              sized as a percentage of this box (not the section) so they stay
+              locked to the vine regardless of viewport width — the box's own
+              height is capped independently of the section's content-driven
+              height, so a fade sized off the section would drift out of
+              proportion with the vine instead of staying pinned to its edges.
+              Desktop uses the precisely positioned/rotated overlays below,
+              matching the Figma design exactly. */}
           <div
             className="absolute inset-x-0 top-0 h-[40%] lg:hidden"
             style={{
               background: "linear-gradient(180deg, #000000 0%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-x-0 bottom-0 h-[40%] lg:hidden"
+            style={{
+              background: "linear-gradient(0deg, #000000 0%, rgba(0,0,0,0) 100%)",
             }}
           />
         </div>
@@ -137,7 +149,8 @@ export default function TakeFirstStepSection() {
       {/* The vine's fixed height (97.3611vw) runs well past the section's capped
           height, so its bottom gets a hard rectangular clip from the section's
           overflow-hidden right where the footer begins. This fades that cut edge
-          into the black background instead, mirroring the top overlay above. */}
+          into the black background instead, mirroring the top overlay above.
+          Desktop-only: mobile's fade lives inside the vine's own box above. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[18%] lg:block"

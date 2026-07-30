@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -52,8 +53,8 @@ export default function DiscoveryCallSection() {
   // reached: the duck glides in from the section's bottom-right corner into
   // its resting spot, the bird pack rises up from below the cloud, the
   // heading types on character by character, "You'll Never Get Back" pops
-  // up from below into place, and the description then types on last.
-  // Desktop and mobile markup are both always mounted (shown via responsive
+  // up from below into place, and the description then pops up the same way
+  // right after. Desktop and mobile markup are both always mounted (shown via responsive
   // classes, not conditional rendering), so every phase animates both
   // copies together — only the visible one is ever seen.
   useLayoutEffect(() => {
@@ -70,10 +71,10 @@ export default function DiscoveryCallSection() {
     const climbEls = [climbDesktopRef.current, climbMobileRef.current].filter(
       Boolean,
     );
-    const descriptionChars = [
-      ...descriptionDesktopRef.current.querySelectorAll(".typewriter-char"),
-      ...descriptionMobileRef.current.querySelectorAll(".typewriter-char"),
-    ];
+    const descriptionEls = [
+      descriptionDesktopRef.current,
+      descriptionMobileRef.current,
+    ].filter(Boolean);
 
     const ctx = gsap.context(() => {
       gsap.set(duckEls, { opacity: 0, x: 260, y: 220 });
@@ -85,7 +86,7 @@ export default function DiscoveryCallSection() {
         scale: 0.85,
         transformOrigin: "center bottom",
       });
-      gsap.set(descriptionChars, { opacity: 0 });
+      gsap.set(descriptionEls, { opacity: 0, y: 40, scale: 0.92 });
 
       // Starts later than the rest of the homepage's "top 70%" convention —
       // this timeline runs long enough (duck + birds + heading + climb +
@@ -128,8 +129,14 @@ export default function DiscoveryCallSection() {
           "-=0.12",
         )
         .to(
-          descriptionChars,
-          { opacity: 1, duration: 0.01, stagger: 0.006, ease: "none" },
+          descriptionEls,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            ease: "back.out(1.6)",
+          },
           "-=0.2",
         );
     }, sectionRef);
@@ -203,15 +210,15 @@ export default function DiscoveryCallSection() {
               ref={descriptionDesktopRef}
               className="mt-8 max-w-121.75 font-poppins text-[19px] font-semibold leading-[110%] text-black/70"
             >
-              <TypewriterChars text={DESCRIPTION_TEXT} />
+              {DESCRIPTION_TEXT}
             </p>
 
-            <button
-              type="button"
-              className="mt-38.25 w-96.75 cursor-pointer rounded-lg bg-[#ac40ff] py-3 font-poppins text-[24px] font-semibold uppercase leading-[1.1] text-[#101010]"
+            <Link
+              href="/contact"
+              className="mt-38.25 flex w-96.75 cursor-pointer items-center justify-center rounded-lg bg-[#ac40ff] py-3 font-poppins text-[24px] font-semibold uppercase leading-[1.1] text-[#101010]"
             >
               Book Your Discovery Call
-            </button>
+            </Link>
 
             <p className="mt-4.25 font-poppins text-[14px] font-medium text-black/70">
               30-minute call &nbsp;·&nbsp; No pressure &nbsp;·&nbsp; No pitch
@@ -269,15 +276,15 @@ export default function DiscoveryCallSection() {
           ref={descriptionMobileRef}
           className="mt-4 max-w-sm font-poppins text-[15px] font-semibold leading-snug text-black/70"
         >
-          <TypewriterChars text={DESCRIPTION_TEXT} />
+          {DESCRIPTION_TEXT}
         </p>
 
-        <button
-          type="button"
-          className="mt-8 w-full max-w-xs cursor-pointer rounded-lg bg-[#ac40ff] py-3 font-poppins text-base font-semibold uppercase leading-[1.1] text-[#101010]"
+        <Link
+          href="/contact"
+          className="mt-8 flex w-full max-w-xs cursor-pointer items-center justify-center rounded-lg bg-[#ac40ff] py-3 font-poppins text-base font-semibold uppercase leading-[1.1] text-[#101010]"
         >
           Book Your Discovery Call
-        </button>
+        </Link>
 
         <p className="mt-3 max-w-xs font-poppins text-xs font-medium leading-normal text-black/70">
           30-minute call &nbsp;·&nbsp; No pressure &nbsp;·&nbsp; No pitch deck

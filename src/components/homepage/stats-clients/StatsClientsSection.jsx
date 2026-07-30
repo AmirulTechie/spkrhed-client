@@ -202,9 +202,9 @@ export default function StatsClientsSection() {
           ref={clientsRevealRef}
           className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:items-center lg:grid-cols-[589fr_641fr]"
         >
-          <p className="font-poppins text-[clamp(40px,6.5vw,112px)] font-bold uppercase leading-[0.88] text-white">
-  Clients whose realities we&apos;ve changed
-</p>
+          <p className="font-poppins text-[clamp(28px,6.5vw,112px)] font-bold uppercase leading-[0.95] text-white">
+            Clients whose realities we&apos;ve changed
+          </p>
 
           <div className="grid grid-cols-2 justify-items-center gap-x-[clamp(24px,3.4722vw,80px)] gap-y-[clamp(32px,4.5139vw,104px)] sm:grid-cols-4">
             {LOGOS.map((logo) => (

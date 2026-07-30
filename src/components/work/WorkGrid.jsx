@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
@@ -15,6 +16,20 @@ const GAP = 12;
 const MIN_TILE_UNIT = 240;
 const MAX_TILE_UNIT = 420;
 const LERP = 0.12;
+const TAP_MAX_DISTANCE = 10;
+const TAP_MAX_DURATION = 500;
+
+// A plain click on a tile is unreliable here: allowNativeTouchScrolling:false
+// forces Draggable to preventDefault() the pointer stream so it can drive
+// the pan itself, and on touch, once a pointer interaction's default has
+// been prevented, the browser drops the synthetic "click" it would
+// otherwise dispatch afterward — before it ever reaches this Link. Firing
+// navigation from raw pointerdown/pointerup instead sidesteps that: those
+// fire regardless of preventDefault elsewhere, so a tap still counts as a
+// tap on touch, mouse, and touch-emulated devices alike.
+function isPlainPrimaryPointer(e) {
+  return e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+}
 
 // Mirrors a clamp(240px, 22vw, 420px) — kept as a plain JS function (rather
 // than a CSS custom property) because the wrap-around math below needs the
@@ -32,6 +47,13 @@ function MosaicTile({ tile, col, left, top, width, height }) {
       href={`/work/${project.slug}`}
       data-col={col}
       draggable={false}
+      onClick={(e) => {
+        // Navigation is driven by WorkGrid's pointerdown/pointerup tap
+        // detection instead (see note above isPlainPrimaryPointer) — but a
+        // modifier/middle click should still fall through to the browser's
+        // native handling (open in new tab, etc.).
+        if (isPlainPrimaryPointer(e)) e.preventDefault();
+      }}
       className="group absolute block select-none overflow-hidden rounded-[20px]"
       style={{ left, top, width, height }}
     >
@@ -67,7 +89,7 @@ function CursorLabel({ innerRef }) {
     <div
       ref={innerRef}
       aria-hidden
-      className="pointer-events-none absolute left-0 top-0 z-20 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white/90 px-5 py-2.5 font-poppins text-[11px] font-semibold uppercase tracking-widest text-black opacity-0 backdrop-blur-sm"
+      className="pointer-events-none absolute left-0 top-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white/90 px-5 py-2.5 font-poppins text-[11px] font-semibold uppercase tracking-widest text-black opacity-0 backdrop-blur-sm md:block"
     >
       Scroll or Click
     </div>
@@ -75,12 +97,44 @@ function CursorLabel({ innerRef }) {
 }
 
 export default function WorkGrid() {
+  const router = useRouter();
   const sectionRef = useRef(null);
   const proxyRef = useRef(null);
   const draggableRef = useRef(null);
   const cursorLabelRef = useRef(null);
+  const pressRef = useRef(null);
   const [tileUnit, setTileUnit] = useState(320);
   const [copies, setCopies] = useState({ x: 3, y: 3 });
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    function handlePointerDown(e) {
+      const link = isPlainPrimaryPointer(e) && e.target.closest("a[href]");
+      pressRef.current = link
+        ? { x: e.clientX, y: e.clientY, time: Date.now(), href: link.getAttribute("href") }
+        : null;
+    }
+
+    function handlePointerUp(e) {
+      const press = pressRef.current;
+      pressRef.current = null;
+      if (!press) return;
+
+      const distance = Math.hypot(e.clientX - press.x, e.clientY - press.y);
+      if (distance < TAP_MAX_DISTANCE && Date.now() - press.time < TAP_MAX_DURATION) {
+        router.push(press.href);
+      }
+    }
+
+    section.addEventListener("pointerdown", handlePointerDown);
+    section.addEventListener("pointerup", handlePointerUp);
+    return () => {
+      section.removeEventListener("pointerdown", handlePointerDown);
+      section.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [router]);
 
   useLayoutEffect(() => {
     function measure() {
@@ -173,6 +227,12 @@ export default function WorkGrid() {
       inertia: true,
       dragClickables: true,
       allowNativeTouchScrolling: false,
+      // Default minimumMovement (2px) is well within normal finger jitter on
+      // a touchscreen, so taps on a tile were almost always misclassified as
+      // drags — which suppresses the click and breaks navigation into the
+      // work detail page on mobile. A higher threshold still leaves plenty
+      // of room to distinguish a real pan gesture from a tap.
+      minimumMovement: 10,
       // The proxy's own x/y only ever move when it's actually dragged, so
       // after a wheel gesture has carried `current` somewhere else, the
       // proxy is left stale. Re-baseline it to `current` on every new press

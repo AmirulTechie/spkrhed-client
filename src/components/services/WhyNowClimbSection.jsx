@@ -111,7 +111,7 @@ const BODY_FONT = fluidFont(13, 10);
 // scanner extracts candidate classes from the raw source text — a
 // template-interpolated variant like `${SOME_VAR}:w-...` never appears in
 // the file as the real class string, so no CSS would be generated for it.
-const MOBILE_IMAGE_WIDTH = "w-[30%]";
+const MOBILE_IMAGE_WIDTH = "w-[55%]";
 const MOBILE_TEXT_WIDTH = "w-[78cqw]";
 
 const CARDS = [
@@ -192,8 +192,23 @@ const CARDS = [
 export default function WhyNowClimbSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasHovered, setHasHovered] = useState(false);
+  // Touch devices have no hover, so the "dim everything but the active
+  // card" treatment (built for a mouse resting over one card at a time)
+  // would otherwise leave every card but the first permanently grayed out
+  // and read as broken/disabled rather than an interaction hint. Defaults
+  // to true so SSR/first paint matches the desktop-authored look; flips
+  // before paint on devices that can't hover.
+  const [supportsHover, setSupportsHover] = useState(true);
   const contentRefs = useRef([]);
   const mountedRef = useRef(false);
+
+  useLayoutEffect(() => {
+    const mql = window.matchMedia("(hover: hover)");
+    setSupportsHover(mql.matches);
+    const handleChange = (e) => setSupportsHover(e.matches);
+    mql.addEventListener("change", handleChange);
+    return () => mql.removeEventListener("change", handleChange);
+  }, []);
 
   const sectionRef = useRef(null);
   const bulletIconRef = useRef(null);
@@ -294,13 +309,13 @@ export default function WhyNowClimbSection() {
     contentRefs.current.forEach((el, index) => {
       if (!el) return;
       gsap.to(el, {
-        filter: index === activeIndex ? ACTIVE_FILTER : INACTIVE_FILTER,
+        filter: !supportsHover || index === activeIndex ? ACTIVE_FILTER : INACTIVE_FILTER,
         duration: 0.6,
         ease: "power2.inOut",
         overwrite: true,
       });
     });
-  }, [activeIndex]);
+  }, [activeIndex, supportsHover]);
 
   function handleHover(index) {
     setHasHovered(true);
@@ -390,7 +405,8 @@ export default function WhyNowClimbSection() {
                     }}
                     className="absolute inset-0"
                     style={{
-                      filter: index === 0 ? ACTIVE_FILTER : INACTIVE_FILTER,
+                      filter:
+                        !supportsHover || index === 0 ? ACTIVE_FILTER : INACTIVE_FILTER,
                     }}
                   >
                     <div
