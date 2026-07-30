@@ -28,6 +28,7 @@ const BRANCHES = [
     height: 2396,
     side: "left",
     position: "left-[-7%] top-[-20%] w-[55%]",
+    zIndex: 40,
   },
   {
     src: "/images/Home/tree-branch-3.png",
@@ -39,7 +40,8 @@ const BRANCHES = [
     // more vertical room and exposes this PNG's hard-cropped bottom seam
     // at top-40%. Pushing it to top-63% restores the same clipped margin
     // the wide desktop stage gives it for free.
-    position: "left-[-10%] top-[63%] w-[35%]",
+    position: "left-[-15%] top-[55%] w-[35%]",
+    zIndex: 30,
   },
   {
     src: "/images/Home/tree-branch-2.png",
@@ -47,6 +49,7 @@ const BRANCHES = [
     height: 1943,
     side: "right",
     position: "right-[-32%] top-[-85%] w-[90%]",
+    zIndex: 30,
   },
   {
     src: "/images/Home/tree-branch-1.png",
@@ -54,6 +57,7 @@ const BRANCHES = [
     height: 1943,
     side: "right",
     position: "right-[-16%] top-[-30%] w-[55%]",
+    zIndex: 30,
   },
 ];
 
@@ -165,7 +169,8 @@ export default function VideoSection() {
             alt=""
             width={branch.width}
             height={branch.height}
-            className={`pointer-events-none absolute hidden max-w-none select-none z-0 will-change-transform lg:z-30 lg:block ${branch.position}`}
+            style={{ zIndex: branch.zIndex }}
+            className={`pointer-events-none absolute hidden max-w-none select-none will-change-transform lg:block ${branch.position}`}
           />
         ))}
 

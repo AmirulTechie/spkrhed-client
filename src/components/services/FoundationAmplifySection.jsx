@@ -205,13 +205,20 @@ export default function FoundationAmplifySection() {
       className="relative overflow-hidden bg-black pt-[clamp(48px,10vw,144px)] pb-[clamp(48px,10vw,144px)] lg:pt-[clamp(72px,19.5139vw,281px)] lg:pb-[clamp(80px,21.8056vw,314px)]"
     >
       {/*
-        Vine + gradients are absolutely positioned against the section
-        itself, so they ignore the section's own pt-/pb- padding and always
-        span its true top-to-bottom edge (in Figma the vine fills the whole
-        section box, edge to edge). The card deck below is a normal-flow
-        sibling, so IT is the one pushed down/up by that padding. Both share
-        the same centered box capped at Figma's 1440px design width, so
-        percentages never drift out of sync between the two.
+        Vine is absolutely positioned against the section itself, so it
+        ignores the section's own pt-/pb- padding and always spans its true
+        top-to-bottom edge (in Figma the vine fills the whole section box,
+        edge to edge). The card deck below is a normal-flow sibling, so IT
+        is the one pushed down/up by that padding.
+
+        The top/bottom fade used to be two separately-positioned gradient
+        divs stacked on top of the image. Because they were a different
+        element trying to align pixel-for-pixel with the image's edges,
+        subpixel rounding between the two (varying by viewport width) could
+        leave a hairline seam where they didn't quite agree — visible as a
+        sharp line on some mobile widths but not others. Baking the same
+        fade into a mask-image on the vine itself removes the second layer
+        entirely, so there's nothing left to drift out of alignment.
       */}
       <div
         className="mx-auto h-full w-full max-w-360"
@@ -227,47 +234,44 @@ export default function FoundationAmplifySection() {
             left: "12.0833%",
             width: "75.8333%",
             height: "var(--branch-h)",
-          }}
-        />
-
-        {/*
-          Both fades are expressed as a fraction of --branch-h (the same
-          clamp() driving the image itself), so they scale together at
-          every viewport — including once the image hits its 550px floor
-          on mobile. Independent clamp()s with their own floors used to
-          drift apart from the image's floor and leave a hard-cropped
-          strip uncovered; this keeps top/bottom coverage locked to the
-          image's actual rendered height on every device.
-        */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute z-10"
-          style={{
-            left: 0,
-            width: "100%",
-            top: 0,
-            height: "calc(var(--branch-h) * 0.552527)",
-            background: `linear-gradient(to bottom,
-              #0f0f0f 0%,
-              rgba(15,15,15,0.95) 20%,
-              rgba(15,15,15,0.75) 40%,
-              rgba(15,15,15,0.45) 60%,
-              rgba(15,15,15,0.2) 80%,
-              rgba(15,15,15,0) 100%
+            WebkitMaskImage: `linear-gradient(to bottom,
+              transparent 0%,
+              rgba(0,0,0,0.05) 11.0505%,
+              rgba(0,0,0,0.25) 22.1011%,
+              rgba(0,0,0,0.55) 33.1516%,
+              rgba(0,0,0,0.8) 44.2022%,
+              black 55.2527%,
+              black 71.6606%,
+              transparent 100%
+            )`,
+            maskImage: `linear-gradient(to bottom,
+              transparent 0%,
+              rgba(0,0,0,0.05) 11.0505%,
+              rgba(0,0,0,0.25) 22.1011%,
+              rgba(0,0,0,0.55) 33.1516%,
+              rgba(0,0,0,0.8) 44.2022%,
+              black 55.2527%,
+              black 71.6606%,
+              transparent 100%
             )`,
           }}
         />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute z-10 bg-linear-to-b from-transparent to-black"
-          style={{
-            left: "7.8472%",
-            width: "100%",
-            top: "calc(var(--branch-h) * 0.716606)",
-            height: "calc(var(--branch-h) * 0.283394)",
-          }}
-        />
       </div>
+
+      {/*
+        Standing in for the old top overlay's opaque #0f0f0f start: softens
+        the seam against GrowthEngineSection's #0F0F0F background just above.
+        Unlike the old overlay this is a fixed height, not tied to
+        --branch-h, so it can't drift out of sync with anything — it only
+        has to agree with itself.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 z-10 h-[clamp(64px,9vw,130px)] w-full"
+        style={{
+          background: "linear-gradient(to bottom, #0f0f0f 0%, transparent 100%)",
+        }}
+      />
 
       <div className="relative mx-auto hidden w-full max-w-360 lg:block">
         <div
