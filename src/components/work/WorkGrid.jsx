@@ -41,7 +41,14 @@ function MosaicTile({ tile, col, left, top, width, height }) {
         fill
         draggable={false}
         loading="eager"
-        sizes="(min-width: 1024px) 30vw, 60vw"
+        // A tile's CSS width is capped at MAX_TILE_UNIT (420px) regardless of
+        // viewport — only its height varies, up to 1.6x that via the masonry
+        // rowSpan. A vw-relative sizes hint chases the wrong dimension here:
+        // when a tile's own source photo is landscape, object-cover has to
+        // scale against the (much larger, viewport-independent) height, so
+        // this requests a flat width well past 420px to cover that worst case
+        // rather than tracking viewport width at all.
+        sizes="800px"
         className="pointer-events-none object-cover transition-transform duration-700 ease-out group-hover:scale-110"
       />
       <div
