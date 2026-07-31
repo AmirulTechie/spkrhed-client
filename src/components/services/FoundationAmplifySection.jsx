@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
@@ -70,83 +70,182 @@ const CARDS = {
       ],
     ],
   },
+  convert: {
+    id: "convert",
+    shape: "/images/services/convert-card-shape.svg",
+    mask: "/images/services/convert-card-mask.svg",
+    heightPx: 505,
+    eyebrow: "CONVERT",
+    headingLines: [
+      { text: "Stop the leaks in", color: "purple" },
+      { text: "your own pipeline.", color: "white" },
+    ],
+    body: "Interest that never gets a reply is wasted spend. We build the follow-up and closing layer that keeps every conversation moving until it becomes a booked, qualified call.",
+    columns: [
+      [
+        {
+          label: "Appointment Setting",
+          detail:
+            "Every warm reply gets chased until it's a booked, qualified call, not just a maybe.",
+        },
+        {
+          label: "Follow-Up Sequences",
+          detail:
+            "Email and SMS cadences that catch the leads who don't book on the first touch.",
+        },
+      ],
+      [
+        {
+          label: "Sales Enablement",
+          detail:
+            "Call scripts, objection handling and handoff notes so booked calls actually close.",
+        },
+      ],
+    ],
+  },
 };
 
-// Front and peek-right share the same top edge, so the swap is a pure
-// horizontal move. This is the xPercent distance between the two slots,
-// derived from Figma (peek-right left% minus front left%, both relative to
-// the container the cards fill edge to edge).
-const SWAP_X_PERCENT = 77.33;
+const CARD_IDS = ["foundation", "amplify", "convert"];
 
-// Mobile shows one card at a time inside a fixed-height box. Foundation has
-// three feature blocks to Amplify's two, so it needs a taller floor to fit
-// its content without overflow; this is that measured natural content
-// height plus a small buffer, not a guess. Both cards share this one height
-// (rather than each getting its own, shorter value) so swapping between
-// them never changes the section's total height — Amplify just sits with
-// extra breathing room above its bottom-pinned columns instead of shrinking
-// the box, which would otherwise yank everything below the section up/down
-// on every swipe.
+// The three fanned slots the desktop deck cycles cards through: front
+// (centered, on top), peekRight (partially visible to the right — becomes
+// front on the next advance), and peekLeft (partially visible to the left —
+// the card that was front two advances ago). left%/top/zIndex are fixed per
+// slot regardless of which physical card currently occupies it — only the
+// slot assignment (`order` below) changes. Derived from Figma.
+const SLOTS = [
+  { left: "0%", top: 0, zIndex: 30, variant: "front" },
+  { left: "77.33%", top: 0, zIndex: 20, variant: "back" },
+  {
+    left: "-48.67%",
+    top: "clamp(28px,5vw,72px)",
+    zIndex: 10,
+    variant: "back",
+  },
+];
+
+// Mobile shows one card at a time inside a fixed-height box. Foundation and
+// Convert both have three feature blocks to Amplify's two, so the floor is
+// tuned to fit the taller ones without overflow; this is that measured
+// natural content height plus a small buffer, not a guess. All three cards
+// share this one height (rather than each getting its own, shorter value)
+// so swapping between them never changes the section's total height —
+// Amplify just sits with extra breathing room above its bottom-pinned
+// columns instead of shrinking the box, which would otherwise yank
+// everything below the section up/down on every swipe.
 const MOBILE_CARD_HEIGHT = "clamp(500px,88.5417vw,513px)";
 
 export default function FoundationAmplifySection() {
-  const [frontId, setFrontId] = useState("foundation");
+  // order[0] is the id in the front slot, order[1] peekRight, order[2]
+  // peekLeft. Mobile only ever looks at order[0].
+  const [order, setOrder] = useState(CARD_IDS);
   const [hasSwapped, setHasSwapped] = useState(false);
-  const backId = frontId === "foundation" ? "amplify" : "foundation";
 
   const sectionRef = useRef(null);
   const cardsWrapperRef = useRef(null);
-  const frontRef = useRef(null);
-  const peekRightRef = useRef(null);
-  const peekLeftRef = useRef(null);
   const mobileFrontRef = useRef(null);
+  const mobileFrontRevealRef = useRef(null);
+
+  // Each physical card keeps the same DOM node across swaps now (only its
+  // slot styling changes), so refs are keyed by card id rather than by
+  // slot. useMemo keeps these callback refs referentially stable across
+  // renders — otherwise a fresh closure every render would make React
+  // null-and-reattach every ref on every render for no reason.
+  const cardRefs = useRef({});
+  const revealRefs = useRef({});
+  const setCardRef = useMemo(() => {
+    const fns = {};
+    CARD_IDS.forEach((id) => {
+      fns[id] = (el) => {
+        cardRefs.current[id] = el;
+      };
+    });
+    return fns;
+  }, []);
+  const setRevealRef = useMemo(() => {
+    const fns = {};
+    CARD_IDS.forEach((id) => {
+      fns[id] = (el) => {
+        revealRefs.current[id] = el;
+      };
+    });
+    return fns;
+  }, []);
+
   const animatingRef = useRef(false);
   const mountedRef = useRef(false);
+  // FLIP "first" rects, captured synchronously in handleAdvance right
+  // before the reorder — see the swap effect below.
+  const firstRectsRef = useRef(null);
 
   // One-time entrance, played the moment the section reaches the viewport:
   // every card (the desktop 3-slot fan and the mobile single card) pops up
   // in place — the same rise + scale-back treatment used by the homepage's
   // ProjectsSection rows — rather than sliding in from off-screen.
   useLayoutEffect(() => {
-    const desktopCards = [
-      peekLeftRef.current,
-      frontRef.current,
-      peekRightRef.current,
-    ];
+    // Left-to-right visual sweep (peekLeft, front, peekRight) rather than
+    // CARD_IDS order, so the stagger reads as one pass across the fan
+    // regardless of which card currently occupies which slot.
+    const visualOrder = [order[2], order[0], order[1]];
+    const desktopCards = visualOrder.map((id) => cardRefs.current[id]);
+    const desktopReveals = visualOrder.map((id) => revealRefs.current[id]);
     const mobileCard = mobileFrontRef.current;
+    const mobileReveal = mobileFrontRevealRef.current;
 
     const ctx = gsap.context(() => {
-      gsap.set(desktopCards, { opacity: 0, y: 90, scale: 0.92 });
-      gsap.to(desktopCards, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.9,
-        ease: "back.out(1.6)",
-        stagger: 0.15,
+      // y/scale still animate on the cards themselves — only opacity moved
+      // to the reveal covers, since transform doesn't trigger the
+      // backdrop-filter desync (see EngineCard's revealRef comment).
+      gsap.set(desktopCards, { y: 90, scale: 0.92 });
+      gsap.set(desktopReveals, { opacity: 1 });
+
+      const desktopTl = gsap.timeline({
         scrollTrigger: {
           trigger: cardsWrapperRef.current,
           start: "top 80%",
           toggleActions: "play none none reverse",
         },
       });
+      desktopTl
+        .to(
+          desktopCards,
+          {
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "back.out(1.6)",
+            stagger: 0.15,
+          },
+          0,
+        )
+        .to(
+          desktopReveals,
+          {
+            opacity: 0,
+            duration: 0.9,
+            ease: "back.out(1.6)",
+            stagger: 0.15,
+          },
+          0,
+        );
 
-      gsap.set(mobileCard, { opacity: 0, y: 90, scale: 0.92 });
-      gsap.to(mobileCard, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.9,
-        ease: "back.out(1.6)",
+      gsap.set(mobileCard, { y: 90, scale: 0.92 });
+      gsap.set(mobileReveal, { opacity: 1 });
+
+      const mobileTl = gsap.timeline({
         scrollTrigger: {
           trigger: mobileCard,
           start: "top 85%",
           toggleActions: "play none none reverse",
         },
       });
+      mobileTl
+        .to(mobileCard, { y: 0, scale: 1, duration: 0.9, ease: "back.out(1.6)" }, 0)
+        .to(mobileReveal, { opacity: 0, duration: 0.9, ease: "back.out(1.6)" }, 0);
     }, sectionRef);
 
     return () => ctx.revert();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useLayoutEffect(() => {
@@ -161,42 +260,67 @@ export default function FoundationAmplifySection() {
       },
     });
 
-    tl.fromTo(
-      frontRef.current,
-      { xPercent: SWAP_X_PERCENT },
-      { xPercent: 0, duration: 0.6, ease: "power2.inOut" },
-      0,
-    );
-    tl.fromTo(
-      peekRightRef.current,
-      { xPercent: -SWAP_X_PERCENT },
-      { xPercent: 0, duration: 0.6, ease: "power2.inOut" },
-      0,
-    );
-    tl.fromTo(
-      peekLeftRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.4, ease: "power1.out" },
-      0.15,
-    );
+    // FLIP: each physical card kept the same DOM node across the reorder,
+    // so by this point (a synchronous layout effect) its new left%/top/
+    // zIndex from the new slot are already applied. Diff its just-measured
+    // position against where it was an instant ago (captured in
+    // handleAdvance, before the reorder) and tween that pixel delta back
+    // to zero. This is robust regardless of how the left%/top clamp()s and
+    // per-card heights resolve, since it's measured from the real DOM
+    // rather than computed by hand — unlike the old two-card version, which
+    // hardcoded one fixed xPercent distance that only worked because there
+    // were exactly two interchangeable cards.
+    const firstRects = firstRectsRef.current;
+    if (firstRects) {
+      CARD_IDS.forEach((id) => {
+        const el = cardRefs.current[id];
+        const first = firstRects[id];
+        if (!el || !first) return;
+        const last = el.getBoundingClientRect();
+        const dx = first.left - last.left;
+        const dy = first.top - last.top;
+        tl.fromTo(
+          el,
+          { x: dx, y: dy },
+          { x: 0, y: 0, duration: 0.6, ease: "power2.inOut" },
+          0,
+        );
+      });
+    }
 
     // Mobile only ever shows one card, so the "swap" is a content pop: the
     // ref's content has already re-rendered to the new front card by this
-    // point, so cutting it to 0 and fading it back in reads as a swap
-    // rather than an instant text change.
+    // point, so covering it and fading the cover back out reads as a swap
+    // rather than an instant text change. y still animates on the card
+    // itself (transform, not opacity, so no backdrop-filter desync — see
+    // EngineCard's revealRef comment).
+    tl.set(mobileFrontRevealRef.current, { opacity: 1 }, 0);
     tl.fromTo(
       mobileFrontRef.current,
-      { opacity: 0, y: 16 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+      { y: 16 },
+      { y: 0, duration: 0.4, ease: "power2.out" },
       0.1,
     );
-  }, [frontId]);
+    tl.to(
+      mobileFrontRevealRef.current,
+      { opacity: 0, duration: 0.4, ease: "power2.out" },
+      0.1,
+    );
+  }, [order]);
 
   function handleAdvance() {
     if (animatingRef.current) return;
     animatingRef.current = true;
     setHasSwapped(true);
-    setFrontId((id) => (id === "foundation" ? "amplify" : "foundation"));
+
+    const rects = {};
+    CARD_IDS.forEach((id) => {
+      const el = cardRefs.current[id];
+      if (el) rects[id] = el.getBoundingClientRect();
+    });
+    firstRectsRef.current = rects;
+
+    setOrder((prev) => [prev[1], prev[2], prev[0]]);
   }
 
   return (
@@ -283,42 +407,26 @@ export default function FoundationAmplifySection() {
             className="relative"
             style={{ minHeight: "clamp(320px,35.625vw,513px)" }}
           >
-            <EngineCard
-              card={CARDS[backId]}
-              cardRef={peekLeftRef}
-              variant="back"
-              className="z-10"
-              style={{
-                left: "-48.67%",
-                width: "100%",
-                top: "clamp(28px,5vw,72px)",
-                height: `clamp(${CARDS[backId].heightPx * 0.55}px,${(CARDS[backId].heightPx / 1440) * 100}vw,${CARDS[backId].heightPx}px)`,
-              }}
-            />
-            <EngineCard
-              card={CARDS[backId]}
-              cardRef={peekRightRef}
-              variant="back"
-              className="z-20"
-              style={{
-                left: "77.33%",
-                width: "100%",
-                top: 0,
-                height: `clamp(${CARDS[backId].heightPx * 0.55}px,${(CARDS[backId].heightPx / 1440) * 100}vw,${CARDS[backId].heightPx}px)`,
-              }}
-            />
-            <EngineCard
-              card={CARDS[frontId]}
-              cardRef={frontRef}
-              variant="front"
-              className="z-30"
-              style={{
-                left: "0%",
-                width: "100%",
-                top: 0,
-                height: `clamp(${CARDS[frontId].heightPx * 0.55}px,${(CARDS[frontId].heightPx / 1440) * 100}vw,${CARDS[frontId].heightPx}px)`,
-              }}
-            />
+            {CARD_IDS.map((id) => {
+              const card = CARDS[id];
+              const slot = SLOTS[order.indexOf(id)];
+              return (
+                <EngineCard
+                  key={id}
+                  card={card}
+                  cardRef={setCardRef[id]}
+                  revealRef={setRevealRef[id]}
+                  variant={slot.variant}
+                  style={{
+                    left: slot.left,
+                    width: "100%",
+                    top: slot.top,
+                    zIndex: slot.zIndex,
+                    height: `clamp(${card.heightPx * 0.55}px,${(card.heightPx / 1440) * 100}vw,${card.heightPx}px)`,
+                  }}
+                />
+              );
+            })}
 
             <button
               type="button"
@@ -346,15 +454,17 @@ export default function FoundationAmplifySection() {
       {/*
         Mobile: the fanned 3-card deck needs ~665px of width to read as
         intended, so below lg it's replaced with a single full-width card.
-        The arrow click still drives the same frontId/backId state and GSAP
-        swap timeline above — only the visual treatment differs (a content
-        pop instead of a spatial slide).
+        The arrow click still drives the same `order` state and GSAP swap
+        timeline above — only the visual treatment differs (a content pop
+        instead of a spatial slide), and only order[0] (the front slot) is
+        ever shown.
       */}
       <div className="relative mx-auto w-full max-w-137 px-6 pb-19 lg:hidden">
         <div className="relative" style={{ height: MOBILE_CARD_HEIGHT }}>
           <EngineCard
-            card={CARDS[frontId]}
+            card={CARDS[order[0]]}
             cardRef={mobileFrontRef}
+            revealRef={mobileFrontRevealRef}
             variant="front"
             className="z-20"
             style={{ left: 0, top: 0, width: "100%", height: "100%" }}

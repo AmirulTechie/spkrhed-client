@@ -29,6 +29,7 @@ const HEADING_COLOR = {
 export default function EngineCard({
   card,
   cardRef,
+  revealRef,
   variant = "back",
   className = "",
   style,
@@ -58,7 +59,7 @@ export default function EngineCard({
       */}
       <div
         aria-hidden
-        className="absolute inset-0 rounded-[clamp(18px,2.1875vw,32px)] backdrop-blur-[5.5px]"
+        className="absolute inset-0 rounded-[clamp(18px,2.1875vw,32px)] backdrop-blur-[5.5px] transform-gpu"
         style={maskStyle}
       >
         <Image
@@ -75,7 +76,7 @@ export default function EngineCard({
       <div
         className={`relative flex h-full flex-col p-[clamp(26px,3.6111vw,52px)] ${isBack ? "opacity-35" : ""}`}
       >
-        <p className="font-poppins text-[clamp(20px,2.7778vw,40px)] font-bold text-white">
+        <p className="font-poppins text-[clamp(16px,2.2222vw,32px)] font-bold text-white lg:text-[clamp(20px,2.7778vw,40px)]">
           {card.eyebrow}
         </p>
 
@@ -87,7 +88,7 @@ export default function EngineCard({
           drop below the notch before going full-width; lg keeps the
           original 50%-width layout, which never reaches the notch.
         */}
-        <h3 className="mt-12 max-w-full lg:mt-[clamp(8px,1.25vw,18px)] lg:max-w-[50%] font-anton-sc text-[clamp(20px,2.7778vw,40px)] leading-[1.15] lg:leading-[1.02] uppercase">
+        <h3 className="mt-16 lg:mt-[clamp(8px,1.25vw,18px)] lg:max-w-[50%] font-anton-sc text-[clamp(20px,2.7778vw,40px)] leading-[1.15] lg:leading-[1.02] uppercase">
           {card.headingLines.map((line, index) => (
             <span
               key={index}
@@ -115,6 +116,29 @@ export default function EngineCard({
           ))}
         </div>
       </div>
+
+      {/*
+        Entrance and swap used to fade THIS card's own opacity (0 -> 1) via
+        GSAP. Chromium doesn't recompute a descendant's backdrop-filter in
+        sync with an ancestor's opacity tween — will-change/transform-gpu on
+        the blurred layer above didn't fix it either — so the card would
+        render with a sharp, unblurred background for the first frame or
+        two and then visibly "pop" into blur once the opacity animation
+        settled. This plain (non-backdrop-filtered) cover sits on top and
+        is what actually gets faded instead: the card itself stays at a
+        constant opacity 1 the whole time (already fully, correctly
+        blurred from its very first paint), and revealing it is just this
+        cover fading away. Solid bg-black to match the section's own
+        background so it reads as "nothing there yet," not a visible flash
+        of black.
+      */}
+      {revealRef && (
+        <div
+          ref={revealRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-50 rounded-[clamp(18px,2.1875vw,32px)] bg-black"
+        />
+      )}
     </div>
   );
 }

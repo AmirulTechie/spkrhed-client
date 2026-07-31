@@ -86,7 +86,7 @@ export default function ServicesHero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-dvh w-full items-center overflow-hidden bg-black lg:h-screen lg:items-end">
+    <section className="relative flex min-h-dvh w-full items-end overflow-hidden bg-black lg:h-screen">
       <Image
         src="/images/services/services-banner.png"
         alt=""
@@ -101,19 +101,19 @@ export default function ServicesHero() {
         alt=""
         fill
         sizes="(max-width: 1023px) 190vh, 100vw"
-        className="object-cover opacity-20"
+        className="object-cover opacity-10 lg:opacity-20"
       />
 
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-[40%] bg-linear-to-b from-[#0f0f0f] to-transparent"
+        className="absolute inset-x-0 top-0 h-[22%] bg-linear-to-b from-[#0f0f0f] to-transparent lg:h-[40%]"
       />
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-[40%] bg-linear-to-b from-transparent to-[#0f0f0f]"
+        className="absolute inset-x-0 bottom-0 h-[22%] bg-linear-to-b from-transparent to-[#0f0f0f] lg:h-[40%]"
       />
 
-      <div className="relative z-10 grid w-full grid-cols-1 items-end gap-y-8 px-8 py-[clamp(96px,14vw,120px)] text-white sm:px-12 sm:gap-y-10 lg:grid-cols-[490fr_598fr] lg:gap-x-[clamp(48px,14.4444vw,208px)] lg:px-16 lg:py-0 lg:pb-[clamp(24px,3.1944vw,46px)]">
+      <div className="relative z-10 grid w-full grid-cols-1 items-end gap-y-8 px-8 pt-[clamp(96px,14vw,120px)] pb-10 text-white sm:px-12 sm:gap-y-10 sm:pb-12 lg:grid-cols-[490fr_598fr] lg:gap-x-[clamp(48px,14.4444vw,208px)] lg:px-16 lg:py-0 lg:pb-[clamp(24px,3.1944vw,46px)]">
         <div className="flex flex-col items-start">
           <Image
             src="/images/spkrhed-logo.png"

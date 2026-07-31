@@ -21,6 +21,13 @@ const STATS = [
   { value: "50K+", valueClassName: "text-[#AC40FF]", label: "Targeted\nDMs / Month" },
 ];
 
+// On desktop each word sits on its own line (see Figma), so it reads well
+// as a word-by-word reveal. On mobile the words wrap normally, so that
+// section instead fades/slides in as a single block.
+const CLIENTS_HEADING_WORDS = "Clients whose realities we've changed".split(" ");
+
+const LG_BREAKPOINT_QUERY = "(min-width: 1024px)";
+
 // 12 real client logos, 4 per row / 3 rows on desktop. All source files are
 // square 2880x2880 exports, so they share one aspect ratio and box size.
 const LOGOS = [
@@ -69,7 +76,9 @@ export default function StatsClientsSection() {
   const wordRefs = useRef([]);
   const statValueRefs = useRef([]);
   const clientsSectionRef = useRef(null);
-  const clientsRevealRef = useRef(null);
+  const clientsHeadingRef = useRef(null);
+  const clientsWordRefs = useRef([]);
+  const clientsLogosRef = useRef(null);
 
   useLayoutEffect(() => {
     const words = wordRefs.current.filter(Boolean);
@@ -120,19 +129,48 @@ export default function StatsClientsSection() {
         });
       });
 
-      gsap.set(clientsRevealRef.current, { yPercent: 100, opacity: 0 });
+      const clientsTrigger = {
+        trigger: clientsSectionRef.current,
+        start: "top 85%",
+        toggleActions: "play none none reverse",
+      };
 
-      gsap.to(clientsRevealRef.current, {
+      gsap.set(clientsLogosRef.current, { yPercent: 100, opacity: 0 });
+
+      gsap.to(clientsLogosRef.current, {
         yPercent: 0,
         opacity: 1,
         duration: 1,
         ease: "power3.out",
-        scrollTrigger: {
-          trigger: clientsSectionRef.current,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
+        scrollTrigger: clientsTrigger,
       });
+
+      if (window.matchMedia(LG_BREAKPOINT_QUERY).matches) {
+        // Desktop: reveal the heading one word at a time.
+        const clientsWords = clientsWordRefs.current.filter(Boolean);
+
+        gsap.set(clientsWords, { yPercent: 100, opacity: 0 });
+
+        gsap.to(clientsWords, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.07,
+          ease: "power3.out",
+          scrollTrigger: clientsTrigger,
+        });
+      } else {
+        // Mobile/tablet: the heading wraps normally, so fade/slide it in as one block.
+        gsap.set(clientsHeadingRef.current, { yPercent: 100, opacity: 0 });
+
+        gsap.to(clientsHeadingRef.current, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: clientsTrigger,
+        });
+      }
     }, rowRef);
 
     return () => ctx.revert();
@@ -198,15 +236,31 @@ export default function StatsClientsSection() {
         ref={clientsSectionRef}
         className="overflow-hidden px-[clamp(32px,5.0694vw,117px)] pt-[clamp(40px,6.1111vw,141px)] pb-[clamp(48px,6.1111vw,141px)]"
       >
-        <div
-          ref={clientsRevealRef}
-          className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:items-center lg:grid-cols-[589fr_641fr]"
-        >
-          <p className="font-poppins text-[clamp(28px,6.5vw,112px)] font-bold uppercase leading-[0.95] text-white">
-            Clients whose realities we&apos;ve changed
+        <div className="grid grid-cols-1 items-start gap-x-[clamp(32px,4.4444vw,102px)] gap-y-10 lg:items-center lg:grid-cols-[589fr_641fr]">
+          <p
+            ref={clientsHeadingRef}
+            className="font-poppins text-[clamp(28px,6.5vw,112px)] font-bold uppercase leading-[0.95] text-white"
+          >
+            {CLIENTS_HEADING_WORDS.map((word, index) => (
+              <span key={word + index}>
+                <span className="inline-block overflow-hidden">
+                  <span
+                    ref={(el) => {
+                      clientsWordRefs.current[index] = el;
+                    }}
+                    className="inline-block"
+                  >
+                    {word}
+                  </span>
+                </span>{" "}
+              </span>
+            ))}
           </p>
 
-          <div className="grid grid-cols-2 justify-items-center gap-x-[clamp(24px,3.4722vw,80px)] gap-y-[clamp(32px,4.5139vw,104px)] sm:grid-cols-4">
+          <div
+            ref={clientsLogosRef}
+            className="grid grid-cols-2 justify-items-center gap-x-[clamp(24px,3.4722vw,80px)] gap-y-[clamp(32px,4.5139vw,104px)] sm:grid-cols-4"
+          >
             {LOGOS.map((logo) => (
               <Image
                 key={logo.src}

@@ -31,15 +31,15 @@ const PROBLEM_CARDS = [
   {
     number: "02",
     label: "/Problem",
-    heading: "Feast or famine, every quarter",
+    heading: "Cold outreach, colder results",
     description:
-      "One month you're turning people away. The next, you're refreshing your inbox wondering where everyone went.",
+      "Your reps dial and blast emails all day, and buyers delete it before they even read it. The message that would've landed never got sent, because nobody's running LinkedIn.",
     points: [
-      "Volatility",
-      "Inconsistency",
-      "Unpredictable Growth",
-      "Founder-Led Manual Outreach",
-      "Single Point of Failure",
+      "Cold Call Fatigue",
+      "Email Deliverability Drop",
+      "Ignored Outreach",
+      "No LinkedIn Presence",
+      "Wasted Ad Spend",
     ],
   },
 ];
