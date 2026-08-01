@@ -25,6 +25,9 @@ const nextConfig = {
   /* config options here */
   reactCompiler: true,
   poweredByHeader: false,
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+  },
   allowedDevOrigins: [
     "*.ngrok-free.app",
     "*.ngrok-free.dev",
