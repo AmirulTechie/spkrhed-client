@@ -1,11 +1,11 @@
+const DESCRIPTION = "News and announcements from SPKRHED.";
+
 export const metadata = {
-  title: "Updates | SPKRHED",
-  description:
-    "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+  title: "Updates",
+  description: DESCRIPTION,
   openGraph: {
     title: "Updates | SPKRHED",
-    description:
-      "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+    description: DESCRIPTION,
   },
 };
 

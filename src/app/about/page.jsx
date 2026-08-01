@@ -5,14 +5,15 @@ import FirstStepBannerSection from "@/components/about/FirstStepBannerSection";
 import ThreePrinciplesSection from "@/components/about/ThreePrinciplesSection";
 import TakeFirstStepSection from "@/components/about/TakeFirstStepSection";
 
+const DESCRIPTION =
+  "The story behind SPKRHED: why we swapped agency theater for real conversations, and the principles that guide how we grow companies on LinkedIn.";
+
 export const metadata = {
-  title: "About | SPKRHED",
-  description:
-    "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+  title: "About",
+  description: DESCRIPTION,
   openGraph: {
     title: "About | SPKRHED",
-    description:
-      "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+    description: DESCRIPTION,
     images: ["/images/about/about-hero.png"],
   },
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import gsap from "gsap";
@@ -17,9 +17,13 @@ export default function Loader() {
   // Lenis resolves from undefined to the real instance shortly after mount,
   // which would otherwise re-trigger this effect (restarting the timeline
   // and remounting the gif) a second time on every route change. Reading it
-  // through a ref keeps the effect reacting only to actual pathname changes.
+  // through a ref keeps the effect reacting only to actual pathname changes;
+  // the ref itself is synced in its own effect (runs after every render,
+  // unlike the timeline effect below) rather than written during render.
   const lenisRef = useRef(lenis);
-  lenisRef.current = lenis;
+  useEffect(() => {
+    lenisRef.current = lenis;
+  });
 
   useLayoutEffect(() => {
     const overlay = overlayRef.current;

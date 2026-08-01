@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useSupportsHover } from "@/lib/useSupportsHover";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -159,20 +160,10 @@ export default function OldestGrowthStorySection() {
   // Touch devices have no hover, so the "dim everything but the active
   // card" treatment (built for a mouse resting over one card at a time)
   // would otherwise leave every card but the first permanently grayed out
-  // and read as broken/disabled rather than an interaction hint. Defaults
-  // to true so SSR/first paint matches the desktop-authored look; flips
-  // before paint on devices that can't hover.
-  const [supportsHover, setSupportsHover] = useState(true);
+  // and read as broken/disabled rather than an interaction hint.
+  const supportsHover = useSupportsHover();
   const contentRefs = useRef([]);
   const mountedRef = useRef(false);
-
-  useLayoutEffect(() => {
-    const mql = window.matchMedia("(hover: hover)");
-    setSupportsHover(mql.matches);
-    const handleChange = (e) => setSupportsHover(e.matches);
-    mql.addEventListener("change", handleChange);
-    return () => mql.removeEventListener("change", handleChange);
-  }, []);
 
   const sectionRef = useRef(null);
   const bulletIconRef = useRef(null);

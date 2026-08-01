@@ -49,7 +49,7 @@ export default function ProjectHero({ project }) {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [loaderDuration]);
 
   const bannerImage = project.images[0] ?? project.thumbnail;
 

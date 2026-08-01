@@ -113,7 +113,7 @@ export default function ContactHero() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [loaderDuration]);
 
   async function handleSubmit(event) {
     event.preventDefault();

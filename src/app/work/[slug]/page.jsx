@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
     : `${project.title} — a SPKRHED case study.`;
 
   return {
-    title: `${project.title} | SPKRHED Work`,
+    title: project.title,
     description,
     openGraph: {
       title: `${project.title} | SPKRHED Work`,

@@ -1,13 +1,14 @@
 import ContactHero from "@/components/contact/ContactHero";
 
+const DESCRIPTION =
+  "Start the conversation. Get in touch with SPKRHED to talk through what growing your pipeline on LinkedIn could look like.";
+
 export const metadata = {
-  title: "Contact | SPKRHED",
-  description:
-    "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+  title: "Contact",
+  description: DESCRIPTION,
   openGraph: {
     title: "Contact | SPKRHED",
-    description:
-      "SPKRHED is not another agency. We are a movement to put the human back into how companies grow — real people, real conversations, real trust, starting on LinkedIn.",
+    description: DESCRIPTION,
   },
 };
 

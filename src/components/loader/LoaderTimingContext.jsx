@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef } from "react";
+import { createContext, useContext, useState } from "react";
 import { usePathname } from "next/navigation";
 
 // Full preloader treatment used for a real first load / cross-section
@@ -17,22 +17,23 @@ const LoaderTimingContext = createContext(FULL_DURATION);
 
 export function LoaderTimingProvider({ children }) {
   const pathname = usePathname();
-  const prevPathnameRef = useRef(undefined);
-  const durationRef = useRef(FULL_DURATION);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  const [duration, setDuration] = useState(FULL_DURATION);
 
-  // Derived-during-render (not an effect) so the value is already correct
-  // by the time Loader and the page heroes read it via context in this same
-  // render pass, instead of racing their own layout effects against a
-  // parent effect that hasn't committed yet.
-  if (prevPathnameRef.current !== pathname) {
+  // Adjusted during render (React's sanctioned "derive state from a prop
+  // change" pattern, not an effect) so the value is already correct by the
+  // time Loader and the page heroes read it via context in this same render
+  // pass, instead of racing their own layout effects against a parent effect
+  // that hasn't committed yet.
+  if (pathname !== prevPathname) {
     const isWorkToWork =
-      prevPathnameRef.current?.startsWith("/work") && pathname.startsWith("/work");
-    durationRef.current = isWorkToWork ? WORK_TRANSITION_DURATION : FULL_DURATION;
-    prevPathnameRef.current = pathname;
+      prevPathname?.startsWith("/work") && pathname.startsWith("/work");
+    setDuration(isWorkToWork ? WORK_TRANSITION_DURATION : FULL_DURATION);
+    setPrevPathname(pathname);
   }
 
   return (
-    <LoaderTimingContext.Provider value={durationRef.current}>
+    <LoaderTimingContext.Provider value={duration}>
       {children}
     </LoaderTimingContext.Provider>
   );
