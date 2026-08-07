@@ -121,7 +121,7 @@ export default function Hero() {
         className="pointer-events-none object-cover opacity-80"
       />
 
-      <div className="pointer-events-none absolute bottom-[9%] left-1/2 z-20 w-[clamp(380px,58vw,1050px)] -translate-x-1/2">
+      <div className="pointer-events-none absolute bottom-[9%] left-1/2 z-20 w-[clamp(420px,64vw,1160px)] -translate-x-1/2">
         <Image
           src="/images/Home/plant-out-bean.png"
           alt=""
@@ -158,20 +158,20 @@ export default function Hero() {
         </span>
       </p>
 
-      <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:-mt-25">
+      <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:max-w-none lg:px-[clamp(12px,1.5vw,32px)] lg:-mt-25">
         <div className="flex w-full flex-col items-center">
           <div
             ref={linesRef}
-            className="relative flex w-full flex-col items-center lg:h-[calc(2*clamp(30px,6.9444vw,160px))]"
+            className="relative flex w-full flex-col items-center lg:h-[calc(2*clamp(40px,10.2vw,224px))] lg:-translate-x-[clamp(16px,2.4vw,56px)]"
           >
             {HEADLINE_LINES.map(({ text, column, row }) => (
               <div
                 key={text}
-                className={`whitespace-nowrap font-anton-sc text-[clamp(40px,11vw,160px)] leading-none lg:text-[clamp(30px,6.9444vw,160px)] lg:absolute ${
+                className={`whitespace-nowrap font-anton-sc text-[clamp(46px,12.6vw,186px)] leading-none lg:text-[clamp(40px,10.2vw,224px)] lg:absolute ${
                   column === "left"
                     ? "lg:right-[calc(50%+clamp(24px,5.55vw,90px))]"
                     : "lg:left-[calc(50%+clamp(24px,5.55vw,90px))]"
-                } ${row === 0 ? "lg:top-0" : "lg:top-[clamp(30px,6.9444vw,160px)]"}`}
+                } ${row === 0 ? "lg:top-0" : "lg:top-[clamp(40px,10.2vw,224px)]"}`}
               >
                 <Line text={text} />
               </div>

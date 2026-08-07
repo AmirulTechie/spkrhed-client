@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { useLoaderDuration } from "@/components/loader/LoaderTimingContext";
+import { canPlayVideo } from "@/lib/media";
 
 export default function ProjectHero({ project }) {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function ProjectHero({ project }) {
   }, [loaderDuration]);
 
   const bannerImage = project.images[0] ?? project.thumbnail;
+  const playableHeroVideo = canPlayVideo(project.heroVideo) ? project.heroVideo : null;
 
   return (
     // Source banners are landscape photos/mockups; a full min-h-dvh section
@@ -60,14 +62,25 @@ export default function ProjectHero({ project }) {
     // window becomes so extreme it zooms in past the actual subject —
     // shortening the section on small screens keeps the crop reasonable.
     <section className="relative flex h-[65dvh] w-full items-end overflow-hidden bg-black sm:h-[80dvh] lg:min-h-dvh">
-      <Image
-        src={bannerImage}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {playableHeroVideo ? (
+        <video
+          src={playableHeroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <Image
+          src={bannerImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      )}
 
       <div
         aria-hidden

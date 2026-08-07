@@ -205,7 +205,7 @@ export default function StatsClientsSection() {
             </div>
           </div>
 
-          <p className="font-anton-sc text-[clamp(18px,2.2222vw,51px)] leading-[1.275] text-white">
+          <p className="font-anton-sc text-[clamp(18px,2.2222vw,51px)] leading-[1.275] text-white uppercase">
             {COPY_LINES.map((line, lineIndex) => (
               <span key={lineIndex} className="lg:block">
                 {line.split(" ").map((word) => {
@@ -262,15 +262,35 @@ export default function StatsClientsSection() {
             className="grid grid-cols-2 justify-items-center gap-x-[clamp(24px,3.4722vw,80px)] gap-y-[clamp(32px,4.5139vw,104px)] sm:grid-cols-4"
           >
             {LOGOS.map((logo) => (
-              <Image
+              <div
                 key={logo.src}
-                src={logo.src}
-                alt={logo.alt}
-                width={2880}
-                height={2880}
-                sizes="120px"
-                className="h-auto w-[clamp(64px,8.3333vw,120px)] cursor-pointer brightness-0 invert opacity-60 transition-all duration-300 ease-out hover:scale-110 hover:opacity-100"
-              />
+                className="group relative aspect-square w-[clamp(64px,8.3333vw,120px)] cursor-pointer transition-transform duration-300 ease-out hover:scale-110"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  fill
+                  sizes="120px"
+                  className="object-contain brightness-0 invert opacity-60 transition-opacity duration-300 ease-out group-hover:opacity-0"
+                />
+                {/* Purple hover state: a flat #AC40FF layer masked to the
+                    logo's own alpha shape, so the color swap is exact
+                    instead of approximated via CSS filters. */}
+                <span
+                  aria-hidden
+                  style={{
+                    WebkitMaskImage: `url(${logo.src})`,
+                    maskImage: `url(${logo.src})`,
+                    WebkitMaskSize: "contain",
+                    maskSize: "contain",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    maskPosition: "center",
+                  }}
+                  className="absolute inset-0 bg-[#AC40FF] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+                />
+              </div>
             ))}
           </div>
         </div>

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { WORK_PROJECTS } from "@/data/work";
 import ProjectHero from "@/components/work/ProjectHero";
 import ProjectContent from "@/components/work/ProjectContent";
+import ProjectBlocks from "@/components/work/ProjectBlocks";
 
 export function generateStaticParams() {
   return WORK_PROJECTS.map((project) => ({ slug: project.slug }));
@@ -34,10 +35,16 @@ export default async function WorkProjectPage({ params }) {
 
   if (!project) notFound();
 
+  const hasBlocks = Array.isArray(project.blocks) && project.blocks.length > 0;
+
   return (
     <>
       <ProjectHero project={project} />
-      <ProjectContent project={project} />
+      {hasBlocks ? (
+        <ProjectBlocks project={project} />
+      ) : (
+        <ProjectContent project={project} />
+      )}
     </>
   );
 }

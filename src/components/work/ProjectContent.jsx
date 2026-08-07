@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { canPlayVideo } from "@/lib/media";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -207,10 +208,7 @@ export default function ProjectContent({ project }) {
 
   const hasSections = Array.isArray(project.sections) && project.sections.length > 0;
   const galleryImages = hasSections ? [] : project.images.slice(1);
-  // CSP's media-src only allows Cloudinary — videos still pointing at the old
-  // speakerhead.com host get silently blocked by the browser, so only render
-  // once a project's videoUrl has actually been migrated there.
-  const canPlayVideo = project.videoUrl?.includes("res.cloudinary.com");
+  const playableVideo = canPlayVideo(project.videoUrl);
 
   // Every image across every section gets a stable flat ref slot via this
   // closure counter, reset each render — avoids needing per-section nested
@@ -284,7 +282,7 @@ export default function ProjectContent({ project }) {
             />
           ))}
 
-          {canPlayVideo && (
+          {playableVideo && (
             <div className="mx-auto w-full max-w-325 px-[clamp(24px,5.5556vw,80px)] pt-[clamp(24px,3.3333vw,40px)]">
               <video
                 src={project.videoUrl}
@@ -302,7 +300,7 @@ export default function ProjectContent({ project }) {
             <TextBlock label="Approach" text={project.approach} blockRef={approachRef} />
           </div>
 
-          {canPlayVideo && (
+          {playableVideo && (
             <video
               src={project.videoUrl}
               controls

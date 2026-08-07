@@ -112,3 +112,15 @@
 .arrow-pulse {
   animation: arrow-nudge 1.1s ease-in-out infinite;
 }
+
+/* Scroll-snap galleries (e.g. ProjectVideoGallery) want the native
+   horizontal-scroll/snap behavior without a visible scrollbar competing
+   with the row's own prev/next buttons. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

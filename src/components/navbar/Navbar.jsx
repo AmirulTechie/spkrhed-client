@@ -22,7 +22,6 @@ const NAV_LINKS = [
   { label: "Work", href: "/work" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
-  { label: "Updates", href: "/updates" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -117,7 +116,7 @@ function AnimatedNavLink({ href, children, onClick, isActive = false }) {
       initial="rest"
       animate={isActive ? "hover" : "rest"}
       whileHover="hover"
-      className={`relative inline-flex items-center gap-1.5 ${
+      className={`relative inline-flex items-center ${
         isActive ? "text-white" : ""
       }`}
     >
@@ -299,7 +298,7 @@ export default function Navbar() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.nav
-        className={`relative z-10 mx-auto flex items-center justify-between gap-x-4 px-8 text-white sm:px-12 lg:px-6 2xl:px-16 ${
+        className={`relative z-10 mx-auto flex items-center justify-between gap-x-4 px-6 text-white sm:px-8 lg:px-4 2xl:px-12 ${
           isWorkPage ? "py-5" : "py-8"
         }`}
         initial={false}
@@ -319,17 +318,16 @@ export default function Navbar() {
           />
         )}
 
-        <div className="flex items-center gap-[clamp(12px,1.8vw,56px)]">
+        <div className="flex items-center gap-[clamp(24px,3.2vw,88px)]">
           <Logo innerRef={logoRef} />
 
           <ul
             ref={navListRef}
-            className="hidden items-center gap-[clamp(8px,1vw,28px)] text-[clamp(13px,0.9vw,20px)] font-semibold text-white/90 xl:flex"
+            className="hidden items-center gap-[clamp(8px,1vw,28px)] text-[clamp(14px,1vw,22px)] font-semibold text-white/90 uppercase xl:flex"
           >
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href} className="opacity-0">
                 <AnimatedNavLink href={href} isActive={pathname === href}>
-                  <span aria-hidden className="h-1 w-1 rounded-full bg-white" />
                   {label}
                 </AnimatedNavLink>
               </li>

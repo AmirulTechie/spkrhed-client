@@ -65,8 +65,10 @@ const BRANCHES = [
 const CLOUD_POSITION = "bottom-[-35%] left-1/2 w-[115%]";
 
 // How much stage width/height stays clear around the video once it has
-// scaled up to its largest, final size.
-const VIDEO_FINAL_MARGIN_RATIO = 0.03;
+// scaled up to its largest, final size. Zero so the video fills the stage
+// edge-to-edge at full scale, with no gap left for the user to scroll past
+// before the pin releases.
+const VIDEO_FINAL_MARGIN_RATIO = 0;
 
 export default function VideoSection() {
   const stageRef = useRef(null);
@@ -135,19 +137,22 @@ export default function VideoSection() {
         rightEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
       }
 
-      // Scale the video up to fill the stage minus a small breathing
-      // margin, capped by whichever dimension (width or height) is
-      // tighter so it never overflows the stage.
+      // Grow the video from a small starting box up to the stage's full
+      // width and height independently (not a uniform scale), so the
+      // final frame is flush with the stage on every side instead of
+      // being letterboxed to the video's own, narrower aspect ratio. The
+      // inner Image uses object-cover, so it crops to fill as the box's
+      // aspect ratio shifts rather than stretching/distorting.
       const videoRect = video.getBoundingClientRect();
       const marginX = stageRect.width * VIDEO_FINAL_MARGIN_RATIO;
       const marginY = stageRect.height * VIDEO_FINAL_MARGIN_RATIO;
-      const targetScale = Math.min(
-        (stageRect.width - marginX * 2) / videoRect.width,
-        (stageRect.height - marginY * 2) / videoRect.height
-      );
+      const startWidth = videoRect.width * 0.4;
+      const startHeight = videoRect.height * 0.4;
+      const targetWidth = stageRect.width - marginX * 2;
+      const targetHeight = stageRect.height - marginY * 2;
 
-      gsap.set(video, { scale: 0.4 });
-      tl.to(video, { scale: targetScale, ease: "none" }, 0);
+      gsap.set(video, { width: startWidth, height: startHeight });
+      tl.to(video, { width: targetWidth, height: targetHeight, ease: "none" }, 0);
     });
 
     return () => mm.revert();
@@ -185,10 +190,10 @@ export default function VideoSection() {
 
         <div
           ref={videoRef}
-          className="absolute left-1/2 top-[38%] aspect-850/452 w-[94%] overflow-hidden rounded-[clamp(12px,2.2vw,32px)] z-10 will-change-transform lg:top-1/2 lg:w-[59.03%]"
+          className="absolute left-1/2 top-[38%] aspect-850/452 w-[94%] overflow-hidden z-10 will-change-transform lg:top-1/2 lg:w-[59.03%]"
         >
           <Image
-            src="/images/Home/home-video-thumbnail.png"
+            src="/images/Home/video_section_thumbnail.png"
             alt="Watch the story"
             fill
             sizes="(min-width: 1024px) 60vw, 100vw"

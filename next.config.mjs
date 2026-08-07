@@ -1,16 +1,22 @@
 const isDev = process.env.NODE_ENV === "development";
 
-// Cloudinary is allowed for the hero videos described in CLAUDE.md; widen
+// Cloudinary is allowed for the hero videos described in CLAUDE.md.
+// Vercel Blob (public store "spkrhed-media") hosts the work-page case-study
+// videos migrated from the old speakerhead.com site — every public store
+// serves from a per-store subdomain of blob.vercel-storage.com, hence the
+// wildcard. player.vimeo.com / youtube.com are allowed as frame-src for case
+// studies (e.g. Space Whale, HairDreams) that embed the client's existing
+// Vimeo/YouTube videos directly rather than a self-hosted file. Widen
 // img-src/media-src/connect-src here if more third-party origins are added.
 const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://res.cloudinary.com;
-  media-src 'self' https://res.cloudinary.com;
+  img-src 'self' data: blob: https://res.cloudinary.com https://*.public.blob.vercel-storage.com;
+  media-src 'self' https://res.cloudinary.com https://*.public.blob.vercel-storage.com;
   font-src 'self' data:;
-  connect-src 'self' https://res.cloudinary.com https://challenges.cloudflare.com;
-  frame-src https://challenges.cloudflare.com;
+  connect-src 'self' https://res.cloudinary.com https://*.public.blob.vercel-storage.com https://challenges.cloudflare.com;
+  frame-src https://challenges.cloudflare.com https://player.vimeo.com https://www.youtube.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -26,7 +32,10 @@ const nextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+    ],
     formats: ["image/avif", "image/webp"],
   },
   allowedDevOrigins: [

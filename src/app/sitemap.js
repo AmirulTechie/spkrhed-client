@@ -1,7 +1,7 @@
 import { WORK_PROJECTS } from "@/data/work";
 import { SITE_URL } from "@/lib/site-config";
 
-const STATIC_ROUTES = ["", "/about", "/services", "/work", "/contact", "/updates"];
+const STATIC_ROUTES = ["", "/about", "/services", "/work", "/contact"];
 
 export default function sitemap() {
   const lastModified = new Date();
