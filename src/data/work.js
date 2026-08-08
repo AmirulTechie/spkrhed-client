@@ -182,14 +182,6 @@ export const WORK_PROJECTS = [
         "imageWidth": 1600,
         "imageHeight": 900,
         "imageSide": "left"
-      },
-      {
-        "heading": null,
-        "text": "Since Reno’s natural desert environment provides spectacular mountain views by day and equally impressive constellation views by night, we determined that an alternating Day/Night environment was the perfect setting for the piece. The entire piece was modeled in Unreal Engine 5. Speakerhead CEO Karriem Muhammad had this to say about the project, “Many of our most current projects are being developed for Crypto, NFT, and Metaverse applications. The Space Whale project presented a rare opportunity for us to illustrate how complex pieces can be accurately modeled for these new spaces.”",
-        "image": "/images/work/mastercard/img-4.jpg",
-        "imageWidth": 1600,
-        "imageHeight": 900,
-        "imageSide": "right"
       }
     ]
   },
@@ -581,11 +573,6 @@ export const WORK_PROJECTS = [
         "heading": "3D Animation",
         "reverse": true,
         "text": "Once again clear messaging and accurate descriptions of the process were essential for the Herc 3d animation. Accurate models representing Herc rental products as efficient and well maintained was another crucial aspect of the campaign."
-      },
-      {
-        "type": "video-embed",
-        "variant": "ambient",
-        "src": "https://www.speakerhead.com/assets/videos/hertz.mov"
       }
     ]
   },
@@ -878,11 +865,6 @@ export const WORK_PROJECTS = [
         "heading": "Approach",
         "reverse": true,
         "text": "After studying the Cordella™ Heart Failure System process carefully, we determined to present it as dynamic animation. Speakerhead illustrated each component's purpose and functionality, animating its deployment and placement within the human cavities. This 3D segment was integrated with live-action footage and screenshots from the hardware modules. The final project was synchronized with the help of a partnering agency."
-      },
-      {
-        "type": "video-embed",
-        "variant": "ambient",
-        "src": "https://www.speakerhead.com/assets/videos/endotronixs.mp4"
       }
     ]
   },

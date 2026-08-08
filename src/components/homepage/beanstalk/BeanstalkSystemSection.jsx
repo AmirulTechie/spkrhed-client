@@ -66,15 +66,15 @@ function BeanstalkCard({ card, ref }) {
       ref={ref}
       className="relative w-full max-w-143.75 rounded-[20px] bg-[#D9D9D9]/20 p-[clamp(24px,2.7778vw,40px)] backdrop-blur-sm flex flex-col items-start"
     >
-      <div className="flex items-center gap-[clamp(8px,0.8333vw,12px)]">
+      <div className="flex items-center gap-[clamp(12px,1.25vw,18px)]">
         <Image
           src={card.icon}
           alt=""
           width={34}
           height={34}
-          className="size-[clamp(24px,2.3611vw,34px)] shrink-0"
+          className="size-[clamp(32px,3.4722vw,50px)] shrink-0"
         />
-        <span className="inline-flex rounded-[70px] bg-[#AC40FF] px-5 py-2 font-poppins text-[clamp(14px,1.4583vw,21px)] font-medium leading-none text-white">
+        <span className="inline-flex items-center whitespace-nowrap rounded-[70px] bg-[#AC40FF] px-[clamp(16px,1.9444vw,28px)] py-[clamp(8px,0.9722vw,14px)] font-poppins text-[clamp(16px,2.5vw,36px)] font-medium leading-none text-white">
           {card.step}
         </span>
       </div>
@@ -86,7 +86,7 @@ function BeanstalkCard({ card, ref }) {
           </span>
         ))}
       </h3>
-      <p className="mt-[clamp(20px,4.31vw,70px)] max-w-md font-poppins text-[clamp(14px,1.1111vw,16px)] font-medium leading-[1.1] text-black text-start">
+      <p className="mt-[clamp(12px,1.6667vw,24px)] max-w-md font-poppins text-[clamp(16px,1.3889vw,20px)] font-medium leading-[1.1] text-black text-start">
         {card.description}
       </p>
 
@@ -109,11 +109,12 @@ export default function BeanstalkSystemSection() {
 
   // One-time entrance, gated behind ScrollTrigger the moment the section is
   // reached: the big-branch rises from below (position untouched), the
-  // heading types on, "Growth Engine." ink-reveals with a fast clip-path
-  // wipe left to right — same treatment as Flywheel's "Outreach Makes
-  // Content Close Faster." — and the description slides in from the left.
-  // Each card then pops in on its own ScrollTrigger as the user scrolls
-  // past it.
+  // heading types on, "Growth Engine." fades/lifts in — a straight clip-path
+  // wipe (as used by Flywheel's "Outreach Makes Content Close Faster.") cuts
+  // a hard vertical line through this cursive font's loops (e.g. the belly
+  // of the G) whenever caught mid-transition, so it isn't used here — and
+  // the description slides in from the left. Each card then pops in on its
+  // own ScrollTrigger as the user scrolls past it.
   useLayoutEffect(() => {
     const typewriterChars = [
       ...fivePlantingsRef.current.querySelectorAll(".typewriter-char"),
@@ -124,7 +125,7 @@ export default function BeanstalkSystemSection() {
     const ctx = gsap.context(() => {
       gsap.set(bigBranchRef.current, { opacity: 0, y: 220 });
       gsap.set(typewriterChars, { opacity: 0 });
-      gsap.set(growthEngineLine, { clipPath: "inset(-100px 100% -100px 0%)" });
+      gsap.set(growthEngineLine, { opacity: 0, yPercent: 20, filter: "blur(6px)" });
       gsap.set(descriptionRef.current, { opacity: 0, x: -140 });
 
       const tl = gsap.timeline({
@@ -154,9 +155,11 @@ export default function BeanstalkSystemSection() {
         .to(
           growthEngineLine,
           {
-            clipPath: "inset(-100px 0% -100px 0%)",
+            opacity: 1,
+            yPercent: 0,
+            filter: "blur(0px)",
             duration: 0.45,
-            ease: "power2.inOut",
+            ease: "power2.out",
           },
           "-=0.2",
         )

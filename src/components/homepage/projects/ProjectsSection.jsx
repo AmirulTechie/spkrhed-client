@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,24 +10,28 @@ gsap.registerPlugin(ScrollTrigger);
 
 const PROJECTS = [
   {
+    slug: "mastercard",
+    category: "/ Financial Technology",
+    name: "MasterCard",
+    services: "3D Animation, Branding, Marketing",
+    image: "/images/Home/project-thubmnails/project-mastercard.jpg",
+  },
+  {
+    slug: "breez",
     category: "/ Marketing Agency",
     name: "Breez Banner System",
     services: "UI/UX, Development, Marketing",
     image: "/images/Home/project-thubmnails/project-01.png",
   },
   {
+    slug: "bqs",
     category: "/ Agency",
     name: "BQS Website",
     services: "UI/UX, Development, Marketing",
     image: "/images/Home/project-thubmnails/project-02.png",
   },
   {
-    category: "/ Fashion",
-    name: "Tuft & Stitch",
-    services: "Branding, Marketing, Website",
-    image: "/images/Home/project-thubmnails/project-03.png",
-  },
-  {
+    slug: "concord-medical",
     category: "/ Healthcare",
     name: "Concord Medical",
     services: "UI/UX, Development, Marketing",
@@ -37,7 +42,6 @@ const PROJECTS = [
 const BULLET_TEXT = "Selected Projects";
 const DESCRIPTION_TEXT =
   "Projects across brand strategy, visual identity, web design, development, and visual content. Each project here represents a specific brief, a specific challenge, and a specific outcome.";
-
 // Splits on words, keeping spaces as real text nodes between word-spans
 // (rather than wrapping the space itself in a span, which would collapse to
 // zero width), and wraps each character in an individually animatable span —
@@ -82,34 +86,38 @@ function ProjectRow({ project, rowRef }) {
       ref={rowRef}
       className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
     >
-      <div>
-        <p className="font-poppins text-[clamp(14px,1.3889vw,20px)] leading-[0.97] text-[#b7b7b7]">
-          {project.category}
-        </p>
-        <h3 className="mt-[clamp(8px,2.2917vw,33px)] font-anton-sc text-[clamp(28px,3.4722vw,50px)] uppercase leading-[0.97] text-white">
-          {project.name}
-        </h3>
-        <p className="mt-[clamp(24px,8.125vw,117px)] font-poppins text-[clamp(14px,1.3889vw,20px)] leading-[0.97] text-[#b7b7b7]">
-          {project.services}
-        </p>
-      </div>
+      <Link
+        href={`/work/${project.slug}`}
+        className="group flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between w-full"
+      >
+        <div>
+          <p className="font-poppins text-[clamp(14px,1.3889vw,20px)] leading-[0.97] text-[#b7b7b7]">
+            {project.category}
+          </p>
+          <h3 className="mt-[clamp(8px,2.2917vw,33px)] font-anton-sc text-[clamp(28px,3.4722vw,50px)] uppercase leading-[0.97] text-white transition-colors duration-300 group-hover:text-[#AC40FF]">
+            {project.name}
+          </h3>
+          <p className="mt-[clamp(24px,8.125vw,117px)] font-poppins text-[clamp(14px,1.3889vw,20px)] leading-[0.97] text-[#b7b7b7]">
+            {project.services}
+          </p>
+        </div>
 
-      <div className="group relative aspect-544/362 w-full overflow-hidden rounded-[30px] sm:w-[clamp(280px,37.7778vw,544px)] sm:shrink-0">
-        <Image
-          src={project.image}
-          alt={project.name}
-          fill
-          sizes="(min-width: 640px) 544px, 100vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-        />
-      </div>
+        <div className="relative aspect-544/362 w-full overflow-hidden rounded-[30px] sm:w-[clamp(280px,37.7778vw,544px)] sm:shrink-0">
+          <Image
+            src={project.image}
+            alt={project.name}
+            fill
+            sizes="(min-width: 640px) 544px, 100vw"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          />
+        </div>
+      </Link>
     </div>
   );
 }
 
 export default function ProjectsSection() {
   const sectionRef = useRef(null);
-  const bulletRef = useRef(null);
   const bulletCharRefs = useRef([]);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -138,7 +146,7 @@ export default function ProjectsSection() {
       gsap.set(descriptionRef.current, { opacity: 0, y: 40, scale: 0.92 });
 
       const anchorEl = bulletChars[0];
-      const bulletEls = [bulletRef.current, ...bulletChars];
+      const bulletEls = bulletChars;
       const anchorLeft = anchorEl.getBoundingClientRect().left;
 
       gsap.set(bulletEls, {
@@ -212,16 +220,7 @@ export default function ProjectsSection() {
       className="relative overflow-hidden py-[clamp(64px,9.7222vw,140px)]"
     >
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.5556vw,80px)]">
-        <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
-          <span ref={bulletRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={120}
-              height={120}
-              className="h-[clamp(24px,5.2083vw,75px)] w-[clamp(24px,5.2083vw,75px)] brightness-0 invert"
-            />
-          </span>
+        <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center px-2">
           <span className="font-anton-sc whitespace-nowrap text-[clamp(40px,10vw,144px)] uppercase leading-none tracking-tight text-white">
             {BULLET_TEXT.split("").map((char, i) => (
               <span
@@ -260,7 +259,7 @@ export default function ProjectsSection() {
 
           <p
             ref={descriptionRef}
-            className="font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[1.05] text-[#b7b7b7] lg:max-w-[clamp(300px,29.2361vw,421px)]"
+            className="font-poppins text-[clamp(16px,2.22vw,32px)] font-medium leading-[1.05] text-[#b7b7b7] lg:max-w-100"
           >
             {DESCRIPTION_TEXT}
           </p>

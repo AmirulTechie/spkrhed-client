@@ -23,7 +23,6 @@ function RevealWord({ children, className = "" }) {
 export default function WhyLinkedInSection() {
   const glowRef = useRef(null);
   const sectionRef = useRef(null);
-  const kickerIconRef = useRef(null);
   const kickerCharRefs = useRef([]);
   const headingRef = useRef(null);
   const leftParaRef = useRef(null);
@@ -64,7 +63,6 @@ export default function WhyLinkedInSection() {
         yPercent: 110,
         filter: "blur(6px)",
       });
-      gsap.set(kickerIconRef.current, { opacity: 0, y: 20 });
       gsap.set(glowRef.current, { opacity: 0, y: 60 });
 
       const tl = gsap.timeline({
@@ -75,19 +73,14 @@ export default function WhyLinkedInSection() {
         },
       });
 
-      tl.to(kickerIconRef.current, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" })
-        .to(
-          kickerChars,
-          {
-            opacity: 1,
-            yPercent: 0,
-            filter: "blur(0px)",
-            duration: 0.4,
-            ease: "power3.out",
-            stagger: 0.03,
-          },
-          "<0.05"
-        )
+      tl.to(kickerChars, {
+        opacity: 1,
+        yPercent: 0,
+        filter: "blur(0px)",
+        duration: 0.4,
+        ease: "power3.out",
+        stagger: 0.03,
+      })
         .to(
           headingWords,
           {
@@ -169,16 +162,7 @@ export default function WhyLinkedInSection() {
       />
 
       <div className="relative mx-auto max-w-300 px-[clamp(24px,5.5556vw,80px)] text-center">
-        <div className="mx-[calc(50%-50vw)] mb-15 mt-20 flex w-screen justify-center items-center gap-3 sm:gap-6 sm:mb-36 px-2">
-          <span ref={kickerIconRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={120}
-              height={120}
-              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0 invert"
-            />
-          </span>
+        <div className="mx-[calc(50%-50vw)] mb-15 mt-20 flex w-screen justify-center items-center sm:mb-36 px-2">
           <span className="font-anton-sc whitespace-nowrap text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-white">
             {KICKER_TEXT.split("").map((char, i) => (
               <span

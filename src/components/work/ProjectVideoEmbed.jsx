@@ -19,6 +19,19 @@ export default function ProjectVideoEmbed({ src, variant = "player" }) {
   const isIframeEmbed = isVimeo || isYouTube;
   const ambient = variant === "ambient";
 
+  // A "player" iframe (Vimeo/YouTube) has no object-fit: cover of its own —
+  // left to fill an h-dvh-tall box, the platform's embed letterboxes or
+  // pillarboxes to the video's native 16:9 the moment the viewport's own
+  // ratio isn't also 16:9 (any window shorter/wider than that leaves visible
+  // bars down the sides, so the video reads as not spanning full width).
+  // Constraining the container itself to aspect-video instead guarantees the
+  // box's ratio always matches the video's, so the iframe fills it edge to
+  // edge with no bars and its native control bar lands fully on-screen.
+  // Ambient embeds keep the h-dvh cover treatment below — they have no
+  // control bar to protect, so cropping the excess to stay full-bleed is
+  // fine there.
+  const iframePlayer = isIframeEmbed && !ambient;
+
   const containerRef = useRef(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
@@ -53,20 +66,20 @@ export default function ProjectVideoEmbed({ src, variant = "player" }) {
   if (!isIframeEmbed && !canPlayVideo(src)) return null;
 
   return (
-    <div ref={containerRef} className="relative h-dvh w-full overflow-hidden bg-black">
+    <div
+      ref={containerRef}
+      className={`relative w-full overflow-hidden bg-black ${iframePlayer ? "aspect-video" : "h-dvh"}`}
+    >
       {shouldLoad &&
         (isIframeEmbed ? (
           <iframe
             src={src}
-            // An iframe has no object-fit: cover — sized to inset-0 it would
-            // just letterbox/pillarbox to the video's native aspect ratio,
-            // leaving visible bars. Ambient/background embeds instead get
-            // oversized to whichever dimension the viewport demands (16:9
-            // assumed, matching the old site's own background-video embeds)
-            // and centered, so the crop always fills edge to edge with no
-            // gaps — the classic iframe "cover" trick. A "player" embed
-            // keeps its natural fit since it's meant to be watched intact,
-            // not cropped.
+            // Ambient/background embeds get oversized to whichever dimension
+            // the viewport demands (16:9 assumed, matching the old site's own
+            // background-video embeds) and centered, so the crop always fills
+            // edge to edge with no gaps — the classic iframe "cover" trick.
+            // A "player" embed just fills its aspect-video container exactly
+            // (see iframePlayer above), so it's never cropped or barred.
             className={
               ambient
                 ? "absolute left-1/2 top-1/2 h-[56.25vw] min-h-dvh w-screen min-w-[177.78dvh] -translate-x-1/2 -translate-y-1/2"

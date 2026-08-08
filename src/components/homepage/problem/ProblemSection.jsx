@@ -392,7 +392,7 @@ export default function ProblemSection() {
               alt=""
               width={200}
               height={200}
-              className="pointer-events-none relative z-0 my-[clamp(16px,2.7778vw,40px)] -ml-[clamp(20px,4.1667vw,60px)] w-[clamp(54px,8.7188vw,126px)] select-none"
+              className="pointer-events-none relative z-0 my-[clamp(16px,2.7778vw,40px)] ml-[clamp(8px,1.3889vw,20px)] w-[clamp(54px,8.7188vw,126px)] select-none"
             />
 
             <p
