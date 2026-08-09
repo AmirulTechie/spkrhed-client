@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -22,10 +23,6 @@ const ROLE_CLASS = "font-poppins text-[clamp(11px,0.9028vw,13px)] leading-[1.1]"
 const BULLET_TEXT = "Testimonials";
 const DESCRIPTION_TEXT = "Founders, agencies, and enterprise teams who joined the movement.";
 
-// Splits on words, keeping spaces as real text nodes between word-spans
-// (rather than wrapping the space itself in a span, which would collapse to
-// zero width), and wraps each character in an individually animatable span —
-// the true "type on" building block shared by Beanstalk/Projects/Pricing.
 function TypewriterChars({ text }) {
   const words = text.split(" ");
   const nodes = [];
@@ -185,7 +182,6 @@ function TestimonialCard({ testimonial, className = "", ariaHidden = false }) {
 
 export default function TestimonialsSection() {
   const sectionRef = useRef(null);
-  const bulletIconRef = useRef(null);
   const bulletCharRefs = useRef([]);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -194,19 +190,17 @@ export default function TestimonialsSection() {
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
 
-  // One-time entrance, gated behind ScrollTrigger: the "Testimonials" bullet
-  // line is coupled to its first character exactly like Hero's "This is a
-  // movement" line (everything starts stacked on the anchor, then pulls
-  // apart outward), the heading and description type on character by
-  // character, the tree branch slides in from the left border, the leaf
-  // drifts in from the middle of the section, and the card strip fades and
-  // rises into place. No resting position changes — only the
-  // approach. Once in, the strip sits at the exact Figma rest position (a
-  // left gap revealing the tree branch, the third card cut off on the
-  // right) and becomes a bounded drag: dragging left slides the cards over
-  // that gap until the last card's edge is flush with the viewport (hard
-  // stop, no wrap), dragging right returns to the Figma rest position (also
-  // a hard stop) — see the Draggable setup below.
+  // Exposed to the JSX buttons below, filled in once the drag setup inside
+  // the effect knows the track's real bounds. Kept as a ref (not state)
+  // since these are imperative actions, not render data.
+  const trackControlsRef = useRef({ next: () => {}, prev: () => {} });
+
+  // Drives the fade-out on the hint copy and the disabled state on the
+  // chevrons. Starts "false"/"false" (not at either end, nothing dismissed
+  // yet) so the hint and both buttons are visible on first paint.
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [scrollState, setScrollState] = useState({ atStart: true, atEnd: false });
+
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".typewriter-char"),
@@ -232,18 +226,8 @@ export default function TestimonialsSection() {
 
       if (viewportRef.current) gsap.set(viewportRef.current, { opacity: 0, y: 60 });
 
-      // Make the card strip a bounded, grab-and-drag scroller — same at
-      // every breakpoint. The strip's rest position (x: 0) is the Figma
-      // layout itself — the left gap/margin-left on the track already
-      // places card one there in normal flow. Dragging left is allowed
-      // only until the last card's right edge reaches the viewport's right
-      // edge (minX); dragging right is capped at the rest position (maxX:
-      // 0). edgeResistance is < 1 so pulling past either dead end
-      // stretches like a rubber band (heavy resistance, not a 1:1 drag)
-      // and snaps back to the bound on release — no wrap. Card width is
-      // clamp()-based (see the track below), so on narrow phones the
-      // clamp's min pins each card to roughly a full screen width and only
-      // one is visible at rest — no separate mobile layout needed.
+      let updateScrollState = () => {};
+
       if (trackRef.current && viewportRef.current) {
         const track = trackRef.current;
         const viewport = viewportRef.current;
@@ -255,20 +239,28 @@ export default function TestimonialsSection() {
           return { minX: Math.min(0, viewportWidth - trackWidth - restGap), maxX: 0 };
         };
 
+        // Keeps the chevron disabled states and hint visibility in sync
+        // with wherever the strip actually is, whether it got there via
+        // drag, throw, snap-back, or a button click.
+        updateScrollState = () => {
+          const bounds = getBounds();
+          const x = gsap.getProperty(track, "x");
+          setScrollState({
+            atStart: x >= bounds.maxX - 1,
+            atEnd: x <= bounds.minX + 1,
+          });
+        };
+
         gsap.set(track, { x: 0 });
 
-        // edgeResistance gives the drag itself a heavy, rubber-band feel
-        // once past either dead end. inertia's own bounds-aware throw
-        // handles the snap-back for a real flick, but a slow drag that's
-        // released with ~zero velocity right won't generate a throw large
-        // enough to pull it back in on its own — so onDragEnd explicitly
-        // tweens it back to the nearest bound whenever release happens
-        // outside [minX, maxX], guaranteeing the rubber always retracts.
         const [draggable] = Draggable.create(track, {
           type: "x",
           bounds: getBounds(),
           edgeResistance: 0.65,
           inertia: true,
+          onDragStart: () => setHasInteracted(true),
+          onDrag: updateScrollState,
+          onThrowUpdate: updateScrollState,
           onDragEnd: () => {
             const bounds = getBounds();
             const x = gsap.getProperty(track, "x");
@@ -278,7 +270,10 @@ export default function TestimonialsSection() {
                 x: gsap.utils.clamp(bounds.minX, bounds.maxX, x),
                 duration: 0.6,
                 ease: "elastic.out(1, 0.75)",
+                onUpdate: updateScrollState,
               });
+            } else {
+              updateScrollState();
             }
           },
         });
@@ -289,19 +284,45 @@ export default function TestimonialsSection() {
           gsap.set(track, {
             x: gsap.utils.clamp(bounds.minX, bounds.maxX, gsap.getProperty(track, "x")),
           });
+          updateScrollState();
         };
         window.addEventListener("resize", onResize);
         removeResizeListener = () => window.removeEventListener("resize", onResize);
+
+        // Chevron click handler: steps by roughly one card width (card +
+        // gap), clamped to the same bounds the drag respects, so buttons
+        // and drag never disagree about where the ends are.
+        const nudgeTrack = (dir) => {
+          const bounds = getBounds();
+          const firstCard = track.firstElementChild;
+          const gap = parseFloat(getComputedStyle(track).columnGap) || 18;
+          const step = (firstCard ? firstCard.getBoundingClientRect().width : 300) + gap;
+          const currentX = gsap.getProperty(track, "x");
+          const nextX = gsap.utils.clamp(
+            bounds.minX,
+            bounds.maxX,
+            currentX + (dir === "prev" ? step : -step),
+          );
+          gsap.killTweensOf(track);
+          gsap.to(track, {
+            x: nextX,
+            duration: 0.6,
+            ease: "power3.out",
+            onUpdate: updateScrollState,
+          });
+          setHasInteracted(true);
+        };
+
+        trackControlsRef.current = {
+          next: () => nudgeTrack("next"),
+          prev: () => nudgeTrack("prev"),
+        };
       }
 
-      // "Testimonials" is coupled to its first character — every other
-      // char and the bullet start stacked on top of it, then pull apart
-      // outward in both directions, exactly like Hero's movement text.
       const anchorEl = bulletChars[0];
-      const bulletEls = [bulletIconRef.current, ...bulletChars];
       const anchorLeft = anchorEl.getBoundingClientRect().left;
 
-      gsap.set(bulletEls, {
+      gsap.set(bulletChars, {
         opacity: 0,
         x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
       });
@@ -314,12 +335,12 @@ export default function TestimonialsSection() {
         },
       });
 
-      tl.to(bulletEls, {
+      tl.to(bulletChars, {
         x: 0,
         opacity: 1,
         duration: 0.5,
         ease: "power3.out",
-        stagger: { each: 0.032, from: bulletEls.indexOf(anchorEl) },
+        stagger: { each: 0.032, from: 0 },
       })
         .to(
           headingChars,
@@ -358,6 +379,21 @@ export default function TestimonialsSection() {
         },
         "-=0.5",
       );
+
+      // Discoverability nudge: once everything's settled, tug the strip
+      // left and let it spring back. Purely a visual hint that the cards
+      // move, doesn't touch scrollState since it always ends back at x: 0.
+      if (trackRef.current) {
+        tl.to(
+          trackRef.current,
+          { x: "-=70", duration: 0.5, ease: "power2.out" },
+          "+=0.3",
+        ).to(trackRef.current, {
+          x: "+=70",
+          duration: 0.7,
+          ease: "elastic.out(1, 0.55)",
+        });
+      }
     }, sectionRef);
 
     return () => {
@@ -399,15 +435,6 @@ export default function TestimonialsSection() {
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
         <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
-          <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={120}
-              height={120}
-              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0 invert"
-            />
-          </span>
           <span className="font-anton-sc whitespace-nowrap text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-white">
             {BULLET_TEXT.split("").map((char, i) => (
               <span
@@ -417,7 +444,7 @@ export default function TestimonialsSection() {
                 }}
                 className="inline-block opacity-0"
               >
-                {char === " " ? " " : char}
+                {char === " " ? " " : char}
               </span>
             ))}
           </span>
@@ -457,6 +484,42 @@ export default function TestimonialsSection() {
             />
           ))}
         </div>
+      </div>
+
+      {/* Discoverability row: hint copy + chevron controls. Copy swaps
+          between mouse and touch phrasing per breakpoint; buttons stay
+          visible everywhere since they're also the accessible fallback
+          for anyone who can't or won't drag. */}
+      <div className="relative z-10 mx-auto mt-[clamp(20px,2.7778vw,40px)] flex max-w-360 items-center justify-center gap-[clamp(12px,1.6667vw,24px)] px-[clamp(20px,3.1944vw,46px)]">
+        <button
+  type="button"
+  onClick={() => trackControlsRef.current.prev()}
+  disabled={scrollState.atStart}
+  aria-label="Show previous testimonial"
+  className="flex h-[clamp(44px,4.4444vw,64px)] w-[clamp(44px,4.4444vw,64px)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-opacity duration-300 disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-[#ac40ff] enabled:hover:text-[#ac40ff]"
+>
+  <ChevronLeft className="h-[clamp(18px,1.6667vw,24px)] w-[clamp(18px,1.6667vw,24px)]" />
+</button>
+
+        <p
+          aria-hidden="true"
+          className={`font-poppins text-[clamp(11px,0.9722vw,14px)] text-white/50 transition-opacity duration-500 ${
+            hasInteracted ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <span className="hidden sm:inline">Drag to explore more stories</span>
+          <span className="sm:hidden">Swipe to see more stories</span>
+        </p>
+
+        <button
+  type="button"
+  onClick={() => trackControlsRef.current.next()}
+  disabled={scrollState.atEnd}
+  aria-label="Show next testimonial"
+  className="flex h-[clamp(44px,4.4444vw,64px)] w-[clamp(44px,4.4444vw,64px)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-opacity duration-300 disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-[#ac40ff] enabled:hover:text-[#ac40ff]"
+>
+  <ChevronRight className="h-[clamp(18px,1.6667vw,24px)] w-[clamp(18px,1.6667vw,24px)]" />
+</button>
       </div>
     </section>
   );

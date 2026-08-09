@@ -27,6 +27,7 @@ const STATS = [
 const CLIENTS_HEADING_WORDS = "Clients whose realities we've changed".split(" ");
 
 const LG_BREAKPOINT_QUERY = "(min-width: 1024px)";
+const SM_BREAKPOINT_QUERY = "(max-width: 1023px)";
 
 // 12 real client logos, 4 per row / 3 rows on desktop. All source files are
 // square 2880x2880 exports, so they share one aspect ratio and box size.
@@ -145,7 +146,16 @@ export default function StatsClientsSection() {
         scrollTrigger: clientsTrigger,
       });
 
-      if (window.matchMedia(LG_BREAKPOINT_QUERY).matches) {
+      // Heading reveal, desktop vs mobile. Uses gsap.matchMedia instead of a
+      // one-time window.matchMedia check, since a plain check reads its
+      // value once at mount and can be wrong (or the resulting ScrollTrigger
+      // instance can end up with stale start/end math) if layout hasn't
+      // fully settled yet, which happens on client-side route transitions
+      // but not on a hard reload. matchMedia re-evaluates properly and
+      // handles its own cleanup.
+      const mm = gsap.matchMedia();
+
+      mm.add(LG_BREAKPOINT_QUERY, () => {
         // Desktop: reveal the heading one word at a time.
         const clientsWords = clientsWordRefs.current.filter(Boolean);
 
@@ -159,7 +169,9 @@ export default function StatsClientsSection() {
           ease: "power3.out",
           scrollTrigger: clientsTrigger,
         });
-      } else {
+      });
+
+      mm.add(SM_BREAKPOINT_QUERY, () => {
         // Mobile/tablet: the heading wraps normally, so fade/slide it in as one block.
         gsap.set(clientsHeadingRef.current, { yPercent: 100, opacity: 0 });
 
@@ -170,10 +182,27 @@ export default function StatsClientsSection() {
           ease: "power3.out",
           scrollTrigger: clientsTrigger,
         });
-      }
+      });
     }, rowRef);
 
-    return () => ctx.revert();
+    // Force a recalc once the browser has actually painted the settled
+    // layout. React committing the DOM isn't the same as the browser
+    // finishing layout/paint, especially right after a route transition,
+    // so a double RAF here makes sure ScrollTrigger's start/end math (and
+    // the matchMedia checks above) run against final positions instead of
+    // a transitional state.
+    const rafId1 = requestAnimationFrame(() => {
+      const rafId2 = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+      rowRef.current._rafId2 = rafId2;
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId1);
+      if (rowRef.current?._rafId2) cancelAnimationFrame(rowRef.current._rafId2);
+      ctx.revert();
+    };
   }, []);
 
   let wordIndex = -1;

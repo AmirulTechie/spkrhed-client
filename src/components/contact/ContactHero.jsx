@@ -179,7 +179,7 @@ export default function ContactHero() {
         <div className="flex flex-col items-start">
           <h1
             ref={headingRef}
-            className="font-anton-sc text-[clamp(40px,5.5556vw,80px)] uppercase leading-[0.97]"
+            className="font-anton-sc text-[clamp(40px,7.5vw,130px)] uppercase leading-[0.97]"
           >
             <span className="block">
               <TypewriterChars text="Contact" />
@@ -191,7 +191,7 @@ export default function ContactHero() {
 
           <p
             ref={descriptionRef}
-            className="mt-[clamp(16px,2.2222vw,32px)] max-w-121 font-poppins text-[clamp(15px,1.25vw,18px)] font-light leading-[1.35] text-white/80"
+            className="mt-[clamp(16px,2.75vw,38px)] max-w-115 font-poppins text-[clamp(15px,1.35vw,20px)] font-light leading-[1.35]"
           >
             {DESCRIPTION_TEXT}
           </p>
@@ -205,7 +205,7 @@ export default function ContactHero() {
             </p>
             <Link
               href="mailto:info@speakerhead.com"
-              className="font-poppins text-lg text-white/90 transition-colors duration-300 hover:text-[#AC40FF]"
+              className="font-poppins text-2xl text-white/90 transition-colors duration-300 hover:text-[#AC40FF]"
             >
               info@speakerhead.com
             </Link>

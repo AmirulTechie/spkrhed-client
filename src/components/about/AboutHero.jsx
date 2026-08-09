@@ -81,32 +81,32 @@ export default function AboutHero() {
         className="absolute inset-x-0 bottom-0 h-[38%] bg-linear-to-b from-transparent to-[#0f0f0f]"
       />
 
-      <div className="relative z-10 w-full px-8 pb-[clamp(28px,3.1944vw,46px)] text-white sm:px-12 lg:px-16">
-        <p className="mb-[clamp(16px,1.6667vw,24px)] flex items-center gap-[clamp(4px,0.4167vw,6px)] font-poppins text-[clamp(34px,5.5556vw,80px)] font-bold uppercase text-white">
-          <span ref={bulletRef} className="inline-flex opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={19}
-              height={19}
-              className="h-[clamp(21px,3.4722vw,50px)] w-[clamp(21px,3.4722vw,50px)] brightness-0 invert"
-            />
-          </span>
-          <span className="inline-block">
-            {EYEBROW_TEXT.split("").map((char, i) => (
-              <span
-                key={i}
-                ref={(el) => {
-                  eyebrowCharRefs.current[i] = el;
-                }}
-                className="inline-block opacity-0"
-              >
-                {char === " " ? " " : char}
-              </span>
-            ))}
-          </span>
-        </p>
+      <p className="absolute bottom-[clamp(16px,3vw,60px)] right-[clamp(24px,6vw,100px)] z-10 flex items-center gap-3 font-poppins text-[clamp(22px,3.5vw,62px)] font-bold uppercase text-white">
+        <span ref={bulletRef} className="inline-flex opacity-0">
+          <Image
+            src="/images/Home/leaf-2.png"
+            alt=""
+            width={19}
+            height={19}
+            className="h-[clamp(14px,1.6667vw,24px)] w-[clamp(14px,1.6667vw,24px)] brightness-0 invert"
+          />
+        </span>
+        <span className="inline-block">
+          {EYEBROW_TEXT.split("").map((char, i) => (
+            <span
+              key={i}
+              ref={(el) => {
+                eyebrowCharRefs.current[i] = el;
+              }}
+              className="inline-block opacity-0"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </span>
+      </p>
 
+      <div className="relative z-10 w-full px-8 pb-[clamp(28px,3.1944vw,46px)] text-white sm:px-12 lg:px-16">
         <div ref={logoRef} className="opacity-0">
           <Image
             src="/images/about/spkrhed-wordmark.svg"
@@ -119,7 +119,7 @@ export default function AboutHero() {
 
         <p
           ref={descriptionRef}
-          className="mt-[clamp(12px,1.4583vw,21px)] max-w-150.5 font-poppins text-[clamp(13px,1.25vw,18px)] leading-[1.124] text-white opacity-0"
+          className="mt-[clamp(12px,1.4583vw,21px)] max-w-115 font-poppins text-[clamp(13px,1.25vw,22px)] leading-[1.124] text-white opacity-0"
         >
           SPKRHED is not another agency. We are a movement to put the human
           back into how companies grow. While the rest of the market drowns

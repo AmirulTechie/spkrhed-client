@@ -202,7 +202,6 @@ export default function WhyNowClimbSection() {
   const mountedRef = useRef(false);
 
   const sectionRef = useRef(null);
-  const bulletIconRef = useRef(null);
   const bulletCharRefs = useRef([]);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -229,7 +228,7 @@ export default function WhyNowClimbSection() {
       gsap.set(descriptionRef.current, { opacity: 0, x: -80 });
 
       const anchorEl = bulletChars[0];
-      const bulletEls = [bulletIconRef.current, ...bulletChars];
+      const bulletEls = bulletChars;
       const anchorLeft = anchorEl.getBoundingClientRect().left;
 
       gsap.set(bulletEls, {
@@ -334,16 +333,7 @@ export default function WhyNowClimbSection() {
             longer bullet stays on one line without clipping past the viewport at common
             desktop widths. */}
         <div className="mx-[calc(50%-50vw)] mb-[clamp(28px,5vw,72px)] flex w-screen items-center justify-center gap-2 px-2 sm:gap-4">
-          <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={30}
-              height={30}
-              className="h-[clamp(20px,4.5vw,56px)] w-[clamp(20px,4.5vw,56px)] brightness-0 invert"
-            />
-          </span>
-          <span className="whitespace-nowrap font-anton-sc text-[clamp(24px,8vw,100px)] uppercase leading-none tracking-tight text-white">
+          <span className="whitespace-nowrap font-anton-sc text-[clamp(24px,11vw,150px)] uppercase leading-none tracking-tight text-white">
             <BulletChars text={BULLET_TEXT} charRefs={bulletCharRefs} />
           </span>
         </div>
@@ -351,14 +341,14 @@ export default function WhyNowClimbSection() {
         <div className="flex flex-col gap-[clamp(16px,2.2222vw,32px)] justify-between md:flex-row md:items-end md:justify-between">
           <h2
             ref={headingRef}
-            className="max-w-159 font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[1.1] text-white"
+            className="max-w-120 font-anton-sc text-[clamp(32px,4.1667vw,60px)] uppercase leading-[1.1] text-white"
           >
             <SproutChars text={HEADING_TEXT} />
           </h2>
 
           <p
             ref={descriptionRef}
-            className="max-w-156.25 font-poppins text-[clamp(11px,0.9028vw,13px)] leading-[1.23] text-white uppercase md:text-right"
+            className="max-w-130 font-poppins text-[clamp(11px,1.50vw,26px)] leading-[1.23] text-white uppercase md:text-right"
           >
             Before SPKRHED, growth means burning your best hours on cold
             calls, dead referrals, and a website that just sits there.

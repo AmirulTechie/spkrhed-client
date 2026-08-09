@@ -60,25 +60,28 @@ const BRANCHES = [
     zIndex: 30,
   },
 ];
-
-// Same idea for the cloud: one position, used at every breakpoint.
-const CLOUD_POSITION = "bottom-[-35%] left-1/2 w-[115%]";
-
 // How much stage width/height stays clear around the video once it has
 // scaled up to its largest, final size. Zero so the video fills the stage
 // edge-to-edge at full scale, with no gap left for the user to scroll past
 // before the pin releases.
 const VIDEO_FINAL_MARGIN_RATIO = 0;
 
+// How much extra pinned scroll happens AFTER the video finishes growing,
+// before the pin releases and the next section is allowed to appear. This
+// is the fix for the "problem section sneaks into view right as the video
+// hits full size" issue — without a hold, the growth tween's end and the
+// pin's release land on the exact same scroll pixel, so there's no scroll
+// distance left to signal "you're done here, the video is now static full
+// screen." 0.4 = 40% of one viewport height of "nothing animates" scroll.
+const HOLD_RATIO = 0.4;
+
 export default function VideoSection() {
   const stageRef = useRef(null);
   const branchRefs = useRef([]);
-  const cloudRef = useRef(null);
   const videoRef = useRef(null);
 
   useLayoutEffect(() => {
     const stage = stageRef.current;
-    const cloud = cloudRef.current;
     const video = videoRef.current;
     const branchEls = BRANCHES.map((branch, i) => ({
       side: branch.side,
@@ -88,7 +91,6 @@ export default function VideoSection() {
     // Centering transforms apply at every breakpoint — they're layout, not
     // animation, so they stay in effect even where the scroll-driven
     // pin/scrub below is disabled.
-    gsap.set(cloud, { xPercent: -50, y: 0 });
     gsap.set(video, { xPercent: -50, yPercent: -50 });
 
     // The branch/video pin-and-scrub animation, and the branches
@@ -105,11 +107,16 @@ export default function VideoSection() {
       // (matches Figma).
       branchEls.forEach(({ el }) => gsap.set(el, { x: 0, y: 0 }));
 
+      // Total pinned scroll = one viewport height for the growth
+      // animation, plus HOLD_RATIO extra for the post-growth hold. The
+      // growth tweens below are all given an explicit duration of 1 so
+      // they map to exactly that first viewport height, leaving the
+      // HOLD_RATIO tail for the hold tween added at the end.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: stage,
           start: "top top",
-          end: () => "+=" + window.innerHeight,
+          end: () => "+=" + window.innerHeight * (1 + HOLD_RATIO),
           scrub: 0.6,
           pin: true,
         },
@@ -128,13 +135,13 @@ export default function VideoSection() {
       if (leftEls.length) {
         const innerEdge = Math.max(...leftEls.map((el) => el.getBoundingClientRect().right));
         const delta = stageRect.left - innerEdge;
-        leftEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
+        leftEls.forEach((el) => tl.to(el, { x: delta, ease: "none", duration: 1 }, 0));
       }
 
       if (rightEls.length) {
         const innerEdge = Math.min(...rightEls.map((el) => el.getBoundingClientRect().left));
         const delta = stageRect.right - innerEdge;
-        rightEls.forEach((el) => tl.to(el, { x: delta, ease: "none" }, 0));
+        rightEls.forEach((el) => tl.to(el, { x: delta, ease: "none", duration: 1 }, 0));
       }
 
       // Grow the video from a small starting box up to the stage's full
@@ -143,23 +150,43 @@ export default function VideoSection() {
       // being letterboxed to the video's own, narrower aspect ratio. The
       // inner Image uses object-cover, so it crops to fill as the box's
       // aspect ratio shifts rather than stretching/distorting.
+      //
+      // Target size is "100%" (of the stage, the video's positioned
+      // parent) rather than a pixel number computed from
+      // getBoundingClientRect(). A computed pixel target can end up a
+      // few px short of the real stage size (subpixel rounding,
+      // scrollbar width, layout not fully settled when this effect
+      // runs), which shows up as a thin gap around the video once it's
+      // "full screen." Tweening straight to 100% has no such drift, it
+      // always lands exactly on the stage's actual rendered edges.
+      // VIDEO_FINAL_MARGIN_RATIO stays available for a deliberate inset;
+      // when it's 0 the target is just 100%.
       const videoRect = video.getBoundingClientRect();
-      const marginX = stageRect.width * VIDEO_FINAL_MARGIN_RATIO;
-      const marginY = stageRect.height * VIDEO_FINAL_MARGIN_RATIO;
       const startWidth = videoRect.width * 0.4;
       const startHeight = videoRect.height * 0.4;
-      const targetWidth = stageRect.width - marginX * 2;
-      const targetHeight = stageRect.height - marginY * 2;
+      const targetWidth = `${(1 - VIDEO_FINAL_MARGIN_RATIO * 2) * 100}%`;
+      const targetHeight = `${(1 - VIDEO_FINAL_MARGIN_RATIO * 2) * 100}%`;
 
       gsap.set(video, { width: startWidth, height: startHeight });
-      tl.to(video, { width: targetWidth, height: targetHeight, ease: "none" }, 0);
+      tl.to(
+        video,
+        { width: targetWidth, height: targetHeight, ease: "none", duration: 1 },
+        0,
+      );
+
+      // Hold: nothing animates here, it's an empty tween that just
+      // occupies timeline (and therefore scroll) space. This is what
+      // keeps the stage pinned for a bit after the video hits full size,
+      // so the user has to scroll past this before the pin releases and
+      // ProblemSection is allowed to creep into view.
+      tl.to({}, { duration: HOLD_RATIO });
     });
 
     return () => mm.revert();
   }, []);
 
   return (
-    <section className="bg-[#DDDDD5] rounded-4xl">
+    <section className="bg-[#DDDDD5] rounded-t-4xl">
       <div
         ref={stageRef}
         className="relative aspect-4/3 w-full overflow-hidden rounded-t-[clamp(24px,4vw,72px)] will-change-transform lg:aspect-1440/666"
@@ -178,16 +205,6 @@ export default function VideoSection() {
             className={`pointer-events-none absolute hidden max-w-none select-none will-change-transform lg:block ${branch.position}`}
           />
         ))}
-
-        <Image
-          ref={cloudRef}
-          src="/images/Home/cloud.png"
-          alt=""
-          width={3723}
-          height={1164}
-          className={`pointer-events-none absolute max-w-none select-none z-999 will-change-transform ${CLOUD_POSITION}`}
-        />
-
         <div
           ref={videoRef}
           className="absolute left-1/2 top-[38%] aspect-850/452 w-[94%] overflow-hidden z-10 will-change-transform lg:top-1/2 lg:w-[59.03%]"

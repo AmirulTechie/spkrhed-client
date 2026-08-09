@@ -331,7 +331,7 @@ export default function ProblemSection() {
     <section
       ref={sectionRef}
       id="problem"
-      className="relative z-10 -mt-[clamp(56px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA]"
+      className="relative z-10 overflow-hidden rounded-b-4xl bg-[#F0F0EA]"
     >
       <Image
         ref={leafTopRef}

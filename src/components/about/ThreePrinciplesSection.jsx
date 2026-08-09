@@ -117,7 +117,6 @@ const PRINCIPLES = [
 
 export default function ThreePrinciplesSection() {
   const sectionRef = useRef(null);
-  const bulletIconRef = useRef(null);
   const bulletCharRefs = useRef([]);
   const headingRef = useRef(null);
   const headingLine1Ref = useRef(null);
@@ -159,7 +158,7 @@ export default function ThreePrinciplesSection() {
       gsap.set(descriptionChars, { opacity: 0 });
 
       const anchorEl = bulletChars[0];
-      const bulletEls = [bulletIconRef.current, ...bulletChars];
+      const bulletEls = bulletChars;
       const anchorLeft = anchorEl.getBoundingClientRect().left;
 
       gsap.set(bulletEls, {
@@ -297,16 +296,7 @@ export default function ThreePrinciplesSection() {
               this much larger eyebrow has the full viewport to scale into instead
               of overflowing past the column's edges at wide screens. */}
           <div className="mx-[calc(50%-50vw)] mb-[clamp(32px,6vw,100px)] flex w-screen items-center justify-center gap-2 px-2 sm:gap-4">
-            <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
-              <Image
-                src="/images/Home/leaf-2.png"
-                alt=""
-                width={30}
-                height={30}
-                className="h-[clamp(22px,4.6vw,68px)] w-[clamp(22px,4.6vw,68px)] brightness-0 invert"
-              />
-            </span>
-            <p className="whitespace-nowrap font-poppins text-[clamp(16px,6vw,152px)] font-bold uppercase text-white">
+            <p className="whitespace-nowrap font-poppins text-[clamp(16px,6.9vw,170px)] font-bold uppercase text-white">
               {BULLET_TEXT.split("").map((char, i) => (
                 <span
                   key={i}

@@ -205,7 +205,6 @@ export default function GrowthEngineSection() {
   const sectionRef = useRef(null);
   const leftBranchRef = useRef(null);
   const rightBranchRef = useRef(null);
-  const bulletRef = useRef(null);
   const eyebrowRef = useRef(null);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -286,7 +285,7 @@ export default function GrowthEngineSection() {
       // start stacked on top of it, then pull apart outward, exactly like
       // Hero's "This is a movement" line.
       const anchorEl = eyebrowChars[0];
-      const eyebrowEls = [bulletRef.current, ...eyebrowChars];
+      const eyebrowEls = eyebrowChars;
       const anchorLeft = anchorEl.getBoundingClientRect().left;
 
       gsap.set(eyebrowEls, {
@@ -458,18 +457,9 @@ export default function GrowthEngineSection() {
             viewport to scale into instead of overflowing past the
             column's edges at wide screens. */}
         <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-2 px-2 sm:gap-4">
-          <span ref={bulletRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={30}
-              height={30}
-              className="h-[clamp(20px,4vw,58px)] w-[clamp(20px,4vw,58px)] brightness-0 invert"
-            />
-          </span>
           <span
             ref={eyebrowRef}
-            className="whitespace-nowrap font-poppins text-[clamp(14px,5vw,130px)] font-bold uppercase text-white"
+            className="whitespace-nowrap font-poppins text-[clamp(14px,6vw,130px)] font-bold uppercase text-white"
           >
             <EyebrowChars text="The LinkedIn Growth Engine" />
           </span>

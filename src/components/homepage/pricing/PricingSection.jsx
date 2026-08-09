@@ -298,7 +298,7 @@ export default function PricingSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-x-clip py-[clamp(64px,9.7222vw,140px)]"
+      className="relative overflow-x-clip py-[clamp(64px,8.333vw,120px)]"
     >
       {/* Each branch fades both its top AND bottom edges out via a mask
           (rather than a black overlay div) so only the vine's pixels fade —
@@ -341,7 +341,7 @@ export default function PricingSection() {
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">
         <h2
           ref={headingRef}
-          className="mx-auto max-w-5xl text-center font-anton-sc text-[clamp(48px,9vw,130px)] uppercase leading-[0.97] text-white"
+          className="mx-auto max-w-6xl text-center font-anton-sc text-[clamp(48px,10.14vw,146px)] uppercase leading-[0.97] text-white"
         >
           <TypewriterChars text="Pick Your Beanstalk." />
         </h2>
@@ -354,7 +354,7 @@ export default function PricingSection() {
         </p>
 
         {/* mt-top gives room for the "Most Popular" tag that sits above the Beanstalk card */}
-        <div className="mt-[clamp(32px,3.2639vw,47px)] grid grid-cols-1 items-stretch gap-[clamp(30px,0.6944vw,50px)] sm:grid-cols-2 sm:gap-7 xl:grid-cols-4 xl:gap-[11.7px]">
+        <div className="mt-[clamp(38px,6.94vw,100px)] grid grid-cols-1 items-stretch gap-[clamp(30px,0.6944vw,50px)] sm:grid-cols-2 sm:gap-7 xl:grid-cols-4 xl:gap-[11.7px]">
           {TIERS.map((tier, index) => (
             <PricingCard
               key={tier.name}

@@ -166,7 +166,6 @@ export default function OldestGrowthStorySection() {
   const mountedRef = useRef(false);
 
   const sectionRef = useRef(null);
-  const bulletIconRef = useRef(null);
   const bulletCharRefs = useRef([]);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -193,7 +192,7 @@ export default function OldestGrowthStorySection() {
       gsap.set(descriptionRef.current, { opacity: 0, x: -80 });
 
       const anchorEl = bulletChars[0];
-      const bulletEls = [bulletIconRef.current, ...bulletChars];
+      const bulletEls = bulletChars;
       const anchorLeft = anchorEl.getBoundingClientRect().left;
 
       gsap.set(bulletEls, {
@@ -304,15 +303,6 @@ export default function OldestGrowthStorySection() {
             "Why LinkedIn?" kicker treatment on the homepage, and the bottom margin pushes the
             heading/description row further down below this now much larger eyebrow. */}
         <div className="mx-[calc(50%-50vw)] mb-[clamp(32px,6vw,90px)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
-          <span ref={bulletIconRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={120}
-              height={120}
-              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0 invert"
-            />
-          </span>
           <span className="whitespace-nowrap font-anton-sc text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-white">
             {BULLET_TEXT.split("").map((char, i) => (
               <span
@@ -340,7 +330,7 @@ export default function OldestGrowthStorySection() {
 
           <p
             ref={descriptionRef}
-            className="max-w-184.75 min-w-0 font-poppins text-[clamp(14px,1.3194vw,19px)] leading-[1.0526] text-white/70 text-start"
+            className="max-w-130 font-poppins text-[clamp(11px,1.2vw,20px)] leading-[1.23] text-white uppercase md:text-right"
           >
             {DESCRIPTION_TEXT}
           </p>

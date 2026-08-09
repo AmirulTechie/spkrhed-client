@@ -129,7 +129,6 @@ function StepCard({ step, cardRef }) {
 export default function FlywheelSection() {
   const sectionRef = useRef(null);
   const treeBranchRef = useRef(null);
-  const bulletRef = useRef(null);
   const bulletCharRefs = useRef([]);
   const headingRef = useRef(null);
   const climbRef = useRef(null);
@@ -169,13 +168,12 @@ export default function FlywheelSection() {
       gsap.set(climbLines, { clipPath: "inset(-100px 100% -100px 0%)" });
 
       const anchorEl = bulletChars[0];
-      const bulletEls = [bulletRef.current, ...bulletChars];
-      const anchorLeft = anchorEl.getBoundingClientRect().left;
+const anchorLeft = anchorEl.getBoundingClientRect().left;
 
-      gsap.set(bulletEls, {
-        opacity: 0,
-        x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
-      });
+      gsap.set(bulletChars, {
+  opacity: 0,
+  x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
+});
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -196,16 +194,16 @@ export default function FlywheelSection() {
         ease: "power3.out",
       })
         .to(
-          bulletEls,
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.35,
-            ease: "power3.out",
-            stagger: { each: 0.018, from: bulletEls.indexOf(anchorEl) },
-          },
-          "<0.1",
-        )
+  bulletChars,
+  {
+    x: 0,
+    opacity: 1,
+    duration: 0.35,
+    ease: "power3.out",
+    stagger: { each: 0.018, from: 0 },
+  },
+  "<0.1",
+)
         .to(
           headingChars,
           {
@@ -282,15 +280,6 @@ export default function FlywheelSection() {
 
       <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)] text-center">
         <div className="mx-[calc(50%-50vw)] flex w-screen items-center justify-center gap-3 px-2 sm:gap-6">
-          <span ref={bulletRef} className="inline-flex shrink-0 opacity-0">
-            <Image
-              src="/images/Home/leaf-2.png"
-              alt=""
-              width={120}
-              height={120}
-              className="h-[clamp(32px,7.6389vw,110px)] w-[clamp(32px,7.6389vw,110px)] brightness-0"
-            />
-          </span>
           <span className="font-anton-sc whitespace-nowrap text-[clamp(60px,14.5833vw,210px)] uppercase leading-none tracking-tight text-black">
             {BULLET_TEXT.split("").map((char, i) => (
               <span

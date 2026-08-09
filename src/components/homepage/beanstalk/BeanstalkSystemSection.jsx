@@ -34,7 +34,7 @@ function TypewriterChars({ text }) {
 const CARDS = [
   {
     step: "1. THE LAND OFFER",
-    icon: "/images/Home/growth-engine-icon-1.png",
+    icon: "/images/Home/beanstalk-icon-1.png",
     heading: ["THE SOIL TEST:", "DIAGNOSE & PLANT"],
     description:
       "A five-week diagnostic + pilot. We map every leaking dollar in your funnel and ship the first fix live before we invoice. Two systems in production, a CFO-signed baseline, and the green light to climb.",
@@ -43,7 +43,7 @@ const CARDS = [
   },
   {
     step: "2. PIPELINE",
-    icon: "/images/Home/growth-engine-icon-2.png",
+    icon: "/images/Home/beanstalk-icon-2.png",
     heading: ["THE BEANSTALK —", "LINKEDIN-LED OUTBOUND"],
     description:
       "Sales Navigator targeting, A/B tested sequences, and personalized outreach at enterprise scale. Up to 10,000 DMs a month going to the exact decision-makers who can pay your invoice — pre-qualified before they ever hit your calendar.",
@@ -52,7 +52,7 @@ const CARDS = [
   },
   {
     step: "3. AUTHORITY",
-    icon: "/images/Home/growth-engine-icon-3.png",
+    icon: "/images/Home/beanstalk-icon-3.png",
     heading: ["GOLDEN HARVEST —", "CONTENT THAT CLOSES"],
     description:
       "Executive LinkedIn content and paid creative at algorithmic tempo. We extract your expertise, frameworks, and insights and turn them into scroll-stopping posts, carousels, and ad creative that warm prospects before the first call.",
@@ -66,17 +66,19 @@ function BeanstalkCard({ card, ref }) {
       ref={ref}
       className="relative w-full max-w-143.75 rounded-[20px] bg-[#D9D9D9]/20 p-[clamp(24px,2.7778vw,40px)] backdrop-blur-sm flex flex-col items-start"
     >
-      <div className="flex items-center gap-[clamp(12px,1.25vw,18px)]">
-        <Image
-          src={card.icon}
-          alt=""
-          width={34}
-          height={34}
-          className="size-[clamp(32px,3.4722vw,50px)] shrink-0"
-        />
+      <div className="flex w-full items-center justify-between gap-[clamp(12px,1.25vw,18px)]">
         <span className="inline-flex items-center whitespace-nowrap rounded-[70px] bg-[#AC40FF] px-[clamp(16px,1.9444vw,28px)] py-[clamp(8px,0.9722vw,14px)] font-poppins text-[clamp(16px,2.5vw,36px)] font-medium leading-none text-white">
           {card.step}
         </span>
+        <div>
+        <Image
+          src={card.icon}
+          alt=""
+          width={150}
+          height={150}
+          className="size-[clamp(60px,10.42vw,150px)]"
+        />
+        </div>
       </div>
 
       <h3 className="mt-[clamp(20px,2.4vw,40px)] font-anton-sc text-[clamp(26px,3.4028vw,49px)] uppercase leading-none text-black text-start">
