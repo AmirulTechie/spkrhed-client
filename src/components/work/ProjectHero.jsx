@@ -12,6 +12,11 @@ export default function ProjectHero({ project }) {
   const { total: loaderDuration } = useLoaderDuration();
   const headingRef = useRef(null);
   const eyebrowRef = useRef(null);
+  // backBtnWrapperRef: overflow-hidden container that clips the button during
+  // its entrance. backBtnRef: the button itself — animated via y only, never
+  // opacity, so its backdrop-filter layer is always initialised (no glitch).
+  const backBtnWrapperRef = useRef(null);
+  const backBtnRef = useRef(null);
 
   // A plain <Link href="/work"> always pushes a fresh navigation, which
   // can't restore the scroll position the user was at on the grid.
@@ -29,19 +34,26 @@ export default function ProjectHero({ project }) {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set([eyebrowRef.current, headingRef.current], {
-        opacity: 0,
-        y: 24,
-      });
+      // Slide in from the left: the button starts off-screen (x: -280) and
+      // eases to its natural position (x: 0). The parent <section> already
+      // has overflow-hidden, so it clips the button at the viewport's left
+      // edge — no extra wrapper clip needed. No opacity is set on the button
+      // so backdrop-filter stays fully composited the whole time (no glitch).
+      gsap.set(backBtnRef.current, { x: -280 });
+      gsap.set([eyebrowRef.current, headingRef.current], { opacity: 0, y: 24 });
 
       gsap
         .timeline({ delay: loaderDuration })
-        .to(eyebrowRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
+        .to(backBtnRef.current, {
+          x: 0,
+          duration: 0.8,
           ease: "power3.out",
         })
+        .to(
+          eyebrowRef.current,
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          "-=0.35",
+        )
         .to(
           headingRef.current,
           { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
@@ -92,13 +104,34 @@ export default function ProjectHero({ project }) {
       />
 
       <div className="relative z-10 w-full px-8 py-[clamp(64px,10vw,100px)] text-white sm:px-12 lg:px-16">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="font-poppins text-[clamp(13px,0.9722vw,14px)] font-semibold uppercase tracking-wide text-white/60 transition-colors hover:text-white cursor-pointer"
-        >
-          ← Work
-        </button>
+        <div ref={backBtnWrapperRef}>
+          <button
+            ref={backBtnRef}
+            type="button"
+            onClick={handleBack}
+            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/25 bg-black/40 px-5 py-2.5 font-poppins text-[clamp(14px,1.15vw,17px)] font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:bg-white hover:text-black"
+            style={{
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+            }}
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+              className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5"
+            >
+              <path
+                d="M10 3L5 8l5 5"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Work
+          </button>
+        </div>
 
         <p
           ref={eyebrowRef}

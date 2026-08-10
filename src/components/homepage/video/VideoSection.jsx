@@ -79,6 +79,7 @@ export default function VideoSection() {
   const stageRef = useRef(null);
   const branchRefs = useRef([]);
   const videoRef = useRef(null);
+  const playBtnRef = useRef(null);
 
   useLayoutEffect(() => {
     const stage = stageRef.current;
@@ -107,16 +108,22 @@ export default function VideoSection() {
       // (matches Figma).
       branchEls.forEach(({ el }) => gsap.set(el, { x: 0, y: 0 }));
 
-      // Total pinned scroll = one viewport height for the growth
-      // animation, plus HOLD_RATIO extra for the post-growth hold. The
-      // growth tweens below are all given an explicit duration of 1 so
-      // they map to exactly that first viewport height, leaving the
-      // HOLD_RATIO tail for the hold tween added at the end.
+      // Stacking + height fix: the stage must be raised above ProblemSection's
+      // `z-10` stacking context, otherwise the fixed-positioned stage (which
+      // has no explicit z-index by default) renders BEHIND it, causing a thin
+      // sliver of ProblemSection to bleed into the bottom of the viewport
+      // during the pin. Setting height: 100vh here (before ScrollTrigger is
+      // created) also ensures the stage always covers the full viewport from
+      // the moment the pin starts — no partial-height gap as the animation
+      // progresses. Both values are reverted automatically by mm.revert() when
+      // the viewport drops below lg, restoring the normal aspect-ratio layout.
+      gsap.set(stage, { zIndex: 50, height: "100vh" });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: stage,
           start: "top top",
-          end: () => "+=" + window.innerHeight * (1 + HOLD_RATIO),
+          end: () => "+=" + window.innerHeight * (0.4 + HOLD_RATIO),
           scrub: 0.6,
           pin: true,
         },
@@ -174,6 +181,31 @@ export default function VideoSection() {
         0,
       );
 
+      // Remove the stage's top-corner rounding in sync with the video growth
+      // and branch exit animations. Height is no longer tweened here because
+      // it was already set to 100vh in the gsap.set above.
+      tl.to(
+        stage,
+        {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          ease: "none",
+          duration: 1,
+        },
+        0,
+      );
+
+      // Play button: hidden at rest, fades + scales in during the hold
+      // phase (timeline position 1 onward) so it only appears once the
+      // thumbnail has reached full screen. Using half the hold duration
+      // so it finishes well before the pin releases.
+      gsap.set(playBtnRef.current, { opacity: 0, scale: 0.6 });
+      tl.to(
+        playBtnRef.current,
+        { opacity: 1, scale: 1, ease: "none", duration: HOLD_RATIO * 0.6 },
+        1,
+      );
+
       // Hold: nothing animates here, it's an empty tween that just
       // occupies timeline (and therefore scroll) space. This is what
       // keeps the stage pinned for a bit after the video hits full size,
@@ -189,7 +221,7 @@ export default function VideoSection() {
     <section className="bg-[#DDDDD5] rounded-t-4xl">
       <div
         ref={stageRef}
-        className="relative aspect-4/3 w-full overflow-hidden rounded-t-[clamp(24px,4vw,72px)] will-change-transform lg:aspect-1440/666"
+        className="relative aspect-video w-full overflow-hidden rounded-t-[clamp(24px,4vw,72px)] will-change-transform lg:aspect-1440/666"
       >
         {BRANCHES.map((branch, i) => (
           <Image
@@ -207,27 +239,44 @@ export default function VideoSection() {
         ))}
         <div
           ref={videoRef}
-          className="absolute left-1/2 top-[38%] aspect-850/452 w-[94%] overflow-hidden z-10 will-change-transform lg:top-1/2 lg:w-[59.03%]"
+          className="absolute left-1/2 top-1/2 aspect-850/452 w-[94%] overflow-hidden rounded-4xl z-50 will-change-transform lg:rounded-none lg:w-[59.03%]"
         >
           <Image
-            src="/images/Home/video_section_thumbnail.png"
+            src="/images/Home/video_thumbnail.png"
             alt="Watch the story"
             fill
             sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover"
           />
           <button
+            ref={playBtnRef}
             type="button"
             aria-label="Play video"
-            className="absolute left-1/2 top-1/2 h-[clamp(32px,4.4vw,80px)] w-[clamp(32px,4.4vw,80px)] -translate-x-1/2 -translate-y-1/2"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-shadow duration-300 hover:shadow-[0_0_0_6px_rgba(255,255,255,0.15)]"
+            style={{
+              width: "clamp(44px,4.16vw,76px)",
+              height: "clamp(44px,4.16vw,76px)",
+              background: "rgba(255,255,255,0.18)",
+              border: "1.5px solid rgba(255,255,255,0.45)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              boxShadow:
+                "0 2px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5)",
+            }}
           >
-            <Image
-              src="/images/Home/video-play-btn.png"
-              alt=""
-              fill
-              sizes="80px"
-              className="object-contain"
-            />
+            {/*
+              100×100 viewBox with vertices at (35,20), (35,80), (80,50).
+              Centroid = ((35+35+80)/3, (20+80+50)/3) = (50, 50) — perfectly
+              centred, no translateX hack required.
+            */}
+            <svg
+              viewBox="0 0 100 100"
+              fill="white"
+              aria-hidden="true"
+              style={{ width: "46%", height: "46%" }}
+            >
+              <polygon points="35,20 35,80 80,50" />
+            </svg>
           </button>
         </div>
       </div>

@@ -121,24 +121,10 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative flex flex-col items-center justify-between gap-3 border-t border-white/10 px-8 py-5 sm:flex-row lg:px-12">
-        <p className="text-xs text-white/30">
+      <div className="relative border-t border-white/10 px-8 py-5 lg:px-12">
+        <p className="text-center text-xs text-white/30">
           Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
         </p>
-        <div className="flex gap-6">
-          <Link
-            href="#"
-            className="text-xs text-white/30 transition-colors hover:text-white"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="#"
-            className="text-xs text-white/30 transition-colors hover:text-white"
-          >
-            Sitemap
-          </Link>
-        </div>
       </div>
     </footer>
   );

@@ -241,7 +241,7 @@ export default function ProjectsSection() {
         <div className="mt-[clamp(96px,15.2778vw,220px)] flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <h2
             ref={headingRef}
-            className="font-anton-sc text-[clamp(32px,6.0417vw,87px)] uppercase leading-[0.97] text-white"
+            className="font-anton-sc text-[clamp(52px,6.0417vw,87px)] uppercase leading-[0.97] text-white"
           >
             <SproutLine>
               <SproutChars text="A Curated" />
@@ -259,7 +259,7 @@ export default function ProjectsSection() {
 
           <p
             ref={descriptionRef}
-            className="font-poppins text-[clamp(16px,2.22vw,32px)] font-medium leading-[1.05] text-[#b7b7b7] lg:max-w-100"
+            className="font-poppins text-[clamp(16px,2.22vw,32px)] font-medium leading-[1.05] text-[#b7b7b7]"
           >
             {DESCRIPTION_TEXT}
           </p>

@@ -62,41 +62,50 @@ const CARDS = [
 ];
 function BeanstalkCard({ card, ref }) {
   return (
-    <div
-      ref={ref}
-      className="relative w-full max-w-143.75 rounded-[20px] bg-[#D9D9D9]/20 p-[clamp(24px,2.7778vw,40px)] backdrop-blur-sm flex flex-col items-start"
-    >
-      <div className="flex w-full items-center justify-between gap-[clamp(12px,1.25vw,18px)]">
-        <span className="inline-flex items-center whitespace-nowrap rounded-[70px] bg-[#AC40FF] px-[clamp(16px,1.9444vw,28px)] py-[clamp(8px,0.9722vw,14px)] font-poppins text-[clamp(16px,2.5vw,36px)] font-medium leading-none text-white">
-          {card.step}
-        </span>
-        <div>
+    // Outer wrapper: overflow-visible so the icon can spill out of the top
+    <div ref={ref} className="relative w-full max-w-143.75 pt-[clamp(40px,5.556vw,80px)]">
+      {/* Absolutely-positioned icon — half outside the top of the card */}
+      <div
+        className="pointer-events-none absolute right-[-10%] top-0 z-10 translate-y-[-20%] rotate-12"
+      >
         <Image
           src={card.icon}
           alt=""
-          width={150}
-          height={150}
-          className="size-[clamp(60px,10.42vw,150px)]"
+          width={330}
+          height={330}
+          className="size-[clamp(180px,23vw,330px)] drop-shadow-xl"
         />
-        </div>
       </div>
 
-      <h3 className="mt-[clamp(20px,2.4vw,40px)] font-anton-sc text-[clamp(26px,3.4028vw,49px)] uppercase leading-none text-black text-start">
-        {card.heading.map((line) => (
-          <span key={line} className="block">
-            {line}
-          </span>
-        ))}
-      </h3>
-      <p className="mt-[clamp(12px,1.6667vw,24px)] max-w-md font-poppins text-[clamp(16px,1.3889vw,20px)] font-medium leading-[1.1] text-black text-start">
-        {card.description}
-      </p>
+      {/* Card body — backdrop-blur stays at opacity:1 always to avoid browser compositing bug */}
+      <div className="relative overflow-hidden rounded-[20px] bg-[#D9D9D9]/20 p-[clamp(24px,2.7778vw,40px)] backdrop-blur-sm flex flex-col items-start">
+        {/* card-content is the opacity target — never the backdrop-blur parent */}
+        <div className="card-content flex flex-col items-start w-full">
+          {/* Step badge row */}
+          <div className="flex w-full items-start justify-between gap-[clamp(12px,1.25vw,18px)]">
+            <span className="inline-flex items-center whitespace-nowrap rounded-[70px] bg-[#AC40FF] px-[clamp(16px,1.9444vw,28px)] py-[clamp(8px,0.9722vw,14px)] font-poppins text-[clamp(14px,1.6667vw,24px)] font-medium leading-none text-white">
+              {card.step}
+            </span>
+          </div>
 
-      <div className="mt-[clamp(20px,2.4vw,40px)] flex items-center gap-2">
-        <span className="h-2 w-2 shrink-0 rounded-full bg-black" />
-        <span className="font-poppins text-[clamp(14px,1.1111vw,16px)] font-medium leading-[1.1] text-black">
-          {card.layer}
-        </span>
+          <h3 className="mt-[clamp(20px,2.4vw,40px)] font-anton-sc text-[clamp(26px,3.4028vw,49px)] uppercase leading-none text-black text-start">
+            {card.heading.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </h3>
+          <p className="mt-[clamp(12px,1.6667vw,24px)] max-w-md font-poppins text-[clamp(16px,1.3889vw,20px)] font-medium leading-[1.1] text-black text-start">
+            {card.description}
+          </p>
+
+          <div className="mt-[clamp(20px,2.4vw,40px)] flex items-center gap-2">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-black" />
+            <span className="font-poppins text-[clamp(14px,1.1111vw,16px)] font-medium leading-[1.1] text-black">
+              {card.layer}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -173,13 +182,28 @@ export default function BeanstalkSystemSection() {
 
       cardRefs.current.forEach((cardEl) => {
         if (!cardEl) return;
-        gsap.set(cardEl, { opacity: 0, y: 80, scale: 0.85 });
+        const content = cardEl.querySelector(".card-content");
+        // Only y+scale on the outer wrapper — never opacity, because opacity on
+        // a backdrop-blur ancestor causes a browser stacking-context bug where
+        // the blur flashes invisible until opacity reaches 1.
+        gsap.set(cardEl, { y: 80, scale: 0.85 });
+        // Opacity lives on .card-content which has no backdrop-filter parent.
+        gsap.set(content, { opacity: 0 });
         gsap.to(cardEl, {
-          opacity: 1,
           y: 0,
           scale: 1,
           duration: 0.8,
           ease: "back.out(1.6)",
+          scrollTrigger: {
+            trigger: cardEl,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
+        gsap.to(content, {
+          opacity: 1,
+          duration: 0.6,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: cardEl,
             start: "top 85%",
@@ -198,13 +222,13 @@ export default function BeanstalkSystemSection() {
       className="relative z-10 -mt-[clamp(32px,4.4444vw,64px)] overflow-hidden rounded-5xl bg-[#F0F0EA] pb-[clamp(64px,9.7222vw,140px)]"
     >
       <Image
-  ref={bigBranchRef}
-  src="/images/Home/big-branch.png"
-  alt=""
-  width={2162}
-  height={3842}
-  className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none mask-[linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] lg:w-[75.0694%] lg:mask-[linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)] lg:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)]"
-/>
+        ref={bigBranchRef}
+        src="/images/Home/big-branch.png"
+        alt=""
+        width={2162}
+        height={3842}
+        className="pointer-events-none absolute right-[2.1528%] top-[20.2083vw] z-0 w-[220%] select-none mask-[linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_45%,black_65%,transparent_88%)] lg:w-[75.0694%] lg:mask-[linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)] lg:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_65%,transparent_88%)]"
+      />
       <Image
         src="/images/Home/cloud.png"
         alt=""
@@ -254,9 +278,8 @@ export default function BeanstalkSystemSection() {
           {CARDS.map((card, index) => (
             <div
               key={card.step}
-              className={`flex w-full ${
-                card.align === "end" ? "lg:justify-end" : "lg:justify-start"
-              } ${index === 1 ? "lg:-mt-8" : ""}`}
+              className={`flex w-full ${card.align === "end" ? "lg:justify-end" : "lg:justify-start"
+                } ${index === 1 ? "lg:-mt-8" : ""}`}
             >
               <BeanstalkCard
                 card={card}

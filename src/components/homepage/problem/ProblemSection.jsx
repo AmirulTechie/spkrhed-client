@@ -412,7 +412,7 @@ export default function ProblemSection() {
             <div
               ref={backRef}
               aria-hidden="true"
-              className="absolute inset-0 flex flex-col rounded-[clamp(8px,0.8333vw,12px)] p-4 sm:p-[clamp(24px,2.7778vw,40px)]"
+              className="absolute inset-0 flex flex-col overflow-hidden rounded-[clamp(8px,0.8333vw,12px)] p-4 sm:p-[clamp(24px,2.7778vw,40px)]"
               style={{
                 backgroundColor: backCardStyle.bg,
                 "--label-color": backCardStyle.labelColor,

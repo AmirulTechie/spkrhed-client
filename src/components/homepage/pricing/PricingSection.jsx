@@ -11,9 +11,9 @@ gsap.registerPlugin(ScrollTrigger);
 const TIERS = [
   {
     badge: "SEED",
-    icon: "/images/Home/pricing-sprout-icon.png",
-    iconWidth: 68,
-    iconHeight: 68,
+    icon: "/images/Home/pricing-icon-1.png",
+    iconWidth: 100,
+    iconHeight: 100,
     name: "SPROUT",
     description: "Founders & consultants planting the first row.",
     features: [
@@ -29,9 +29,9 @@ const TIERS = [
   },
   {
     badge: "GIANT",
-    icon: "/images/Home/pricing-beanstalk-icon.png",
-    iconWidth: 31,
-    iconHeight: 34,
+    icon: "/images/Home/pricing-icon-2.png",
+    iconWidth: 100,
+    iconHeight: 100,
     name: "BEANSTALK",
     description: "Agencies & growing teams ready to scale past referrals.",
     features: [
@@ -50,9 +50,9 @@ const TIERS = [
   },
   {
     badge: "SKY-HIGH",
-    icon: "/images/Home/pricing-giant-icon.png",
-    iconWidth: 76,
-    iconHeight: 80,
+    icon: "/images/Home/pricing-icon-3.png",
+    iconWidth: 100,
+    iconHeight: 100,
     name: "GOLDEN GIANT",
     description: "Scale-stage founders ready to make referrals optional.",
     features: [
@@ -70,9 +70,9 @@ const TIERS = [
   },
   {
     badge: "CLOUD",
-    icon: "/images/Home/pricing-cloud-icon.png",
-    iconWidth: 90,
-    iconHeight: 62,
+    icon: "/images/Home/pricing-icon-4.png",
+    iconWidth: 100,
+    iconHeight: 100,
     name: "CLOUD KINGDOM",
     description:
       "Enterprise & PE-backed platforms the seat at the top of the beanstalk.",
@@ -139,28 +139,52 @@ function TypewriterChars({ text }) {
 
 function PricingCard({ tier, cardRef }) {
   const highlight = tier.highlight;
+  const iconRef = useRef(null);
+  const spotRef = useRef(null);
 
-  // Hover scale is applied to this outer wrapper (not the inner card div) so
-  // the "Most Popular" tag — an absolutely positioned sibling of the inner
-  // card — scales up together with it instead of getting left behind.
-  const handleEnter = (e) => {
-    gsap.to(e.currentTarget, {
-      scale: 1.05,
-      duration: 0.3,
-      ease: "power2.out",
-    });
+  const handleMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (spotRef.current) {
+      spotRef.current.style.background = `radial-gradient(400px circle at ${x}px ${y}px, ${highlight ? "rgba(255,255,255,0.12)" : "rgba(172,64,255,0.13)"} 0%, transparent 70%)`;
+      spotRef.current.style.opacity = "1";
+    }
   };
+
+  const handleEnter = (e) => {
+    gsap.to(e.currentTarget, { scale: 1.04, duration: 0.3, ease: "power2.out" });
+    gsap.to(iconRef.current, {
+      y: -12,
+      rotate: 10,
+      scale: 1.12,
+      duration: 0.45,
+      ease: "power3.out",
+    });
+    if (spotRef.current) spotRef.current.style.opacity = "1";
+  };
+
   const handleLeave = (e) => {
     gsap.to(e.currentTarget, { scale: 1, duration: 0.3, ease: "power2.out" });
+    gsap.to(iconRef.current, {
+      y: 0,
+      rotate: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: "elastic.out(1, 0.6)",
+    });
+    if (spotRef.current) {
+      spotRef.current.style.opacity = "0";
+    }
   };
 
   return (
-    // no vertical translate — all four cards share the same top edge, per Figma
     <div
       ref={cardRef}
-      className="relative h-full"
+      className="group relative h-full cursor-pointer"
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
+      onMouseMove={handleMove}
     >
       {tier.mostPopular && (
         // Flush against the card's top edge — the tag is a narrower "neck" poking
@@ -174,30 +198,33 @@ function PricingCard({ tier, cardRef }) {
       )}
 
       <div
-        className={`relative z-10 flex h-full flex-col rounded-[10px] p-[clamp(16px,1.3889vw,20px)] ${
-          highlight
-            ? "border-[clamp(3px,0.2778vw,4px)] border-[#F0F0EA] bg-[#AC40FF]"
-            : "bg-white"
-        }`}
+        className={`relative z-10 flex h-full flex-col overflow-hidden rounded-[10px] p-[clamp(16px,1.3889vw,20px)] ${highlight ? "bg-[#AC40FF]" : "bg-white"
+          }`}
       >
+        {/* Mouse-tracking spotlight */}
+        <div
+          ref={spotRef}
+          className="pointer-events-none absolute inset-0 z-0 rounded-[10px] opacity-0 transition-opacity duration-300"
+          style={{ background: "transparent" }}
+        />
         <div className="flex items-center justify-between">
-          <span className="inline-flex w-fit items-center gap-1 rounded-full bg-black px-[clamp(8px,0.6944vw,10px)] py-[clamp(4px,0.3889vw,6px)]">
-            <span className="h-1.25 w-1.25 shrink-0 rounded-full bg-[#AC40FF]" />
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-black px-[clamp(10px,1vw,16px)] py-[clamp(6px,0.6vw,10px)]">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[#AC40FF]" />
             <span
-              className={`font-poppins text-[clamp(11px,1.0417vw,15px)] font-semibold leading-none ${
-                highlight ? "text-[#AC40FF]" : "text-white"
-              }`}
+              className={`font-poppins text-[clamp(13px,1.3889vw,20px)] font-semibold leading-none ${highlight ? "text-[#AC40FF]" : "text-white"
+                }`}
             >
               {tier.badge}
             </span>
           </span>
 
           <Image
+            ref={iconRef}
             src={tier.icon}
             alt=""
             width={tier.iconWidth}
             height={tier.iconHeight}
-            className="h-[clamp(24px,2.3611vw,34px)] w-auto shrink-0 object-contain"
+            className="h-[clamp(50px,6vw,100px)] w-auto shrink-0 object-contain will-change-transform"
           />
         </div>
 
@@ -214,9 +241,8 @@ function PricingCard({ tier, cardRef }) {
           {tier.features.map((feature) => (
             <li key={feature} className="flex items-start gap-2.5">
               <CheckIcon
-                className={`mt-0.5 h-[clamp(14px,1.1972vw,17px)] w-[clamp(14px,1.1972vw,17px)] shrink-0 ${
-                  highlight ? "text-black" : "text-[#AC40FF]"
-                }`}
+                className={`mt-0.5 h-[clamp(14px,1.1972vw,17px)] w-[clamp(14px,1.1972vw,17px)] shrink-0 ${highlight ? "text-black" : "text-[#AC40FF]"
+                  }`}
               />
               <span className="font-poppins text-[clamp(11px,0.8333vw,12px)] font-medium leading-[1.2] text-black/70">
                 {feature}
@@ -227,11 +253,10 @@ function PricingCard({ tier, cardRef }) {
 
         <Link
           href="/contact"
-          className={`mt-3 flex w-full items-center justify-center rounded-lg py-[clamp(8px,0.7546vw,11px)] text-center font-poppins text-[clamp(19px,0.138vw,20px)] font-semibold uppercase transition-colors duration-300 ${
-            highlight
-              ? "bg-black text-[#AC40FF] hover:bg-white hover:text-black"
-              : "bg-[#AC40FF] text-black hover:bg-black hover:text-[#AC40FF]"
-          }`}
+          className={`mt-3 flex w-full items-center justify-center rounded-lg py-[clamp(8px,0.7546vw,11px)] text-center font-poppins text-[clamp(19px,0.138vw,20px)] font-semibold uppercase transition-colors duration-300 ${highlight
+            ? "bg-black text-[#AC40FF] hover:bg-white hover:text-black"
+            : "bg-[#AC40FF] text-black hover:bg-black hover:text-[#AC40FF]"
+            }`}
         >
           {tier.cta}
         </Link>
@@ -341,7 +366,7 @@ export default function PricingSection() {
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">
         <h2
           ref={headingRef}
-          className="mx-auto max-w-6xl text-center font-anton-sc text-[clamp(48px,10.14vw,146px)] uppercase leading-[0.97] text-white"
+          className="mx-auto max-w-6xl whitespace-nowrap text-center font-anton-sc text-[clamp(48px,10.14vw,146px)] uppercase leading-[0.97] text-white"
         >
           <TypewriterChars text="Pick Your Beanstalk." />
         </h2>
