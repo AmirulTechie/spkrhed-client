@@ -69,6 +69,13 @@ const nextConfig = {
           },
         ],
       },
+      // Prevent search engines from indexing raw asset URLs directly.
+      {
+        source: "/images/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
     ];
   },
 };

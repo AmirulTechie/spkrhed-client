@@ -124,3 +124,35 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/*
+ * Asset protection — client-side layer.
+ * Prevents drag-to-new-tab, right-click "Save image as…", and text selection
+ * on visual assets. The server-side proxy.js handles the stronger Referer
+ * check for /public/images/*.
+ */
+img,
+svg,
+canvas,
+video {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/*
+ * Restore pointer events only on elements that need interaction
+ * (buttons, links, inputs). This overrides the blanket rule above.
+ */
+a img,
+button img,
+a svg,
+button svg,
+[role="button"] img,
+[role="button"] svg,
+label img,
+label svg {
+  pointer-events: auto;
+}

@@ -17,7 +17,7 @@ const STEPS = [
     description:
       "Your prospect receives a personalized message. They're curious — so they click your profile.",
     offset: false,
-    icon: "/images/Home/flywheel-icon-1.png",
+    icon: "/images/Home/icon-flywheel-1.png",
     iconWidth: 268,
     iconHeight: 230,
   },
@@ -27,7 +27,7 @@ const STEPS = [
     description:
       "They see polished positioning, real social proof, and a feed of content that makes them feel they already know you.",
     offset: true,
-    icon: "/images/Home/flywheel-icon-2.png",
+    icon: "/images/Home/icon-flywheel-2.png",
     iconWidth: 188,
     iconHeight: 240,
   },
@@ -37,7 +37,7 @@ const STEPS = [
     description:
       "Even if they're not ready today, they follow. Every post keeps you top of mind until the timing is right.",
     offset: false,
-    icon: "/images/Home/flywheel-icon-3.png",
+    icon: "/images/Home/icon-flywheel-3.png",
     iconWidth: 234,
     iconHeight: 234,
   },
@@ -168,12 +168,12 @@ export default function FlywheelSection() {
       gsap.set(climbLines, { clipPath: "inset(-100px 100% -100px 0%)" });
 
       const anchorEl = bulletChars[0];
-const anchorLeft = anchorEl.getBoundingClientRect().left;
+      const anchorLeft = anchorEl.getBoundingClientRect().left;
 
       gsap.set(bulletChars, {
-  opacity: 0,
-  x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
-});
+        opacity: 0,
+        x: (_, target) => anchorLeft - target.getBoundingClientRect().left,
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -194,16 +194,16 @@ const anchorLeft = anchorEl.getBoundingClientRect().left;
         ease: "power3.out",
       })
         .to(
-  bulletChars,
-  {
-    x: 0,
-    opacity: 1,
-    duration: 0.35,
-    ease: "power3.out",
-    stagger: { each: 0.018, from: 0 },
-  },
-  "<0.1",
-)
+          bulletChars,
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.35,
+            ease: "power3.out",
+            stagger: { each: 0.018, from: 0 },
+          },
+          "<0.1",
+        )
         .to(
           headingChars,
           {
