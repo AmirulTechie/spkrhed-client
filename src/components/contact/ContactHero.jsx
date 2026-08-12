@@ -150,7 +150,7 @@ export default function ContactHero() {
       )}
 
       <Image
-        src="/images/Home/hero-banner-plain.png"
+        src="/images/hero-banner.png"
         alt=""
         fill
         priority

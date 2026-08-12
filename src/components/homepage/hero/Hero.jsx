@@ -24,11 +24,16 @@ const MOVEMENT_TEXT = "This is a movement";
 
 function Line({ text }) {
   return (
-    <div className="overflow-hidden">
+    <div>
       <span className="block">
-        {text.split("").map((char, i) => (
-          <span key={i} className="sprout-char inline-block opacity-0">
-            {char === " " ? " " : char}
+        {text.split(" ").map((word, i) => (
+          <span key={i} className="inline-block">
+            <span className="bloom-word inline-block opacity-0">
+              {word}
+            </span>
+            {i < text.split(" ").length - 1 && (
+              <span className="inline-block">&nbsp;</span>
+            )}
           </span>
         ))}
       </span>
@@ -42,10 +47,11 @@ export default function Hero() {
   const movementCharRefs = useRef([]);
 
   useLayoutEffect(() => {
-    const chars = [...linesRef.current.querySelectorAll(".sprout-char")];
+    const words = [...linesRef.current.querySelectorAll(".bloom-word")];
 
     const ctx = gsap.context(() => {
-      gsap.set(chars, { opacity: 0, yPercent: 60, filter: "blur(6px)" });
+      // Each word starts scaled down, invisible, and blurred — ready to bloom.
+      gsap.set(words, { opacity: 0, scale: 0.82, filter: "blur(12px)", transformOrigin: "center center" });
 
       // "This is a movement" is coupled to the "T" — every other char and
       // the bullet start stacked on top of it, then pull apart outward in
@@ -63,15 +69,18 @@ export default function Hero() {
 
       const tl = gsap.timeline({ delay: LOADER_DURATION });
 
-      // Characters sprout up from a clipped baseline, sharpening from
-      // blur into focus as they emerge — text growing out of the ground.
-      tl.to(chars, {
+      // Words bloom outward from the center of the headline — scaling up,
+      // fading in, and clearing their blur simultaneously.
+      tl.to(words, {
         opacity: 1,
-        yPercent: 0,
+        scale: 1,
         filter: "blur(0px)",
-        duration: 0.4,
-        stagger: 0.035,
-        ease: "power2.out",
+        duration: 0.75,
+        stagger: {
+          each: 0.12,
+          from: "center",
+        },
+        ease: "power3.out",
       }).to(
         movementEls,
         {
@@ -81,7 +90,7 @@ export default function Hero() {
           ease: "power3.out",
           stagger: { each: 0.032, from: movementEls.indexOf(anchorEl) },
         },
-        "-=0.25"
+        "-=0.35"
       );
     });
 

@@ -88,6 +88,8 @@ const TESTIMONIALS = [
   {
     id: "delta-sigma-theta",
     variant: "video",
+    name: "Erica Ankram",
+    role: "Owner and Creative Director · Eyes for Wings Photography and Design",
     description:
       "Brand Director for Delta Sigma Theta Sorority, an international organization founded in 1913 with more than 350,000 initiated members and over 1,000 chapters worldwide.",
     thumbnail:
