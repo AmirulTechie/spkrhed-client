@@ -92,7 +92,7 @@ function StepCard({ step, cardRef }) {
   return (
     <div
       ref={cardRef}
-      className={`relative mx-auto aspect-321/353 w-full max-w-70 bg-[rgba(217,217,217,0.5)] backdrop-blur-md [mask-image:url('/images/Home/flywheel-card-shape.svg')] mask-no-repeat mask-size-[100%_100%] sm:max-w-none ${step.offset ? "sm:mt-[clamp(38px,8.0556vw,116px)]" : ""}`}
+      className={`relative mx-auto aspect-321/353 w-full max-w-70 bg-[rgba(217,217,217,0.5)] backdrop-blur-md mask-[url('/images/Home/flywheel-card-shape.svg')] mask-no-repeat mask-size-[100%_100%] sm:max-w-none ${step.offset ? "sm:mt-[clamp(38px,8.0556vw,116px)]" : ""}`}
     >
       <div className="flex h-full w-full flex-col pt-[clamp(20px,1.875vw,27px)] pr-[clamp(20px,1.875vw,27px)] pb-[clamp(28px,2.6389vw,38px)] pl-[clamp(20px,1.875vw,27px)]">
         <div className="mr-[clamp(13px,1.3194vw,19px)] flex items-start justify-between">
@@ -110,7 +110,7 @@ function StepCard({ step, cardRef }) {
           alt=""
           width={step.iconWidth}
           height={step.iconHeight}
-          className="mt-[clamp(12px,1.6667vw,24px)] h-[85px] sm:h-[clamp(56px,7.6389vw,110px)] w-auto object-contain object-left"
+          className="mt-[clamp(12px,1.6667vw,24px)] h-21.25 sm:h-[clamp(56px,7.6389vw,110px)] w-auto object-contain object-left"
         />
 
         <div className="mt-auto pt-[clamp(6px,0.9028vw,13px)]">

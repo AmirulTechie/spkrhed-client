@@ -69,7 +69,7 @@ export default function Footer() {
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-cover opacity-85"
+        className="pointer-events-none select-none object-cover"
       />
       {/* Black overlay mask layer to darken the entire background graphic */}
       <div className="absolute inset-0 bg-black/60 pointer-events-none z-1" />

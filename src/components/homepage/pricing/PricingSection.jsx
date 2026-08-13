@@ -224,7 +224,7 @@ function PricingCard({ tier, cardRef }) {
             alt=""
             width={tier.iconWidth}
             height={tier.iconHeight}
-            className="h-[80px] sm:h-[clamp(50px,6vw,100px)] w-auto shrink-0 object-contain will-change-transform"
+            className="h-20 sm:h-[clamp(50px,6vw,100px)] w-auto shrink-0 object-contain will-change-transform"
           />
         </div>
 

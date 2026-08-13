@@ -148,12 +148,11 @@ function VideoPlayer({ src, onClose }) {
 
       {/* Control bar overlay */}
       <div
-        className={`pointer-events-none absolute inset-0 flex flex-col justify-end transition-opacity duration-300 ${
-          controlsVisible ? "opacity-100" : "opacity-0"
-        }`}
+        className={`pointer-events-none absolute inset-0 flex flex-col justify-end transition-opacity duration-300 ${controlsVisible ? "opacity-100" : "opacity-0"
+          }`}
       >
         {/* Gradient scrim so controls are readable over any video frame */}
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-black/80 to-transparent" />
 
         {/* The control elements themselves re-enable pointer-events */}
         <div className="pointer-events-auto relative z-10 flex flex-col gap-1.5 px-3 pb-2.5">
@@ -380,7 +379,7 @@ export default function TestimonialsSection() {
   // Exposed to the JSX buttons below, filled in once the drag setup inside
   // the effect knows the track's real bounds. Kept as a ref (not state)
   // since these are imperative actions, not render data.
-  const trackControlsRef = useRef({ next: () => {}, prev: () => {} });
+  const trackControlsRef = useRef({ next: () => { }, prev: () => { } });
 
   // Drives the fade-out on the hint copy and the disabled state on the
   // chevrons. Starts "false"/"false" (not at either end, nothing dismissed
@@ -397,7 +396,7 @@ export default function TestimonialsSection() {
     ];
     const bulletChars = bulletCharRefs.current.filter(Boolean);
 
-    let removeResizeListener = () => {};
+    let removeResizeListener = () => { };
 
     const ctx = gsap.context(() => {
       gsap.set(headingChars, { opacity: 0 });
@@ -413,7 +412,7 @@ export default function TestimonialsSection() {
 
       if (viewportRef.current) gsap.set(viewportRef.current, { opacity: 0, y: 60 });
 
-      let updateScrollState = () => {};
+      let updateScrollState = () => { };
 
       if (trackRef.current && viewportRef.current) {
         const track = trackRef.current;
@@ -679,34 +678,33 @@ export default function TestimonialsSection() {
           for anyone who can't or won't drag. */}
       <div className="relative z-10 mx-auto mt-[clamp(20px,2.7778vw,40px)] flex max-w-360 items-center justify-center gap-[clamp(12px,1.6667vw,24px)] px-[clamp(20px,3.1944vw,46px)]">
         <button
-  type="button"
-  onClick={() => trackControlsRef.current.prev()}
-  disabled={scrollState.atStart}
-  aria-label="Show previous testimonial"
-  className="flex h-[clamp(44px,4.4444vw,64px)] w-[clamp(44px,4.4444vw,64px)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-opacity duration-300 disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-[#ac40ff] enabled:hover:text-[#ac40ff]"
->
-  <ChevronLeft className="h-[clamp(18px,1.6667vw,24px)] w-[clamp(18px,1.6667vw,24px)]" />
-</button>
+          type="button"
+          onClick={() => trackControlsRef.current.prev()}
+          disabled={scrollState.atStart}
+          aria-label="Show previous testimonial"
+          className="flex h-[clamp(44px,4.4444vw,64px)] w-[clamp(44px,4.4444vw,64px)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-opacity duration-300 disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-[#ac40ff] enabled:hover:text-[#ac40ff]"
+        >
+          <ChevronLeft className="h-[clamp(18px,1.6667vw,24px)] w-[clamp(18px,1.6667vw,24px)]" />
+        </button>
 
         <p
           aria-hidden="true"
-          className={`font-poppins text-[clamp(11px,0.9722vw,14px)] text-white/50 transition-opacity duration-500 ${
-            hasInteracted ? "opacity-0" : "opacity-100"
-          }`}
+          className={`font-poppins text-[clamp(11px,0.9722vw,14px)] text-white/50 transition-opacity duration-500 ${hasInteracted ? "opacity-0" : "opacity-100"
+            }`}
         >
           <span className="hidden sm:inline">Drag to explore more stories</span>
           <span className="sm:hidden">Swipe to see more stories</span>
         </p>
 
         <button
-  type="button"
-  onClick={() => trackControlsRef.current.next()}
-  disabled={scrollState.atEnd}
-  aria-label="Show next testimonial"
-  className="flex h-[clamp(44px,4.4444vw,64px)] w-[clamp(44px,4.4444vw,64px)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-opacity duration-300 disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-[#ac40ff] enabled:hover:text-[#ac40ff]"
->
-  <ChevronRight className="h-[clamp(18px,1.6667vw,24px)] w-[clamp(18px,1.6667vw,24px)]" />
-</button>
+          type="button"
+          onClick={() => trackControlsRef.current.next()}
+          disabled={scrollState.atEnd}
+          aria-label="Show next testimonial"
+          className="flex h-[clamp(44px,4.4444vw,64px)] w-[clamp(44px,4.4444vw,64px)] shrink-0 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-opacity duration-300 disabled:cursor-not-allowed disabled:opacity-30 enabled:hover:border-[#ac40ff] enabled:hover:text-[#ac40ff]"
+        >
+          <ChevronRight className="h-[clamp(18px,1.6667vw,24px)] w-[clamp(18px,1.6667vw,24px)]" />
+        </button>
       </div>
     </section>
   );
