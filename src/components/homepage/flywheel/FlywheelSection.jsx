@@ -47,7 +47,7 @@ const STEPS = [
     description:
       "When they're ready, you're the only name they think of. They book — already pre-sold on your value.",
     offset: true,
-    icon: "/images/Home/flywheel-icon-4.png",
+    icon: "/images/Home/icon-flywheel-4.png",
     iconWidth: 105,
     iconHeight: 105,
   },

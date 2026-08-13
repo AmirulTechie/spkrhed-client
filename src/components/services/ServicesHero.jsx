@@ -88,7 +88,7 @@ export default function ServicesHero() {
   return (
     <section className="relative flex min-h-dvh w-full items-end overflow-hidden bg-black lg:h-screen">
       <Image
-        src="/images/services/services-banner.png"
+        src="/images/services/services-banner-2.png"
         alt=""
         fill
         priority
