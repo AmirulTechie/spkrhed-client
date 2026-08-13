@@ -69,7 +69,7 @@ export default function Footer() {
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-contain object-left opacity-25 scale-x-[-1]"
+        className="pointer-events-none select-none object-contain object-right opacity-25"
       />
 
       <div className="relative grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
