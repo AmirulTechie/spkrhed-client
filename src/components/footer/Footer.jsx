@@ -69,7 +69,7 @@ export default function Footer() {
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-cover"
+        className="pointer-events-none select-none object-cover opacity-85"
       />
 
       <div className="relative mx-auto max-w-[1440px] flex-col">
