@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaLinkedin } from "react-icons/fa";
-import { SiInstagram } from "react-icons/si";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
@@ -15,13 +14,15 @@ const QUICK_LINKS = [
 ];
 
 const SOCIALS = [
-  { label: "LinkedIn", href: "#", icon: FaLinkedin },
-  { label: "Instagram", href: "#", icon: SiInstagram },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/speakerhead",
+    icon: FaLinkedin,
+  },
 ];
-
 function ColumnHeading({ children }) {
   return (
-    <p className="flex items-center gap-2 font-anton-sc text-lg uppercase tracking-wide text-white">
+    <p className="flex items-center gap-2 font-anton-sc text-xl uppercase tracking-wide text-white lg:text-2xl">
       <Image
         src="/images/Home/leaf-2.png"
         alt=""
@@ -58,73 +59,58 @@ function SocialLink({ social }) {
 export default function Footer() {
   const pathname = usePathname();
 
-  // The Work page is a full-bleed drag/scroll canvas (see WorkGrid) with no
-  // natural end to scroll to, so the footer never has anywhere sensible to sit.
   if (pathname === "/work") return null;
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-black text-white">
+    <footer className="relative w-full overflow-hidden border-t border-white/10 bg-black text-white">
       <Image
         src="/images/footer_bg.png"
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-contain object-right opacity-30"
+        className="pointer-events-none select-none object-cover object-[right_bottom]"
       />
 
-      <div className="relative grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
-        <div className="flex flex-col gap-6 p-6 lg:p-8">
-          <Image
-            src="/images/spkrhed-logo.png"
-            alt="SPKRHED"
-            width={358}
-            height={58}
-            className="h-auto w-32 object-contain object-left"
-          />
+      <div className="relative mx-auto max-w-[1440px] flex-col">
+        <div className="grid flex-1 grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
+          <div className="flex flex-col justify-center gap-8 p-6 lg:p-10">
+            <Image src="/images/spkrhed-logo.png" alt="SPKRHED" width={358} height={58} className="h-auto w-48 object-contain object-left lg:w-56" />
+            <div className="flex flex-col gap-3">
+              <p className="text-sm uppercase tracking-widest text-white/40">How to cooperate?</p>
+              <Link href="mailto:info@speakerhead.com" className="font-anton-sc text-2xl uppercase tracking-wide text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-3xl">
+                info@speakerhead.com
+              </Link>
+            </div>
+          </div>
 
-          <div className="flex flex-col gap-2">
-            <p className="text-xs uppercase tracking-widest text-white/40">
-              How to cooperate?
-            </p>
-            <Link
-              href="mailto:info@speakerhead.com"
-              className="font-anton-sc text-xl uppercase tracking-wide text-white transition-colors duration-300 hover:text-[#AC40FF]"
-            >
-              info@speakerhead.com
-            </Link>
+          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10">
+            <ColumnHeading>Quick Links</ColumnHeading>
+            <ul className="flex flex-col gap-4">
+              {QUICK_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-base text-white transition-colors duration-300 hover:text-white lg:text-lg">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10">
+            <ColumnHeading>Socials</ColumnHeading>
+            <div className="flex flex-col gap-4">
+              {SOCIALS.map((social) => (
+                <SocialLink key={social.label} social={social} />
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 p-6 lg:p-8">
-          <ColumnHeading>Quick Links</ColumnHeading>
-          <ul className="flex flex-col gap-2.5">
-            {QUICK_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="text-sm text-white/50 transition-colors duration-300 hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="border-t border-white/10 px-6 py-4 lg:px-10">
+          <p className="text-center text-xs text-white">
+            Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
+          </p>
         </div>
-
-        <div className="flex flex-col gap-4 p-6 lg:p-8">
-          <ColumnHeading>Socials</ColumnHeading>
-          <div className="flex flex-col gap-2.5">
-            {SOCIALS.map((social) => (
-              <SocialLink key={social.label} social={social} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="relative border-t border-white/10 px-6 py-4 lg:px-8">
-        <p className="text-center text-xs text-white/30">
-          Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
-        </p>
       </div>
     </footer>
   );
