@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
@@ -51,6 +51,178 @@ function PlayIcon({ className }) {
         fill="currentColor"
       />
     </svg>
+  );
+}
+
+function StopIcon({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+      <rect x="5" y="5" width="14" height="14" rx="2" />
+    </svg>
+  );
+}
+
+function formatTime(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+/**
+ * Custom video player that owns all its own pointer events so GSAP
+ * Draggable (which listens globally) cannot steal hover / click events
+ * away from the controls. Native <video controls> hides automatically
+ * and those show/hide events never surface back through GSAP — this
+ * component fixes that by managing the control bar entirely itself.
+ */
+function VideoPlayer({ src, onClose }) {
+  const videoRef = useRef(null);
+  const hideTimerRef = useRef(null);
+
+  const [playing, setPlaying] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [controlsVisible, setControlsVisible] = useState(true);
+
+  // Auto-hide controls after 3 s of no interaction
+  const bringUpControls = () => {
+    setControlsVisible(true);
+    clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = setTimeout(() => setControlsVisible(false), 3000);
+  };
+
+  useEffect(() => {
+    bringUpControls();
+    return () => clearTimeout(hideTimerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play();
+    } else {
+      v.pause();
+    }
+    bringUpControls();
+  };
+
+  const handleSeek = (e) => {
+    const v = videoRef.current;
+    if (!v || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    v.currentTime = ratio * duration;
+    bringUpControls();
+  };
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  return (
+    <div
+      className="relative h-full w-full"
+      // Stop all pointer events from reaching GSAP Draggable
+      onPointerDown={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onMouseMove={(e) => { e.stopPropagation(); bringUpControls(); }}
+      onMouseEnter={(e) => { e.stopPropagation(); bringUpControls(); }}
+      onTouchStart={(e) => e.stopPropagation()}
+    >
+      <video
+        ref={videoRef}
+        src={src}
+        autoPlay
+        playsInline
+        muted={muted}
+        className="h-full w-full cursor-default object-cover"
+        onTimeUpdate={() => setCurrentTime(videoRef.current?.currentTime ?? 0)}
+        onLoadedMetadata={() => setDuration(videoRef.current?.duration ?? 0)}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={onClose}
+        onClick={togglePlay}
+      />
+
+      {/* Control bar overlay */}
+      <div
+        className={`pointer-events-none absolute inset-0 flex flex-col justify-end transition-opacity duration-300 ${
+          controlsVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {/* Gradient scrim so controls are readable over any video frame */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 to-transparent" />
+
+        {/* The control elements themselves re-enable pointer-events */}
+        <div className="pointer-events-auto relative z-10 flex flex-col gap-1.5 px-3 pb-2.5">
+          {/* Scrubber / progress bar */}
+          <div
+            role="slider"
+            aria-label="Video progress"
+            aria-valuenow={Math.round(currentTime)}
+            aria-valuemin={0}
+            aria-valuemax={Math.round(duration)}
+            className="group/bar flex h-4 cursor-pointer items-center"
+            onClick={handleSeek}
+          >
+            <div className="relative h-1 w-full rounded-full bg-white/30 transition-all duration-150 group-hover/bar:h-1.5">
+              <div
+                className="absolute left-0 top-0 h-full rounded-full bg-white"
+                style={{ width: `${progress}%` }}
+              >
+                {/* Scrubber thumb */}
+                <span className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 translate-x-1/2 scale-0 rounded-full bg-white shadow transition-transform group-hover/bar:scale-100" />
+              </div>
+            </div>
+          </div>
+
+          {/* Icon row */}
+          <div className="flex items-center gap-2">
+            {/* Play / Pause */}
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={playing ? "Pause" : "Play"}
+              className="cursor-pointer text-white transition-opacity hover:opacity-70"
+            >
+              {playing ? (
+                <Pause className="h-3.5 w-3.5" fill="currentColor" />
+              ) : (
+                <PlayIcon className="h-3.5 w-3.5" />
+              )}
+            </button>
+
+            {/* Time display */}
+            <span className="font-poppins text-[10px] tabular-nums text-white/80">
+              {formatTime(currentTime)}
+              <span className="text-white/40"> / {formatTime(duration)}</span>
+            </span>
+
+            {/* Mute / Unmute */}
+            <button
+              type="button"
+              onClick={() => setMuted((m) => !m)}
+              aria-label={muted ? "Unmute" : "Mute"}
+              className="ml-auto cursor-pointer text-white transition-opacity hover:opacity-70"
+            >
+              {muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Close / back-to-thumbnail button (always visible) */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Stop video"
+        className="absolute right-2 top-2 z-20 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-black/80"
+      >
+        <StopIcon className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
@@ -125,33 +297,46 @@ function TestimonialCard({ testimonial, className = "", ariaHidden = false }) {
       aria-hidden={ariaHidden || undefined}
     >
       {variant === "video" && (
-        <div className="relative mb-[clamp(8px,0.9028vw,13px)] aspect-402/287 w-full overflow-hidden rounded-[clamp(7px,0.6597vw,9.5px)]">
+        <div
+          className="group relative mb-[clamp(8px,0.9028vw,13px)] aspect-402/287 w-full cursor-default overflow-hidden rounded-[clamp(7px,0.6597vw,9.5px)]"
+        >
           {isPlaying ? (
-            <video
+            <VideoPlayer
               src={video}
-              controls
-              autoPlay
-              playsInline
-              className="h-full w-full object-cover"
+              onClose={() => setIsPlaying(false)}
             />
           ) : (
-            <button
-              type="button"
-              onClick={() => setIsPlaying(true)}
-              aria-label={name ? `Play ${name}'s testimonial video` : "Play testimonial video"}
-              className="absolute inset-0 h-full w-full"
-            >
+            <>
+              {/* Thumbnail image — zooms subtly on group hover */}
               <Image
                 src={thumbnail}
                 alt={name || "SPKRHED client testimonial"}
                 fill
                 sizes="(min-width: 1024px) 402px, 90vw"
-                className="object-cover"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
-              <span className="absolute inset-0 m-auto flex h-[clamp(40px,4.7917vw,69px)] w-[clamp(40px,4.7917vw,69px)] items-center justify-center rounded-full bg-white/10 backdrop-blur-md">
-                <PlayIcon className="h-[clamp(30px,3.6806vw,53px)] w-[clamp(30px,3.6806vw,53px)] translate-x-[6%] text-white" />
+              {/* Dark overlay that fades in on hover to signal clickability */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/30"
+              />
+              {/* Play button anchored bottom-left — pops on group hover */}
+              <button
+                type="button"
+                onClick={() => setIsPlaying(true)}
+                aria-label={name ? `Play ${name}'s testimonial video` : "Play testimonial video"}
+                className="absolute bottom-3 left-3 flex h-[clamp(36px,4vw,58px)] w-[clamp(36px,4vw,58px)] cursor-pointer items-center justify-center rounded-full bg-white/15 backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
+              >
+                <PlayIcon className="h-[clamp(24px,2.8vw,40px)] w-[clamp(24px,2.8vw,40px)] translate-x-[8%] text-white" />
+              </button>
+              {/* "Tap to play" hint label that slides up on hover */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-3 left-[calc(clamp(36px,4vw,58px)+clamp(36px,4vw,58px)*0.25+8px)] translate-y-2 font-poppins text-[clamp(10px,0.8vw,12px)] font-medium text-white/0 transition-all duration-300 group-hover:translate-y-0 group-hover:text-white/80"
+              >
+                Tap to play
               </span>
-            </button>
+            </>
           )}
         </div>
       )}

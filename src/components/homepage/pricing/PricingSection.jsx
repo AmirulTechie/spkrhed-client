@@ -286,35 +286,63 @@ export default function PricingSection() {
     const cards = cardRefs.current.filter(Boolean);
 
     const ctx = gsap.context(() => {
+      // — Heading chars start invisible (typewriter reveal)
       gsap.set(headingChars, { opacity: 0 });
-      gsap.set(descriptionRef.current, { opacity: 0, y: 40 });
-      gsap.set(cards, { opacity: 0, y: 80, scale: 0.85 });
+
+      // — Description block: starts off-screen to the left, clipped by the
+      //   section's overflow-x-clip, so it travels in as one solid unit
+      gsap.set(descriptionRef.current, { opacity: 0, x: -80 });
+
+      // — Cards: pitched back (perspective tilt) and invisible, ready to
+      //   unfold into place one by one
+      gsap.set(cards, {
+        opacity: 0,
+        y: 60,
+        rotateX: 18,
+        transformOrigin: "50% 100%",
+        transformPerspective: 900,
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%",
+          start: "top 72%",
           toggleActions: "play none none reverse",
         },
       });
 
-      tl.to(cards, {
+      // 1. Heading types on
+      tl.to(headingChars, {
         opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.6,
-        ease: "back.out(1.6)",
-      })
-        .to(
-          headingChars,
-          { opacity: 1, duration: 0.01, stagger: 0.02, ease: "none" },
-          "<",
-        )
-        .to(
-          descriptionRef.current,
-          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-          "<",
-        );
+        duration: 0.01,
+        stagger: 0.018,
+        ease: "none",
+      });
+
+      // 2. Description slides in from the left (whole block, one smooth move)
+      tl.to(
+        descriptionRef.current,
+        { opacity: 1, x: 0, duration: 0.75, ease: "power3.out" },
+        "-=0.25",
+      );
+
+      // 3. Cards unfold into place left → right with a stagger so each one
+      //    peels up independently — feels like a premium deck being laid out
+      tl.to(
+        cards,
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 0.65,
+          ease: "power3.out",
+          stagger: {
+            each: 0.12,
+            from: "start",
+          },
+        },
+        "-=0.35",
+      );
     }, sectionRef);
 
     return () => ctx.revert();
