@@ -89,7 +89,7 @@ export default function Footer() {
             <ul className="flex flex-col gap-4">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-lg text-white transition-colors duration-300 hover:text-white lg:text-xl">
+                  <Link href={link.href} className="text-lg text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-xl">
                     {link.label}
                   </Link>
                 </li>
