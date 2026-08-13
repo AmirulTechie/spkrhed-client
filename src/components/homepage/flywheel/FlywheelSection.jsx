@@ -110,7 +110,7 @@ function StepCard({ step, cardRef }) {
           alt=""
           width={step.iconWidth}
           height={step.iconHeight}
-          className="mt-[clamp(12px,1.6667vw,24px)] h-[clamp(56px,7.6389vw,110px)] w-auto object-contain object-left"
+          className="mt-[clamp(12px,1.6667vw,24px)] h-[85px] sm:h-[clamp(56px,7.6389vw,110px)] w-auto object-contain object-left"
         />
 
         <div className="mt-auto pt-[clamp(6px,0.9028vw,13px)]">
