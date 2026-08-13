@@ -63,24 +63,18 @@ export default function Footer() {
 
   return (
     <footer className="relative w-full overflow-hidden border-t border-white/10 bg-black text-white">
-      {/* Absolute image container to prevent zoom cropping on wide viewports */}
-      <div className="absolute right-0 bottom-0 top-0 w-full md:w-[60%] lg:w-[45%] pointer-events-none select-none">
-        <Image
-          src="/images/footer_bg.png"
-          alt=""
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover object-right-bottom opacity-90"
-        />
-        {/* Soft gradient overrides to blend the image left & top edges into the black footer background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-      </div>
+      {/* Background Image at full opacity and correctly aligned to the bottom-right corner */}
+      <Image
+        src="/images/footer_bg.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="pointer-events-none select-none object-cover object-right-bottom"
+      />
 
       <div className="relative mx-auto max-w-[1440px] flex-col">
-        {/* Grid layout with glassmorphism overlays on elements that cover the image graphics */}
         <div className="grid flex-1 grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
-          <div className="flex flex-col justify-center gap-8 p-6 lg:p-10 bg-black/10 backdrop-blur-[2px]">
+          <div className="flex flex-col justify-center gap-8 p-6 lg:p-10">
             <Image src="/images/spkrhed-logo.png" alt="SPKRHED" width={358} height={58} className="h-auto w-48 object-contain object-left lg:w-56" />
             <div className="flex flex-col gap-3">
               <p className="text-sm uppercase tracking-widest text-white/40">How to cooperate?</p>
@@ -90,7 +84,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10 bg-black/30 backdrop-blur-[4px]">
+          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10">
             <ColumnHeading>Quick Links</ColumnHeading>
             <ul className="flex flex-col gap-4">
               {QUICK_LINKS.map((link) => (
@@ -103,7 +97,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10 bg-black/55 backdrop-blur-[7px] border-l border-white/5">
+          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10">
             <ColumnHeading>Socials</ColumnHeading>
             <div className="flex flex-col gap-4">
               {SOCIALS.map((social) => (
@@ -113,7 +107,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="relative border-t border-white/10 px-6 py-4 lg:px-10 bg-black/90">
+        <div className="border-t border-white/10 px-6 py-4 lg:px-10">
           <p className="text-center text-xs text-white">
             Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
           </p>
