@@ -71,8 +71,10 @@ export default function Footer() {
         sizes="100vw"
         className="pointer-events-none select-none object-cover opacity-85"
       />
+      {/* Black overlay mask layer to darken the entire background graphic */}
+      <div className="absolute inset-0 bg-black/60 pointer-events-none z-1" />
 
-      <div className="relative mx-auto max-w-[1440px] flex-col">
+      <div className="relative mx-auto max-w-[1440px] flex-col z-10">
         <div className="grid flex-1 grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
           <div className="flex flex-col justify-center gap-8 px-6 py-16 lg:px-10 lg:py-28">
             <Image src="/images/spkrhed-logo.png" alt="SPKRHED" width={358} height={58} className="h-auto w-56 object-contain object-left lg:w-72" />
