@@ -22,13 +22,13 @@ const SOCIALS = [
 ];
 function ColumnHeading({ children }) {
   return (
-    <p className="flex items-center gap-2.5 font-anton-sc text-2xl uppercase tracking-wide text-white lg:text-3xl">
+    <p className="flex items-center gap-2.5 font-anton-sc text-3xl uppercase tracking-wide text-white lg:text-4xl">
       <Image
         src="/images/Home/leaf-2.png"
         alt=""
-        width={20}
-        height={20}
-        className="brightness-0 invert h-5 w-5"
+        width={24}
+        height={24}
+        className="brightness-0 invert h-6 w-6"
       />
       {children}
     </p>
@@ -46,10 +46,10 @@ function SocialLink({ social }) {
       className="group flex items-center gap-3.5"
     >
       <Icon
-        size={22}
+        size={26}
         className="text-white/50 transition-colors duration-300 group-hover:text-[#AC40FF]"
       />
-      <span className="text-lg text-white/50 transition-colors duration-300 group-hover:text-white lg:text-xl">
+      <span className="text-xl text-white/50 transition-colors duration-300 group-hover:text-white lg:text-2xl">
         {social.label}
       </span>
     </Link>
@@ -86,14 +86,14 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links Column centered within its grid space */}
+          {/* Quick Links Column centered within its grid space, links aligned center */}
           <div className="flex flex-col items-start sm:items-center justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
-            <div className="flex flex-col gap-5 w-fit">
+            <div className="flex flex-col items-center gap-5 w-fit">
               <ColumnHeading>Quick Links</ColumnHeading>
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col items-center gap-4 text-center">
                 {QUICK_LINKS.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-lg text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-xl">
+                    <Link href={link.href} className="text-xl text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-2xl">
                       {link.label}
                     </Link>
                   </li>
@@ -104,9 +104,9 @@ export default function Footer() {
 
           {/* Socials Column centered within its grid space */}
           <div className="flex flex-col items-start sm:items-center justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
-            <div className="flex flex-col gap-5 w-fit">
+            <div className="flex flex-col items-center gap-5 w-fit">
               <ColumnHeading>Socials</ColumnHeading>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col items-center gap-4">
                 {SOCIALS.map((social) => (
                   <SocialLink key={social.label} social={social} />
                 ))}
