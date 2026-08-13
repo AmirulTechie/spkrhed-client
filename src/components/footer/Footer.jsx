@@ -69,12 +69,12 @@ export default function Footer() {
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-cover object-right-bottom"
+        className="pointer-events-none select-none object-cover"
       />
 
       <div className="relative mx-auto max-w-[1440px] flex-col">
         <div className="grid flex-1 grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
-          <div className="flex flex-col justify-center gap-8 p-6 lg:p-10">
+          <div className="flex flex-col justify-center gap-8 px-6 py-16 lg:px-10 lg:py-28">
             <Image src="/images/spkrhed-logo.png" alt="SPKRHED" width={358} height={58} className="h-auto w-48 object-contain object-left lg:w-56" />
             <div className="flex flex-col gap-3">
               <p className="text-sm uppercase tracking-widest text-white/40">How to cooperate?</p>
@@ -84,7 +84,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10">
+          <div className="flex flex-col justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
             <ColumnHeading>Quick Links</ColumnHeading>
             <ul className="flex flex-col gap-4">
               {QUICK_LINKS.map((link) => (
@@ -97,7 +97,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="flex flex-col justify-center gap-5 p-6 lg:p-10">
+          <div className="flex flex-col justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
             <ColumnHeading>Socials</ColumnHeading>
             <div className="flex flex-col gap-4">
               {SOCIALS.map((social) => (
