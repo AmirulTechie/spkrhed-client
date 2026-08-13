@@ -69,11 +69,11 @@ export default function Footer() {
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-contain object-right opacity-25"
+        className="pointer-events-none select-none object-contain object-right opacity-30"
       />
 
       <div className="relative grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
-        <div className="flex flex-col justify-between gap-10 p-8 lg:p-12">
+        <div className="flex flex-col gap-6 p-6 lg:p-8">
           <Image
             src="/images/spkrhed-logo.png"
             alt="SPKRHED"
@@ -82,7 +82,7 @@ export default function Footer() {
             className="h-auto w-32 object-contain object-left"
           />
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             <p className="text-xs uppercase tracking-widest text-white/40">
               How to cooperate?
             </p>
@@ -95,9 +95,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 p-8 lg:p-12">
+        <div className="flex flex-col gap-4 p-6 lg:p-8">
           <ColumnHeading>Quick Links</ColumnHeading>
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-col gap-2.5">
             {QUICK_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
@@ -111,9 +111,9 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-6 p-8 lg:p-12">
+        <div className="flex flex-col gap-4 p-6 lg:p-8">
           <ColumnHeading>Socials</ColumnHeading>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2.5">
             {SOCIALS.map((social) => (
               <SocialLink key={social.label} social={social} />
             ))}
@@ -121,7 +121,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative border-t border-white/10 px-8 py-5 lg:px-12">
+      <div className="relative border-t border-white/10 px-6 py-4 lg:px-8">
         <p className="text-center text-xs text-white/30">
           Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
         </p>
