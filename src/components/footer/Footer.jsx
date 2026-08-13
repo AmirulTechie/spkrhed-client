@@ -65,11 +65,11 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-black text-white">
       <Image
-        src="/images/Home/Hero-banner-grids.png"
+        src="/images/footer_bg.png"
         alt=""
         fill
         sizes="100vw"
-        className="pointer-events-none select-none object-cover opacity-[0.08]"
+        className="pointer-events-none select-none object-cover opacity-20"
       />
 
       <div className="relative grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
