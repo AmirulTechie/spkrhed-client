@@ -86,31 +86,27 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links Column centered within its grid space, links aligned center */}
-          <div className="flex flex-col items-start sm:items-center justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
-            <div className="flex flex-col items-center gap-5 w-fit">
-              <ColumnHeading>Quick Links</ColumnHeading>
-              <ul className="flex flex-col items-center gap-4 text-center">
-                {QUICK_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="text-xl text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-2xl">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Quick Links Column left-aligned */}
+          <div className="flex flex-col justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
+            <ColumnHeading>Quick Links</ColumnHeading>
+            <ul className="flex flex-col gap-4">
+              {QUICK_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-xl text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-2xl">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Socials Column centered within its grid space */}
-          <div className="flex flex-col items-start sm:items-center justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
-            <div className="flex flex-col items-center gap-5 w-fit">
-              <ColumnHeading>Socials</ColumnHeading>
-              <div className="flex flex-col items-center gap-4">
-                {SOCIALS.map((social) => (
-                  <SocialLink key={social.label} social={social} />
-                ))}
-              </div>
+          {/* Socials Column left-aligned */}
+          <div className="flex flex-col justify-center gap-5 px-6 py-16 lg:px-10 lg:py-28">
+            <ColumnHeading>Socials</ColumnHeading>
+            <div className="flex flex-col gap-4">
+              {SOCIALS.map((social) => (
+                <SocialLink key={social.label} social={social} />
+              ))}
             </div>
           </div>
         </div>
