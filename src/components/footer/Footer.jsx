@@ -22,13 +22,13 @@ const SOCIALS = [
 ];
 function ColumnHeading({ children }) {
   return (
-    <p className="flex items-center gap-2 font-anton-sc text-xl uppercase tracking-wide text-white lg:text-2xl">
+    <p className="flex items-center gap-2.5 font-anton-sc text-2xl uppercase tracking-wide text-white lg:text-3xl">
       <Image
         src="/images/Home/leaf-2.png"
         alt=""
-        width={16}
-        height={16}
-        className="brightness-0 invert"
+        width={20}
+        height={20}
+        className="brightness-0 invert h-5 w-5"
       />
       {children}
     </p>
@@ -43,13 +43,13 @@ function SocialLink({ social }) {
       href={social.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-3"
+      className="group flex items-center gap-3.5"
     >
       <Icon
-        size={18}
+        size={22}
         className="text-white/50 transition-colors duration-300 group-hover:text-[#AC40FF]"
       />
-      <span className="text-sm text-white/50 transition-colors duration-300 group-hover:text-white">
+      <span className="text-lg text-white/50 transition-colors duration-300 group-hover:text-white lg:text-xl">
         {social.label}
       </span>
     </Link>
@@ -75,10 +75,10 @@ export default function Footer() {
       <div className="relative mx-auto max-w-[1440px] flex-col">
         <div className="grid flex-1 grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-3">
           <div className="flex flex-col justify-center gap-8 px-6 py-16 lg:px-10 lg:py-28">
-            <Image src="/images/spkrhed-logo.png" alt="SPKRHED" width={358} height={58} className="h-auto w-48 object-contain object-left lg:w-56" />
+            <Image src="/images/spkrhed-logo.png" alt="SPKRHED" width={358} height={58} className="h-auto w-56 object-contain object-left lg:w-72" />
             <div className="flex flex-col gap-3">
-              <p className="text-sm uppercase tracking-widest text-white/40">How to cooperate?</p>
-              <Link href="mailto:info@speakerhead.com" className="font-anton-sc text-2xl uppercase tracking-wide text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-3xl">
+              <p className="text-base uppercase tracking-widest text-white/40">How to cooperate?</p>
+              <Link href="mailto:info@speakerhead.com" className="font-anton-sc text-3xl uppercase tracking-wide text-white transition-colors duration-300 hover:text-[#AC40FF] lg:text-4xl">
                 info@speakerhead.com
               </Link>
             </div>
@@ -89,7 +89,7 @@ export default function Footer() {
             <ul className="flex flex-col gap-4">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-base text-white transition-colors duration-300 hover:text-white lg:text-lg">
+                  <Link href={link.href} className="text-lg text-white transition-colors duration-300 hover:text-white lg:text-xl">
                     {link.label}
                   </Link>
                 </li>
@@ -107,8 +107,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 px-6 py-4 lg:px-10">
-          <p className="text-center text-xs text-white">
+        <div className="border-t border-white/10 px-6 py-5 lg:px-10">
+          <p className="text-center text-sm text-white">
             Copyright &copy; {new Date().getFullYear()} SPKRHED. All Rights Reserved.
           </p>
         </div>
