@@ -8,7 +8,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
 import { FaLinkedin } from "react-icons/fa";
-import { SiInstagram } from "react-icons/si";
 import gsap from "gsap";
 
 const SCROLL_THRESHOLD = 80;
@@ -26,8 +25,11 @@ const NAV_LINKS = [
 ];
 
 const SOCIALS = [
-  { label: "LinkedIn", href: "#", icon: FaLinkedin },
-  { label: "Instagram", href: "#", icon: SiInstagram },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/speakerhead",
+    icon: FaLinkedin,
+  },
 ];
 
 const MotionLink = motion.create(Link);

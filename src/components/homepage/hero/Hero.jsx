@@ -98,7 +98,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-dvh w-full select-none items-center justify-center overflow-hidden bg-black py-24 lg:py-0">
+    <section className="relative flex min-h-dvh w-full select-none items-center justify-center overflow-hidden bg-black pt-24 pb-16 sm:py-24 lg:py-0">
       <Image
         src="/images/Home/hero-banner-plain.png"
         alt=""
@@ -130,7 +130,7 @@ export default function Hero() {
         className="pointer-events-none object-cover opacity-80"
       />
 
-      <div className="pointer-events-none absolute bottom-[9%] left-1/2 z-20 w-[clamp(420px,64vw,1160px)] -translate-x-1/2">
+      <div className="pointer-events-none absolute bottom-[6%] sm:bottom-[8%] lg:bottom-[9%] left-1/2 z-20 w-[clamp(520px,162vw,720px)] lg:w-[clamp(420px,64vw,1160px)] -translate-x-1/2">
         <Image
           src="/images/Home/plant-out-bean.png"
           alt=""
@@ -142,17 +142,17 @@ export default function Hero() {
         />
       </div>
 
-      <p className="absolute bottom-[clamp(16px,3vw,60px)] right-[clamp(24px,6vw,100px)] z-10 flex items-center gap-3 font-poppins text-[clamp(22px,2.8vw,52px)] font-bold uppercase text-white">
+      <p className="absolute bottom-[clamp(16px,3vw,60px)] right-[clamp(24px,6vw,100px)] z-30 flex items-center gap-3 font-poppins text-[clamp(18px,2.8vw,52px)] font-bold uppercase text-white">
         <span ref={bulletRef} className="inline-flex opacity-0">
           <Image
             src="/images/Home/leaf-2.png"
             alt=""
             width={40}
             height={40}
-            className="w-[clamp(26px,3.4vw,64px)] h-auto brightness-0 invert"
+            className="w-[clamp(24px,3.4vw,64px)] h-auto brightness-0 invert"
           />
         </span>
-        <span className="inline-block">
+        <span className="inline-block whitespace-pre">
           {MOVEMENT_TEXT.split("").map((char, i) => (
             <span
               key={i}
@@ -161,13 +161,13 @@ export default function Hero() {
               }}
               className="inline-block opacity-0"
             >
-              {char === " " ? " " : char}
+              {char === " " ? "\u00A0" : char}
             </span>
           ))}
         </span>
       </p>
 
-      <div className="relative z-10 mt-0 flex w-full max-w-[1800px] flex-col items-center px-[clamp(20px,5.5556vw,80px)] text-center text-white lg:max-w-none lg:px-[clamp(12px,1.5vw,32px)] lg:-mt-25">
+      <div className="relative z-10 -mt-16 sm:-mt-10 lg:-mt-25 flex w-full max-w-[1800px] flex-col items-center px-[clamp(16px,4vw,80px)] text-center text-white lg:max-w-none lg:px-[clamp(12px,1.5vw,32px)]">
         <div className="flex w-full flex-col items-center">
           <div
             ref={linesRef}
@@ -176,11 +176,10 @@ export default function Hero() {
             {HEADLINE_LINES.map(({ text, column, row }) => (
               <div
                 key={text}
-                className={`whitespace-nowrap font-anton-sc text-[clamp(46px,12.6vw,186px)] leading-none lg:text-[clamp(40px,10.2vw,224px)] lg:absolute ${
-                  column === "left"
-                    ? "lg:right-[calc(50%+clamp(24px,5.55vw,90px))]"
-                    : "lg:left-[calc(50%+clamp(24px,5.55vw,90px))]"
-                } ${row === 0 ? "lg:top-0" : "lg:top-[clamp(40px,10.2vw,224px)]"}`}
+                className={`whitespace-nowrap font-anton-sc text-[clamp(52px,14.5vw,96px)] leading-[0.93] sm:text-[clamp(54px,12.6vw,186px)] sm:leading-none lg:text-[clamp(40px,10.2vw,224px)] lg:leading-none lg:absolute ${column === "left"
+                  ? "lg:right-[calc(50%+clamp(24px,5.55vw,90px))]"
+                  : "lg:left-[calc(50%+clamp(24px,5.55vw,90px))]"
+                  } ${row === 0 ? "lg:top-0" : "lg:top-[clamp(40px,10.2vw,224px)]"}`}
               >
                 <Line text={text} />
               </div>

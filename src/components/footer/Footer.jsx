@@ -64,7 +64,7 @@ export default function Footer() {
   return (
     <footer className="relative w-full border-t border-white/10 bg-black text-white overflow-hidden">
       {/* Background image — overflow-hidden scoped here so the plant can bleed above */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 hidden overflow-hidden sm:block">
         <Image
           src="/images/footer_bg_full_plain.png"
           alt=""
@@ -72,6 +72,11 @@ export default function Footer() {
           priority={true}
           sizes="100vw"
           className="select-none object-cover object-bottom-right"
+        />
+        {/* Black fade gradient from left */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-r from-black via-black/80 to-transparent"
         />
       </div>
       {/* Plant — outside overflow-hidden so it overlaps the section above the footer */}

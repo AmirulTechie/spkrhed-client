@@ -394,7 +394,7 @@ export default function PricingSection() {
       <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">
         <h2
           ref={headingRef}
-          className="mx-auto max-w-6xl whitespace-nowrap text-center font-anton-sc text-[clamp(48px,10.14vw,146px)] uppercase leading-[0.97] text-white"
+          className="mx-auto max-w-6xl whitespace-nowrap text-center font-anton-sc text-[clamp(32px,10.14vw,146px)] uppercase leading-[0.97] text-white"
         >
           <TypewriterChars text="Pick Your Beanstalk." />
         </h2>
