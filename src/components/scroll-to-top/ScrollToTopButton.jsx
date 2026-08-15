@@ -49,7 +49,7 @@ function BackToWorkButton() {
           {/* Outer glow ring */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -inset-[3px] rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="pointer-events-none absolute -inset-0.75 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             style={{
               background:
                 "radial-gradient(circle, rgba(172,64,255,0.35) 0%, transparent 70%)",
@@ -109,7 +109,7 @@ function BackToWorkButton() {
             {/* Purple accent dot */}
             <span
               aria-hidden
-              className="relative h-1.5 w-1.5 rounded-full flex-shrink-0 transition-all duration-300 group-hover:scale-125"
+              className="relative h-1.5 w-1.5 rounded-full shrink-0 transition-all duration-300 group-hover:scale-125"
               style={{
                 background: "#AC40FF",
                 boxShadow: "0 0 8px 2px rgba(172,64,255,0.7)",

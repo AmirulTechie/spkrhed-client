@@ -84,20 +84,18 @@ export default function ProjectHero({ project }) {
         <Link
           ref={backButtonRef}
           href="/work"
-          className="group inline-flex items-center gap-2 font-poppins text-[clamp(14px,1.25vw,16px)] font-bold uppercase tracking-wider text-white transition-opacity duration-200 hover:opacity-80"
+          className="group inline-flex items-center gap-3 sm:gap-4 font-poppins text-[clamp(20px,2.4vw,34px)] font-bold uppercase tracking-wider text-white transition-all duration-200 hover:text-white/80"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2.5"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
-            className="transition-transform duration-200 group-hover:-translate-x-1"
+            className="h-[clamp(20px,2.4vw,34px)] w-[clamp(20px,2.4vw,34px)] transition-transform duration-200 group-hover:-translate-x-1.5"
           >
             <path d="M19 12H5" />
             <path d="M12 19l-7-7 7-7" />

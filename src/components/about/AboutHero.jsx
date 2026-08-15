@@ -107,13 +107,13 @@ export default function AboutHero() {
       </p>
 
       <div className="relative z-10 w-full px-8 pb-[clamp(28px,3.1944vw,46px)] text-white sm:px-12 lg:px-16">
-        <div ref={logoRef} className="opacity-0">
+        <div ref={logoRef} className="w-full max-w-115 opacity-0">
           <Image
             src="/images/about/spkrhed-wordmark.svg"
             alt="SPKRHED"
             width={469}
             height={75}
-            className="h-auto w-[clamp(160px,23.6111vw,340px)]"
+            className="h-auto w-full"
           />
         </div>
 
