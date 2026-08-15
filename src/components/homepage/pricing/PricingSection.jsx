@@ -224,7 +224,7 @@ function PricingCard({ tier, cardRef }) {
             alt=""
             width={tier.iconWidth}
             height={tier.iconHeight}
-            className="h-20 sm:h-[clamp(50px,6vw,100px)] w-auto shrink-0 object-contain will-change-transform"
+            className="h-[clamp(50px,6vw,100px)] w-auto shrink-0 object-contain will-change-transform"
           />
         </div>
 
@@ -265,12 +265,20 @@ function PricingCard({ tier, cardRef }) {
   );
 }
 
+const DESCRIPTION_TEXT =
+  "Four service tiers, each one a different rung up the beanstalk. Every tier ships with content, outreach, and pipeline systems baked in — because one without the other leaves money on the table.";
+
 export default function PricingSection() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
   const cardRefs = useRef([]);
 
+  // One-time entrance, gated behind ScrollTrigger the moment the section is
+  // reached: cards pop in together, the heading types on char-by-char, and
+  // the description fades/slides up from below — all as one simultaneous
+  // wave. The tree branches are static (no entrance animation, no position
+  // changes) — they render straight at their resting look.
   useLayoutEffect(() => {
     const headingChars = [
       ...headingRef.current.querySelectorAll(".typewriter-char"),
@@ -326,11 +334,14 @@ export default function PricingSection() {
           opacity: 1,
           y: 0,
           rotateX: 0,
-          duration: 0.8,
-          stagger: 0.18,
+          duration: 0.65,
           ease: "power3.out",
+          stagger: {
+            each: 0.12,
+            from: "start",
+          },
         },
-        "-=0.55",
+        "-=0.35",
       );
     }, sectionRef);
 
@@ -340,52 +351,63 @@ export default function PricingSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#F0F0EA] py-[clamp(64px,9.7222vw,140px)]"
+      className="relative overflow-x-clip py-[clamp(64px,8.333vw,120px)]"
     >
-      {/* Background vines — framing patterns dropping down from the top edge. */}
-      <div className="absolute top-0 left-[-4%] z-0 w-[clamp(280px,36vw,520px)] select-none pointer-events-none">
-        <Image
-          src="/images/Home/pricing-vine-left.png"
-          alt=""
-          width={1040}
-          height={1438}
-          className="h-auto w-full"
-        />
-      </div>
+      {/* Each branch fades both its top AND bottom edges out via a mask
+          (rather than a black overlay div) so only the vine's pixels fade —
+          the black background behind it never gets darkened or smudged.
+          The bottom fade matters because the branch is much taller than the
+          card row it runs behind: the cards (z-10) cover the middle of the
+          branch, but its tail extends well past the last card and would
+          otherwise show a hard, unmasked cut in open black space. Size/
+          position are the same fixed formula on every breakpoint (no
+          shrinking to a small mobile accent) so the branch reads with the
+          same visual weight everywhere. */}
+      <Image
+        src="/images/Home/tree-branch-1.png"
+        alt=""
+        width={1615}
+        height={2396}
+        className="pointer-events-none absolute left-[-25%] top-[-17vw] w-[50%] rotate-45 select-none opacity-90"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+        }}
+      />
 
-      <div className="absolute top-0 right-[-4%] z-0 w-[clamp(240px,32vw,460px)] select-none pointer-events-none">
-        <Image
-          src="/images/Home/pricing-vine-right.png"
-          alt=""
-          width={920}
-          height={1238}
-          className="h-auto w-full opacity-90"
-        />
-      </div>
+      <Image
+        src="/images/Home/tree-branch-1.png"
+        alt=""
+        width={1615}
+        height={2396}
+        className="pointer-events-none absolute right-[-24%] top-0 w-[50%] -scale-x-100 select-none opacity-90"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent, black 25%, black 70%, transparent)",
+        }}
+      />
 
-      <div className="relative z-10 mx-auto max-w-360 px-[clamp(20px,3.1944vw,46px)]">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <h2
-            ref={headingRef}
-            className="font-anton-sc text-[clamp(45px,6vw,90px)] uppercase leading-[0.97] text-black"
-          >
-            <span className="block">
-              <TypewriterChars text="Sow The Seed." />
-            </span>
-            <span className="block text-[#AC40FF]">
-              <TypewriterChars text="Own The Pipeline." />
-            </span>
-          </h2>
+      <div className="relative mx-auto max-w-325 px-[clamp(24px,5.0694vw,73px)]">
+        <h2
+          ref={headingRef}
+          className="mx-auto max-w-6xl whitespace-nowrap text-center font-anton-sc text-[clamp(48px,10.14vw,146px)] uppercase leading-[0.97] text-white"
+        >
+          <TypewriterChars text="Pick Your Beanstalk." />
+        </h2>
 
-          <p
-            ref={descriptionRef}
-            className="max-w-105 font-poppins text-[clamp(16px,1.5278vw,22px)] font-medium leading-[1.1] text-black/60"
-          >
-            Four growth configurations built around your goals. Pick your system, book your onboarding sequence, and watch the pipeline sprout.
-          </p>
-        </div>
+        <p
+          ref={descriptionRef}
+          className="mx-auto mt-[clamp(16px,1.875vw,27px)] max-w-3xl text-center font-poppins text-[clamp(15px,1.3194vw,19px)] leading-[0.97] text-white"
+        >
+          {DESCRIPTION_TEXT}
+        </p>
 
-        <div className="mt-[clamp(60px,8.33vw,120px)] grid grid-cols-1 gap-[clamp(24px,1.8056vw,26px)] sm:grid-cols-2 lg:grid-cols-4">
+        {/* mt-top gives room for the "Most Popular" tag that sits above the Beanstalk card */}
+        <div className="mt-[clamp(38px,6.94vw,100px)] grid grid-cols-1 items-stretch gap-[clamp(30px,0.6944vw,50px)] sm:grid-cols-2 sm:gap-7 xl:grid-cols-4 xl:gap-[11.7px]">
           {TIERS.map((tier, index) => (
             <PricingCard
               key={tier.name}
