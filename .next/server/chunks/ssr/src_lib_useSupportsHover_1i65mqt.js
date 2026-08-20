@@ -1,0 +1,3 @@
+module.exports=[93063,a=>{"use strict";var b=a.i(72131);function c(a){let b=window.matchMedia("(hover: hover)");return b.addEventListener("change",a),()=>b.removeEventListener("change",a)}function d(){return window.matchMedia("(hover: hover)").matches}function e(){return!0}a.s(["useSupportsHover",0,function(){return(0,b.useSyncExternalStore)(c,d,e)}])}];
+
+//# sourceMappingURL=src_lib_useSupportsHover_1i65mqt.js.map
