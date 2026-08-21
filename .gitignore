@@ -14,9 +14,8 @@
 # testing
 /coverage
 
-# next.js — production build committed for GoDaddy (pre-built)
-# /.next/
-/.next/dev/
+# next.js
+/.next/
 /out/
 
 # production
