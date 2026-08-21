@@ -1,8 +1,3 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 const isDev = process.env.NODE_ENV === "development";
 
 // Cloudinary is allowed for the hero videos described in CLAUDE.md.
@@ -36,9 +31,6 @@ const nextConfig = {
   /* Production deployment configuration */
   reactCompiler: true,
   poweredByHeader: false,
-  turbopack: {
-    root: __dirname,
-  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },

@@ -150,7 +150,7 @@ export default function BeanstalkSystemSection() {
       tl.to(bigBranchRef.current, {
         opacity: 0.95,
         y: 0,
-        duration: 1.1,
+        duration: 0.65,
         ease: "power3.out",
       })
         .to(
@@ -158,10 +158,10 @@ export default function BeanstalkSystemSection() {
           {
             opacity: 1,
             duration: 0.01,
-            stagger: 0.045,
+            stagger: 0.018,
             ease: "none",
           },
-          "-=0.7",
+          "<0.1",
         )
         .to(
           growthEngineLine,
@@ -169,15 +169,15 @@ export default function BeanstalkSystemSection() {
             opacity: 1,
             yPercent: 0,
             filter: "blur(0px)",
-            duration: 0.45,
+            duration: 0.35,
             ease: "power2.out",
           },
           "-=0.2",
         )
         .to(
           descriptionRef.current,
-          { opacity: 1, x: 0, duration: 0.9, ease: "power3.out" },
-          "-=0.4",
+          { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" },
+          "-=0.25",
         );
 
       cardRefs.current.forEach((cardEl) => {
